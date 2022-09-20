@@ -28,7 +28,9 @@ using Label = Eto.Forms.Label;
 using CheckBox = Eto.Forms.CheckBox;
 using DropDown = Eto.Forms.DropDown;
 using Button = Eto.Forms.Button;
+using ProgressBar = Eto.Forms.ProgressBar;
 using Application = Eto.Forms.Application;
+using System.Collections;
 //using System.Collections.Generic;
 
 namespace DinoLauncher;
@@ -59,6 +61,7 @@ public class MainForm : Eto.Forms.Form
     public ImageView        Image_DinosaurPlanetLogo;
     public CheckBox         CheckBox_UseHQModels;
     public DropDown         DropDown_BranchPicker;
+    public string[]         DropDown_BranchPicker_Options = { "Stable", "Nightly" }; // Is there a better way?
     public Label            Label_VerNum;
     public Label            Label_MainSubtitle;
     public Label            Label_MainTextBody;
@@ -68,8 +71,9 @@ public class MainForm : Eto.Forms.Form
     public Button           Button_BrowseForRom;
     public Button           Button_PatchExecute;
     public Button           Button_PlayGame;
+    public ProgressBar      ProgressBar_Progress;
 
-    #endregion
+    #endregion Form Controls
 
 
     public MainForm()
@@ -91,11 +95,18 @@ public class MainForm : Eto.Forms.Form
 
         // Don't do music right now please, look at this after base functionality is confirmed to be working
         //extras.PlayMusic(@"\\Resources\\music.mp3");
+
+        // Populates on start
+        // Would rather do this sooner but ah well
+        foreach (var item in DropDown_BranchPicker_Options)
+        {
+            DropDown_BranchPicker.Items.Add(item);
+        }
     }
 
     // Control methods are in order from top to bottom
     #region UseHQModels CheckBox
-    private void UseHQModels_CheckedChanged(object sender, ItemCheckedEventArgs e) //Not sure ItemCheckEventArgs is correct here
+    private void UseHQModels_CheckedChanged(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
     {
         if (CheckBox_UseHQModels.Checked == true)
         {
@@ -112,29 +123,29 @@ public class MainForm : Eto.Forms.Form
     }
     #endregion
 
-    #region BranchPicker Picker
-    private void Picker_BranchPicker_SelectionChanged(object sender, EventArgs e)
+    #region DropDown BranchPicker
+    private void DropDown_BranchPicker_SelectionChanged(object sender, EventArgs e)
     {
-        if (DropDown_BranchPicker.SelectedValue.ToString() == "Stable") // May not be calling this correctly
+        // Get the selected item value as a lower-case string
+        string selBranch = DropDown_BranchPicker.SelectedValue.ToString().ToLower();
+
+        if (selBranch != null)
         {
-            // Do this for now, make simple later
-            fileIO.SetupFileStructure();
-            // We want the STABLE branch
-            //fileIO.chosenPatchPath = "\\PatchData\\dp-stable.xdelta";
-
-
-            // Nah we're doing this different now
-            prefs.desiredBranch = "stable";
-        }
-        else if (DropDown_BranchPicker.SelectedValue.ToString() == "Nightly")
-        {
-            // Do this for now, make simple later
-            fileIO.SetupFileStructure();
-
-            prefs.desiredBranch = "nightly";
+            // Dropdown has an item selected
+            if (selBranch == "stable")
+            {
+                // Choose the stable branch
+                prefs.desiredBranch = "stable";
+            }
+            else if (selBranch == "nightly")
+            {
+                // Choose the nightly branch
+                prefs.desiredBranch = "nightly";
+            }
         }
 
         Debug.WriteLine("desired branch: " + prefs.desiredBranch);
+        Debug.WriteLine("selected branch: " + selBranch);
     }
     #endregion
 
@@ -334,17 +345,30 @@ public class MainForm : Eto.Forms.Form
     }
     #endregion
 
-    public void DisableAllControls()
+    /// <summary>
+    /// Feed in a bool value to enable/disable all controls. Useful in preventing
+    /// the user from getting confused or breaking something during the process.
+    /// </summary>
+    /// <param name="b"></param>
+    public void ToggleAllControls(bool b)
     {
-        // Seriously, just disable all the controls.
-        // Use this for when the application needs to do things
-        // on the backend and we don't want the user to break anything
+        Eto.Forms.Control[] controls = {CheckBox_UseHQModels,
+                                        DropDown_BranchPicker,
+                                        Button_UpdatePatch,
+                                        Button_BrowseForRom,
+                                        Button_PatchExecute,
+                                        Button_PlayGame};
 
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_UpdatePatch.IsEnabled = false);
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_BrowseForRom.IsEnabled = false);
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PatchExecute.IsEnabled = false);
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PlayGame.IsEnabled = false);
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => CheckBox_UseHQModels.IsEnabled = false);
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Picker_BranchPicker.IsEnabled = false);
+        foreach (var item in controls)
+        {
+            try
+            {
+                item.Enabled = b;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"DisableAllControls: {ex}");
+            }
+        }
     }
 }

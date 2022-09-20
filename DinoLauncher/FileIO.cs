@@ -33,6 +33,7 @@ public class FileIO //: IDinoLauncher
     public string gitWorkDir;
 
     public string musicPath = "\\_Resources\\Music.mp3";
+    public string assemblyPath;
 
     // -- Functions Outline --
     // Need to figure out the working directory for cross-platform

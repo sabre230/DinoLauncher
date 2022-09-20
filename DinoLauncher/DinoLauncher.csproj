@@ -10,7 +10,23 @@
     <TargetFramework>net6.0</TargetFramework>
 
     <UseXeto>True</UseXeto>
+
+    <PackageIcon>krystalicon.png</PackageIcon>
+
+    <ApplicationIcon>res\Images\favicon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="res\Images\dinoplanet_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="res\Images\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="res\Images\dinoplanet_logo.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
@@ -19,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="res\Images\krystalicon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="res\Styles\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

@@ -8,6 +8,8 @@
   ClientSize="800, 600"
   AutoSize="False"
   BackgroundColor="Black"
+  Resizable="False"
+  Maximizable="False"
 	>
 
   <StackLayout
@@ -16,7 +18,7 @@
     AlignLabels="False"
     HorizontalContentAlignment="Center"
     >
-
+    
     <Label
       x:Name="Label_VerNum"
       Text="v0.01"
@@ -35,7 +37,7 @@
     <!--  Main subtitle  -->
     <Label
         x:Name="Label_MainSubtitle"
-        Text="A LOST ADVENTURE REVEALED..."
+        Text="THE LOST ADVENTURE REVEALED..."
         Size="640,32"
         TextAlignment="Center"
         TextColor="White" 
@@ -46,7 +48,7 @@
         x:Name="Label_MainTextBody"
         TextAlignment="Center"
         Wrap="Word"
-        Text="This is the very first functional iteration of the DinoLauncher! The goal of this launcher is to make it easier to keep Dinosaur Planet up to date with all new fixes."
+        Text="Prepare to launch some Dinos."
         Size="365,65"
         TextColor="White" 
         />
@@ -56,8 +58,10 @@
         x:Name="CheckBox_UseHQModels"
         Checked="False" 
         Text="Use HQ player models &#x0a;(Affects performance)"
+        CheckedChanged="UseHQModels_CheckedChanged"
         Size="140,64"
         TextColor="White"        
+        
         />
 
     <!--  Branch Picker  -->
@@ -66,10 +70,12 @@
         Text="Select update branch to use:"
         TextColor="White" 
         />
-
-    <!-- Put your stupid dropdown shit in here -->
+    
+    <!-- Put your stupid dropdown stuff in here -->
+    <!-- Index "0" should always be Stable by default -->
     <DropDown
       x:Name="DropDown_BranchPicker"
+      SelectedIndex="0"
       Size="170,32"
       TextColor="Black"
       ShowBorder="False"
@@ -116,10 +122,18 @@
     <!--  Status Text  -->
     <Label
         x:Name="Label_Status"
-        VerticalAlignment="Bottom"
+        VerticalAlignment="Bottom" 
+        TextAlignment="Center"
         Text="Waiting for you..." 
         TextColor="White"
         />
+
+    <ProgressBar
+      x:Name="ProgressBar_Progress"
+      BackgroundColor="Black"
+      Visible="False"
+      Enabled="False"
+      />
     
     <!--  Hide the whole frame instead of just the pbar  -->
 
