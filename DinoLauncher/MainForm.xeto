@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form
+	xmlns="http://schema.picoe.ca/eto.forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:DinoLauncher;assembly=DinoLauncher"
+	Title="DinoLauncher"
+	Size="640,460"
+  ClientSize="640,480"
+  AutoSize="False"
+  BackgroundColor="Transparent"
+	>
+
+  <StackLayout
+    Padding="16"
+    AlignLabels="False"
+    HorizontalContentAlignment="Center"
+    >
+
+    <Label
+      x:Name="Label_VerNum"
+      Text="v0.01"
+      TextColor="White"
+      TextAlignment="Left"
+      Size="650,16"     
+      />
+    
+    <!--  Dino Planet logo  -->
+    <ImageView
+        x:Name="Image_DinoPlanetLogo"
+        Size="640,92"
+        Image="C:\Users\sabre\source\repos\DinoLauncher\DinoLauncher\res\Images\dinoplanet_logo.png" 
+        />
+
+    <!--  Main subtitle  -->
+    <Label
+        x:Name="Label_MainSubtitle"
+        Text="A LOST ADVENTURE REVEALED..."
+        Size="640,32"
+        TextAlignment="Center"
+        TextColor="White" 
+        />
+
+    <!--  Explanation section  -->
+    <Label
+        x:Name="Label_MainTextBody"
+        TextAlignment="Center"
+        Wrap="Word"
+        Text="This is the very first functional iteration of the DinoLauncher! The goal of this launcher is to make it easier to keep Dinosaur Planet up to date with all new fixes."
+        Size="365,65"
+        TextColor="White" 
+        />
+
+    <!--  Model quality selection  -->
+    <CheckBox
+        x:Name="CheckBox_UseHQModels"
+        CheckedChanged="UseHQModels_CheckedChanged"
+        Checked="False" 
+        Text="Use HQ player models &#x0a;(Affects performance)"
+        Size="140,64"
+        TextColor="White"        
+        />
+
+    <!--  Branch Picker  -->
+    <Label
+        x:Name="Label_UpdateBranchInfo"
+        Text="Select update branch to use:"
+        TextColor="White" 
+        />
+
+    <!-- Put your stupid dropdown shit in here -->
+    <DropDown
+      x:Name="DropDown_BranchPicker"
+      Size="170,32"
+      TextColor="Black"
+      ShowBorder="False"
+      />
+    
+    <!--  Check for new patch  -->
+    <Button
+      x:Name="Button_UpdatePatch"
+      MouseDown="UpdatePatch_ButtonPress"
+      MouseUp="UpdatePatch_ButtonRelease"
+      Text="Check for most recent patch"
+      Size="170,32"
+      />
+
+
+    <!--  Browse for rom file  -->
+    <Button
+      x:Name="Button_BrowseForRom"
+      MouseDown="BrowseForFile_ButtonPress"
+      MouseUp="BrowseForFile_ButtonRelease"
+      Text="Browse for rom_crack.z64"
+      Size="170,32"
+      />
+
+    <!--  Apply the patch  -->
+    <!--  Change the property IsEnabled to True when Md5 validates as good  -->
+    <Button
+      x:Name="Button_PatchExecute"
+      MouseDown="PatchExecute_ButtonPress"
+      MouseUp="PatchExecute_ButtonRelease"
+      Text="Apply Patch"
+      Size="170,32"
+      />
+
+    <!--  Another button to handle "Play"  -->
+    <Button
+      x:Name="Button_PlayGame"
+      MouseDown="Button_PlayGame_Pressed"
+      MouseUp="Button_PlayGame_Released"
+      Text="PLAY!"
+      Size="170,32"
+      />
+      
+    <!--  Status Text  -->
+    <Label
+        x:Name="Label_Status"
+        VerticalAlignment="Bottom"
+        Text="Waiting for you..." 
+        TextColor="White"
+        />
+    
+    <!--  Hide the whole frame instead of just the pbar  -->
+
+
+  </StackLayout>
+
+  <!-- Example Block -->
+<!-- <Form.Menu>
+		<MenuBar>
+			<SubMenuItem Text="&amp;File">
+				<ButtonMenuItem Text="Click Me!" Click="HandleClickMe" />
+			</SubMenuItem>
+			<MenuBar.ApplicationItems>
+				<ButtonMenuItem Text="Preferences.." Shortcut="{On Control+O, Mac=Application+Comma}" />
+			</MenuBar.ApplicationItems>
+			<MenuBar.QuitItem>
+				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
+			</MenuBar.QuitItem>
+			<MenuBar.AboutItem>
+				<ButtonMenuItem Text="About..." Click="HandleAbout" />
+			</MenuBar.AboutItem>
+		</MenuBar>
+	</Form.Menu>
+	<Form.ToolBar>
+		<ToolBar>
+			<ButtonToolItem Text="Click Me!" Click="HandleClickMe" />
+		</ToolBar>
+	</Form.ToolBar> -->
+  
+  </Form>
