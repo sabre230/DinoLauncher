@@ -35,7 +35,7 @@ public class FileIO //: IDinoLauncher
     public string musicPath = "\\Resources\\Music.mp3";
 
     // -- Functions Outline --
-
+    // Need to figure out the working directory for cross-platform
     // Almost entirely a helper class to simplify read/writes
     // MoveFile(string source, string out) <!>
     // CopyFile(string source, string out) <!>

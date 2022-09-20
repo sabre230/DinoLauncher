@@ -20,6 +20,7 @@ using LibGit2Sharp;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using Eto.
 //using System.Collections.Generic;
 
 namespace DinoLauncher;
@@ -55,7 +56,7 @@ public class MainForm : Form
         
         // Note to Self: Visual element should rely on prefs, not the other way around
         // Please clean this up soon
-        //prefs.useHQModels = 
+        prefs.useHQModels = 
 
         // Don't do music right now please, look at this after base functionality is confirmed to be working
         //extras.PlayMusic(@"\\Resources\\music.mp3");
@@ -313,46 +314,4 @@ public class MainForm : Form
         Application.Current.MainPage.Dispatcher.Dispatch(() => CheckBox_UseHQModels.IsEnabled = false);
         Application.Current.MainPage.Dispatcher.Dispatch(() => Picker_BranchPicker.IsEnabled = false);
     }
-
-
-    // --- Pending removal --- //
-    /*  GitTest, remove after LibGit2Sharp performs everything needed
-    //   private static async Task GitTestTask()
-    //{
-    //       // Do token OAuth stuff for github
-    //       //var tokenAuth = new Credentials("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"); // NOTE: REMOVE BEFORE RELEASE, DO THIS BETTER ------------------------------------------------>
-    //       //gitClient.Credentials = tokenAuth;
-
-    //       // Would like some feedback on button press
-    //       Debug.WriteLine("Running git check");
-
-    //       //var request = new CommitRequest { Path = "DinoPatchRepo/xdelta/*.xdelta" };
-    //       //var list = await gitClient.Repository.Commit.GetAll("sabre230", "DinoPatchRepo", request);
-
-    //       try
-    //	{
-    //           //var user = await gitClient.User.Get("sabre230");
-    //		//var repo = await gitClient.Repository.GetAllPublic();
-    //		//var publicRepos = repo.ToList();
-
-    //		// Work around rate limiting please
-    //           //Debug.WriteLine($"{publicRepos}");
-    //       }
-    //	catch (Exception e)
-    //	{
-    //		bool eCheck;
-
-    //		if (eCheck = e.ToString().Contains("Octokit.RateLimitExceededException: API rate limit exceeded"))
-    //		{
-    //               Debug.WriteLine($"You are being rate-limited");
-    //           }
-    //		else
-    //		{
-    //			Debug.WriteLine($"Exception undefined: {e}");
-    //		}
-
-    //	}
-
-    //   } */
-
 }
