@@ -1,7 +1,3 @@
 # DinoLauncher
 
-# Header 1
-
-# Header 2
-
-## Sub-Header 1
+This is an application that specializes in launching dinos.
