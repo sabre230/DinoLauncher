@@ -20,7 +20,15 @@ using LibGit2Sharp;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
-using Eto.
+using Color = Eto.Drawing.Color;
+using System.Windows.Forms;
+// This could probably be done a lot better
+// But the goal is to make it work for now
+using Label = Eto.Forms.Label;
+using CheckBox = Eto.Forms.CheckBox;
+using DropDown = Eto.Forms.DropDown;
+using Button = Eto.Forms.Button;
+using Application = Eto.Forms.Application;
 //using System.Collections.Generic;
 
 namespace DinoLauncher;
@@ -28,7 +36,7 @@ namespace DinoLauncher;
 // note to self: remember to pass object through parameters when you need
 // that specifically generated object for some reason like prefs
 
-public class MainForm : Form
+public class MainForm : Eto.Forms.Form
 {
     // I think it'll be easier to just pass these along in function parameters
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
@@ -39,6 +47,29 @@ public class MainForm : Form
 
     // Get this info from prefs please
     bool useHQModels;
+
+    // Looks like Eto doesn't auto-generate controls in the xeto form
+    // According to internet wizards, I have to add them to my class as data members
+    // or properties with the same name
+    // Weird
+
+    #region Form Controls
+
+    public StackLayout      StackLayout;
+    public ImageView        Image_DinosaurPlanetLogo;
+    public CheckBox         CheckBox_UseHQModels;
+    public DropDown         DropDown_BranchPicker;
+    public Label            Label_VerNum;
+    public Label            Label_MainSubtitle;
+    public Label            Label_MainTextBody;
+    public Label            Label_UpdateBranchInfo;
+    public Label            Label_Status;
+    public Button           Button_UpdatePatch;
+    public Button           Button_BrowseForRom;
+    public Button           Button_PatchExecute;
+    public Button           Button_PlayGame;
+
+    #endregion
 
 
     public MainForm()
@@ -53,10 +84,10 @@ public class MainForm : Form
 
         // Setup our general file structure
         fileIO.SetupFileStructure();
-        
+
         // Note to Self: Visual element should rely on prefs, not the other way around
         // Please clean this up soon
-        prefs.useHQModels = 
+        //prefs.useHQModels = CheckBox_UseHQModels.Checked;
 
         // Don't do music right now please, look at this after base functionality is confirmed to be working
         //extras.PlayMusic(@"\\Resources\\music.mp3");
@@ -64,19 +95,19 @@ public class MainForm : Form
 
     // Control methods are in order from top to bottom
     #region UseHQModels CheckBox
-    private void UseHQModels_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    private void UseHQModels_CheckedChanged(object sender, ItemCheckedEventArgs e) //Not sure ItemCheckEventArgs is correct here
     {
-        if (CheckBox_UseHQModels.IsChecked == true)
+        if (CheckBox_UseHQModels.Checked == true)
         {
             // If toggled to true
             useHQModels = true;
-            UpdateStatusText("High quality player models will be used", Color.FromArgb("FFFFFF"));
+            UpdateStatusText("High quality player models will be used", Color.FromArgb(255, 255, 255, 255));
         }
         else
         {
             // Else toggled to false
             useHQModels = false;
-            UpdateStatusText("Standard quality player models will be used", Color.FromArgb("FFFFFF"));
+            UpdateStatusText("Standard quality player models will be used", Color.FromArgb(255, 255, 255, 255));
         }
     }
     #endregion
@@ -84,7 +115,7 @@ public class MainForm : Form
     #region BranchPicker Picker
     private void Picker_BranchPicker_SelectionChanged(object sender, EventArgs e)
     {
-        if (Picker_BranchPicker.SelectedItem.ToString() == "Stable")
+        if (DropDown_BranchPicker.SelectedValue.ToString() == "Stable") // May not be calling this correctly
         {
             // Do this for now, make simple later
             fileIO.SetupFileStructure();
@@ -95,7 +126,7 @@ public class MainForm : Form
             // Nah we're doing this different now
             prefs.desiredBranch = "stable";
         }
-        else if (Picker_BranchPicker.SelectedItem.ToString() == "Nightly")
+        else if (DropDown_BranchPicker.SelectedValue.ToString() == "Nightly")
         {
             // Do this for now, make simple later
             fileIO.SetupFileStructure();
@@ -119,10 +150,10 @@ public class MainForm : Form
         git.CheckRepoForPatch(prefs, fileIO);
         //Task.Run(async () => { await git.CheckRepoForPatch(prefs, fileIO); }).Wait();
 
-        // Resets the button back to "Normal" visual state on release
-        // Only necessary on Windows because of course it is
-        Button b = (Button)sender;
-        VisualStateManager.GoToState(b, "Normal");
+        //// Resets the button back to "Normal" visual state on release
+        //// Only necessary on Windows because of course it is
+        //Button b = (Button)sender;
+        //VisualStateManager.GoToState(b, "Normal");
     }
     #endregion
 
@@ -135,77 +166,79 @@ public class MainForm : Form
 
     void BrowseForFile_ButtonRelease(object sender, EventArgs e)
     {
-        // Resets the button back to "Normal" visual state on release
-        // Only necessary on Windows because of course it is
-        Button b = (Button)sender;
-        VisualStateManager.GoToState(b, "Normal");
+        //// Resets the button back to "Normal" visual state on release
+        //// Only necessary on Windows because of course it is
+        //Button b = (Button)sender;
+        //VisualStateManager.GoToState(b, "Normal");
 
         // File pick on a separate thread
-        PickOptions o = new()
+        FilePicker o = new()
         {
-            PickerTitle = "Browse for \'rom_crack.z64\'"
+            Title = "Browse for \'rom_crack.z64\'"
             // We can specify file type later
         };
 
-        Task.Run(async () => { await BrowseForFileTask(o); }).Wait();
+        //Task.Run(async () => { await BrowseForFileTask(o); }).Wait();
     }
 
-    public async Task<FileResult> BrowseForFileTask(PickOptions options)
-    {
-        try
-        {
-            // Opens the file picker
-            var result = await FilePicker.Default.PickAsync(options);
+    // Re-do the FilePicker method
+    //// I don't think I can reuse a lot of this with Eto
+    //public async Task<FilePicker> BrowseForFileTask()
+    //{
+    //    try
+    //    {
+    //        // Opens the file picker
+    //        var result = await FilePicker.Callback();
 
-            if (result != null)
-            {
-                if (result.FileName.EndsWith(".z64", StringComparison.OrdinalIgnoreCase))
-                {
-                    using var stream = await result.OpenReadAsync();
-                    var romFile = ImageSource.FromStream(() => stream);
+    //        if (result != null)
+    //        {
+    //            if (result.FileName.EndsWith(".z64", StringComparison.OrdinalIgnoreCase))
+    //            {
+    //                using var stream = await result.OpenReadAsync();
+    //                var romFile = ImageSource.FromStream(() => stream);
 
-                    if (fileIO.MD5Checksum((fileIO.currentDirectory + fileIO.romCrackPath)) == true)
-                    {
-                        // Md5 check should be successful
-                        Debug.WriteLine("Md5 Checksum successful!");
+    //                if (fileIO.MD5Checksum((fileIO.currentDirectory + fileIO.romCrackPath)) == true)
+    //                {
+    //                    // Md5 check should be successful
+    //                    Debug.WriteLine("Md5 Checksum successful!");
 
-                        UpdateStatusText(fileIO.CalculateMD5(result.FullPath.ToString()), Color.FromArgb("00FF00"));
+    //                    UpdateStatusText(fileIO.CalculateMD5(result.FullPath.ToString()), Color.FromArgb(255, 0, 255, 0));
 
-                        // Load the result path
-                        // load load load load load...
+    //                    // Load the result path
+    //                    // load load load load load...
 
-                        // No need to get rom_crack.z64 again
-                        // Disable the button to prevent confusion
-                        // Enable the patch button
-                        Application.Current.MainPage.Dispatcher.Dispatch(() => Button_BrowseForRom.IsVisible = false);
+    //                    // No need to get rom_crack.z64 again
+    //                    // Disable the button to prevent confusion
+    //                    // Enable the patch button
+    //                    //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_BrowseForRom.IsVisible = false);
 
-                        // Enable the patch button
-                        Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PatchExecute.IsEnabled = true);
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Yours: " + fileIO.CalculateMD5(result.FullPath));
-                        Debug.WriteLine("OG: " + fileIO.originalMd5);
-                        // Md5 was not successful
-                        UpdateStatusText("Bad Checksum! Check your file and try again.", Color.FromArgb("FF0000"));
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("Incorrect file type chosen", Color.FromArgb("FF0000"));
+    //                    // Enable the patch button
+    //                    //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PatchExecute.IsEnabled = true);
+    //                }
+    //                else
+    //                {
+    //                    Debug.WriteLine("Yours: " + fileIO.CalculateMD5(result.FullPath));
+    //                    Debug.WriteLine("OG: " + fileIO.originalMd5);
+    //                    // Md5 was not successful
+    //                    UpdateStatusText("Bad Checksum! Check your file and try again.", Color.FromArgb(255 ,255 ,0 ,0));
+    //                }
+    //            }
+    //            else
+    //            {
+    //                Debug.WriteLine("Incorrect file type chosen", Color.FromArgb(255 ,255 ,0 ,0));
 
-                    UpdateStatusText("That's not a .Z64 file.", Color.FromArgb("FF0000"));
-                }
-            }
-            return result;
-        }
-        catch (Exception e)
-        {
-            // The user canceled or something went wrong
-            Debug.WriteLine(e);
-        }
-        return null;
-    }
+    //                UpdateStatusText("That's not a .Z64 file.", Color.FromArgb(255, 255, 0, 0));
+    //            }
+    //        }
+    //        return result;
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        // The user canceled or something went wrong
+    //        Debug.WriteLine(e);
+    //    }
+    //    return null;
+    //}
     #endregion
 
     #region PatchExecute Button
@@ -228,7 +261,7 @@ public class MainForm : Form
         if (useHQModels == true)
         {
             Debug.WriteLine("Using HQ Models...");
-            using (var stream = File.Open((fileIO.currentDirectory + fileIO.patchedRomPath), FileMode.Open))
+            using (var stream = System.IO.File.Open((fileIO.currentDirectory + fileIO.patchedRomPath), FileMode.Open))
             {
                 // It seems the position changes after any time it's read, so we have to keep setting the stream position
                 // Fix later, get working now
@@ -255,11 +288,11 @@ public class MainForm : Form
             }
         }
 
-        // Resets the button back to "Normal" visual state on release
-        // Only necessary on Windows because of course it is
-        // Apparently it's related to how Windows handles object focus
-        Button b = (Button)sender;
-        VisualStateManager.GoToState(b, "Normal");
+        //// Resets the button back to "Normal" visual state on release
+        //// Only necessary on Windows because of course it is
+        //// Apparently it's related to how Windows handles object focus
+        //Button b = (Button)sender;
+        //VisualStateManager.GoToState(b, "Normal");
     }
     #endregion
 
@@ -271,9 +304,9 @@ public class MainForm : Form
 
     private void Button_PlayGame_Released(object sender, EventArgs e)
     {
-        // Reset button appearance on release
-        Button b = (Button)sender;
-        VisualStateManager.GoToState(b, "Normal");
+        //// Reset button appearance on release
+        //Button b = (Button)sender;
+        //VisualStateManager.GoToState(b, "Normal");
 
         // There are many different N64 emulators, it's tough to account for that
         // So we may need to rely on the user's preferences for Z64 files
@@ -286,8 +319,8 @@ public class MainForm : Form
     #region UpdateStatusText Methods
     public void UpdateStatusText(string statusText)
     {
-        // Makes updating the text on the UI thread much easier
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.Text = statusText);
+        //// Makes updating the text on the UI thread much easier
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.Text = statusText);
 
     }
 
@@ -295,8 +328,8 @@ public class MainForm : Form
     {
         // Maybe there's a better way of creating an overload...
         // This works for now, look at this later
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.Text = statusText);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.TextColor = color);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.Text = statusText);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.TextColor = color);
 
     }
     #endregion
@@ -307,11 +340,11 @@ public class MainForm : Form
         // Use this for when the application needs to do things
         // on the backend and we don't want the user to break anything
 
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Button_UpdatePatch.IsEnabled = false);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Button_BrowseForRom.IsEnabled = false);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PatchExecute.IsEnabled = false);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PlayGame.IsEnabled = false);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => CheckBox_UseHQModels.IsEnabled = false);
-        Application.Current.MainPage.Dispatcher.Dispatch(() => Picker_BranchPicker.IsEnabled = false);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_UpdatePatch.IsEnabled = false);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_BrowseForRom.IsEnabled = false);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PatchExecute.IsEnabled = false);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PlayGame.IsEnabled = false);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => CheckBox_UseHQModels.IsEnabled = false);
+        //Application.Current.MainPage.Dispatcher.Dispatch(() => Picker_BranchPicker.IsEnabled = false);
     }
 }

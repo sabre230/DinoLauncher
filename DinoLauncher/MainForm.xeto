@@ -4,13 +4,14 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:DinoLauncher;assembly=DinoLauncher"
 	Title="DinoLauncher"
-	Size="640,460"
-  ClientSize="640,480"
+	Size="800, 600"
+  ClientSize="800, 600"
   AutoSize="False"
-  BackgroundColor="Transparent"
+  BackgroundColor="Black"
 	>
 
   <StackLayout
+    x:Name="StackLayout"
     Padding="16"
     AlignLabels="False"
     HorizontalContentAlignment="Center"
@@ -53,7 +54,6 @@
     <!--  Model quality selection  -->
     <CheckBox
         x:Name="CheckBox_UseHQModels"
-        CheckedChanged="UseHQModels_CheckedChanged"
         Checked="False" 
         Text="Use HQ player models &#x0a;(Affects performance)"
         Size="140,64"

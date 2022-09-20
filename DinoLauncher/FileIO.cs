@@ -26,13 +26,13 @@ public class FileIO //: IDinoLauncher
     public string currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
     // Paths and path extensions
-    public string chosenPatchPath = "\\PatchData\\dp-stable.xdelta";
-    public string romCrackPath = "\\PatchData\\rom_crack.z64";
-    public string xdeltaPath = "\\PatchData\\xdelta3.exe";
-    public string patchedRomPath = "\\Game\\dinosaurplanet.z64";
+    public string chosenPatchPath = "\\_PatchData\\dp-stable.xdelta";
+    public string romCrackPath = "\\_PatchData\\rom_crack.z64";
+    public string xdeltaPath = "\\_PatchData\\xdelta3.exe";
+    public string patchedRomPath = "\\_Game\\dinosaurplanet.z64";
     public string gitWorkDir;
 
-    public string musicPath = "\\Resources\\Music.mp3";
+    public string musicPath = "\\_Resources\\Music.mp3";
 
     // -- Functions Outline --
     // Need to figure out the working directory for cross-platform
@@ -57,21 +57,21 @@ public class FileIO //: IDinoLauncher
 
         // Create a directory to handle all the things
         // Really just add a bunch of folders if they don't exist, write this better later, make it work for now
-        if (!Directory.Exists($"{currentDirectory}\\PatchData"))
+        if (!Directory.Exists($"{currentDirectory}\\_PatchData"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\PatchData");
+            Directory.CreateDirectory($"{currentDirectory}\\_PatchData");
         }
-        if (!Directory.Exists($"{currentDirectory}\\PatchData\\git"))
+        if (!Directory.Exists($"{currentDirectory}\\_PatchData\\git"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\PatchData\\git");
+            Directory.CreateDirectory($"{currentDirectory}\\_PatchData\\git");
         }
-        if (!Directory.Exists($"{currentDirectory}\\Resources"))
+        if (!Directory.Exists($"{currentDirectory}\\_Resources"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\Resources");
+            Directory.CreateDirectory($"{currentDirectory}\\_Resources");
         }
-        if (!Directory.Exists($"{currentDirectory}\\Game"))
+        if (!Directory.Exists($"{currentDirectory}\\_Game"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\Game");
+            Directory.CreateDirectory($"{currentDirectory}\\_Game");
         }
     }
 
