@@ -20,7 +20,7 @@
       Padding="5"
       AlignLabels="False"
       HorizontalContentAlignment="Center"
-    >
+      >
 
       <!-- Version Number -->
       <Label
@@ -29,14 +29,14 @@
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
-      />
+        />
 
       <!--  Dino Planet logo  -->
       <ImageView
           x:Name="Image_DinoPlanetLogo"
           Size="800,150"
           Image="C:\Users\sabre\source\repos\DinoLauncher\DinoLauncher\res\Images\dinoplanet_logo.png"
-        />
+          />
 
       <!--  Main subtitle  -->
       <Label
@@ -45,7 +45,7 @@
           Size="640,32"
           TextAlignment="Center"
           TextColor="White"
-        />
+          />
 
 
 

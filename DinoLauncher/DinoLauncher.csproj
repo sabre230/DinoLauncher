@@ -17,15 +17,40 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="res\AppIcon\krystalicon.png" />
+    <None Remove="res\Audio\Music.mp3" />
+    <None Remove="res\Fonts\FF Priska Serif Not That Fat.ttf" />
+    <None Remove="res\Fonts\ITC Anima Regular.ttf" />
+    <None Remove="res\Fonts\OpenSans-Regular.ttf" />
+    <None Remove="res\Fonts\OpenSans-Semibold.ttf" />
+    <None Remove="res\Fonts\Penumbra Half Serif Semibold.ttf" />
+    <None Remove="res\Images\background.png" />
     <None Remove="res\Images\dinoplanet_logo.png" />
+    <None Remove="res\Images\krystalicon.png" />
+    <None Remove="res\Images\unknown.png" />
+    <None Remove="res\Splash\dinoplanet_logo_splash.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="res\Images\favicon.ico" />
+    <EmbeddedResource Include="res\AppIcon\krystalicon.png" />
+    <EmbeddedResource Include="res\Audio\Music.mp3" />
+    <EmbeddedResource Include="res\Fonts\FF Priska Serif Not That Fat.ttf" />
+    <EmbeddedResource Include="res\Fonts\ITC Anima Regular.ttf" />
+    <EmbeddedResource Include="res\Fonts\OpenSans-Regular.ttf" />
+    <EmbeddedResource Include="res\Fonts\OpenSans-Semibold.ttf" />
+    <EmbeddedResource Include="res\Fonts\Penumbra Half Serif Semibold.ttf" />
+    <EmbeddedResource Include="res\Images\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="res\Images\background.png" />
     <EmbeddedResource Include="res\Images\dinoplanet_logo.png" />
+    <EmbeddedResource Include="res\Images\krystalicon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </EmbeddedResource>
+    <EmbeddedResource Include="res\Images\unknown.png" />
+    <EmbeddedResource Include="res\Splash\dinoplanet_logo_splash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +60,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="res\Images\krystalicon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
     <None Update="res\Styles\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
