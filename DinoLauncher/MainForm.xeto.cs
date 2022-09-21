@@ -88,17 +88,29 @@ public class MainForm : Eto.Forms.Form
     void Start()
     {
         // We want these things to start up as soon as the window opens
+        // We want to test things before moving them around
+        Testing();
 
         // Setup our general file structure
         fileIO.SetupFileStructure();
-
-
 
         // Would rather do this before building but it's fine for now
         // Please focus on functionality first
         foreach (var item in DropDown_BranchPicker_Options)
         {
             DropDown_BranchPicker.Items.Add(item);
+        }
+    }
+
+    void Testing()
+    {
+        // Show all embedded resources in debug output
+        // Useful for getting exact object references
+        Assembly myAssembly = Assembly.GetExecutingAssembly();
+        string[] names = myAssembly.GetManifestResourceNames();
+        foreach (string name in names)
+        {
+            Debug.WriteLine(name);
         }
     }
 

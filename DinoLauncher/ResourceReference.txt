@@ -1,0 +1,16 @@
+﻿List of resources 9/21/2022
+
+DinoLauncher.res.AppIcon.krystalicon.png
+DinoLauncher.res.Images.background.png
+DinoLauncher.res.Images.dinoplanet_logo.png
+DinoLauncher.res.Images.krystalicon.png
+DinoLauncher.res.Images.unknown.png
+DinoLauncher.res.Splash.dinoplanet_logo_splash.png
+DinoLauncher.res.Audio.Music.mp3
+DinoLauncher.res.Fonts.FF Priska Serif Not That Fat.ttf
+DinoLauncher.res.Fonts.ITC Anima Regular.ttf
+DinoLauncher.res.Fonts.OpenSans-Regular.ttf
+DinoLauncher.res.Fonts.OpenSans-Semibold.ttf
+DinoLauncher.res.Fonts.Penumbra Half Serif Semibold.ttf
+DinoLauncher.res.Images.favicon.ico
+DinoLauncher.MainForm.xeto

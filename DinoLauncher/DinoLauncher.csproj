@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ResourceReference.txt" />
     <None Remove="res\AppIcon\krystalicon.png" />
     <None Remove="res\Audio\Music.mp3" />
     <None Remove="res\Fonts\FF Priska Serif Not That Fat.ttf" />
