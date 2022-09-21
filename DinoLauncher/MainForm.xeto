@@ -12,136 +12,157 @@
   Maximizable="False"
 	>
 
-  <StackLayout
-    x:Name="StackLayout"
-    Padding="16"
-    AlignLabels="False"
-    HorizontalContentAlignment="Center"
+
+    
+    <!-- Main Stack Layout -->
+    <StackLayout
+      x:Name="StackLayout"
+      Padding="5"
+      AlignLabels="False"
+      HorizontalContentAlignment="Center"
     >
-    
-    <Label
-      x:Name="Label_VerNum"
-      Text="v0.01"
-      TextColor="White"
-      TextAlignment="Left"
-      Size="650,16"     
+
+      <!-- Version Number -->
+      <Label
+        x:Name="Label_VerNum"
+        Text="DinoLauncher v0.01"
+        TextColor="White"
+        TextAlignment="Left"
+        Size="850,16"
       />
-    
-    <!--  Dino Planet logo  -->
-    <ImageView
-        x:Name="Image_DinoPlanetLogo"
-        Size="640,92"
-        Image="C:\Users\sabre\source\repos\DinoLauncher\DinoLauncher\res\Images\dinoplanet_logo.png" 
+
+      <!--  Dino Planet logo  -->
+      <ImageView
+          x:Name="Image_DinoPlanetLogo"
+          Size="800,150"
+          Image="C:\Users\sabre\source\repos\DinoLauncher\DinoLauncher\res\Images\dinoplanet_logo.png"
         />
 
-    <!--  Main subtitle  -->
-    <Label
-        x:Name="Label_MainSubtitle"
-        Text="THE LOST ADVENTURE REVEALED..."
-        Size="640,32"
-        TextAlignment="Center"
-        TextColor="White" 
+      <!--  Main subtitle  -->
+      <Label
+          x:Name="Label_MainSubtitle"
+          Text=""
+          Size="640,32"
+          TextAlignment="Center"
+          TextColor="White"
         />
 
-    <!--  Explanation section  -->
-    <Label
-        x:Name="Label_MainTextBody"
-        TextAlignment="Center"
-        Wrap="Word"
-        Text="Prepare to launch some Dinos."
-        Size="365,65"
-        TextColor="White" 
+
+
+      <!--  Main text body  -->
+      <Label
+          x:Name="Label_MainTextBody"
+          TextAlignment="Center"
+          Wrap="Word"
+          Text="Prepare to launch some Dinos."
+          Size="365,65"
+          TextColor="White"
         />
 
-    <!--  Model quality selection  -->
-    <CheckBox
-        x:Name="CheckBox_UseHQModels"
-        Checked="False" 
-        Text="Use HQ player models &#x0a;(Affects performance)"
-        CheckedChanged="UseHQModels_CheckedChanged"
-        Size="140,64"
-        TextColor="White"        
+      <!--  Model quality selection  -->
+      <CheckBox
+          x:Name="CheckBox_UseHQModels"
+          Checked="False"
+          Text="Use HQ player models &#x0a;(Affects performance)"
+          CheckedChanged="UseHQModels_CheckedChanged"
+          Size="140,64"
+          TextColor="White"
         
         />
 
-    <!--  Branch Picker  -->
-    <Label
-        x:Name="Label_UpdateBranchInfo"
-        Text="Select update branch to use:"
-        TextColor="White" 
-        />
-    
-    <!-- Put your stupid dropdown stuff in here -->
-    <!-- Index "0" should always be Stable by default -->
-    <DropDown
-      x:Name="DropDown_BranchPicker"
-      SelectedIndex="0"
-      Size="170,32"
-      TextColor="Black"
-      ShowBorder="False"
-      />
-    
-    <!--  Check for new patch  -->
-    <Button
-      x:Name="Button_UpdatePatch"
-      MouseDown="UpdatePatch_ButtonPress"
-      MouseUp="UpdatePatch_ButtonRelease"
-      Text="Check for most recent patch"
-      Size="170,32"
-      />
-
-
-    <!--  Browse for rom file  -->
-    <Button
-      x:Name="Button_BrowseForRom"
-      MouseDown="BrowseForFile_ButtonPress"
-      MouseUp="BrowseForFile_ButtonRelease"
-      Text="Browse for rom_crack.z64"
-      Size="170,32"
-      />
-
-    <!--  Apply the patch  -->
-    <!--  Change the property IsEnabled to True when Md5 validates as good  -->
-    <Button
-      x:Name="Button_PatchExecute"
-      MouseDown="PatchExecute_ButtonPress"
-      MouseUp="PatchExecute_ButtonRelease"
-      Text="Apply Patch"
-      Size="170,32"
-      />
-
-    <!--  Another button to handle "Play"  -->
-    <Button
-      x:Name="Button_PlayGame"
-      MouseDown="Button_PlayGame_Pressed"
-      MouseUp="Button_PlayGame_Released"
-      Text="PLAY!"
-      Size="170,32"
-      />
-      
-    <!--  Status Text  -->
-    <Label
-        x:Name="Label_Status"
-        VerticalAlignment="Bottom" 
-        TextAlignment="Center"
-        Text="Waiting for you..." 
-        TextColor="White"
+      <!--  Branch Picker  -->
+      <Label
+          x:Name="Label_UpdateBranchInfo"
+          Text="Select update branch to use:"
+          TextColor="White"
         />
 
-    <ProgressBar
-      x:Name="ProgressBar_Progress"
-      BackgroundColor="Black"
-      Visible="False"
-      Enabled="False"
+      <!-- Put your stupid dropdown stuff in here -->
+      <!-- Index "0" should always be Stable by default -->
+      <!-- Look into DataStore later -->
+      <DropDown
+        x:Name="DropDown_BranchPicker"
+        SelectedIndex="0"
+        Size="170,32"
+        TextColor="Black"
+        ShowBorder="False"
       />
-    
-    <!--  Hide the whole frame instead of just the pbar  -->
 
+      <!--  Check for new patch  -->
+      <Button
+        x:Name="Button_UpdatePatch"
+        MouseDown="UpdatePatch_ButtonPress"
+        MouseUp="UpdatePatch_ButtonRelease"
+        Text="Check for most recent patch"
+        Size="170,32"
+      />
 
-  </StackLayout>
+      <!--  Browse for rom file  -->
+      <Button
+        x:Name="Button_BrowseForRom"
+        MouseDown="BrowseForFile_ButtonPress"
+        MouseUp="BrowseForFile_ButtonRelease"
+        Text="Browse for rom_crack.z64"
+        Size="170,32"
+      />
+      <!--  Browse for rom file ALT -->
+      <FilePicker
+        x:Name="FilePicker_BrowseForRom"
+        Title="Browse for 'rom_crack.z64'"
+        FilePath="rom_crack.z64"
+        Size="170,32"
+        AllowDrop="True"
+        Enabled="True"
+        Visible="True"
+      />
 
-  <!-- Example Block -->
-<!-- <Form.Menu>
+      <!--  Apply the patch  -->
+      <!--  Change the property IsEnabled to True when Md5 validates as good  -->
+      <Button
+        x:Name="Button_PatchExecute"
+        MouseDown="PatchExecute_ButtonPress"
+        MouseUp="PatchExecute_ButtonRelease"
+        Text="Apply Patch"
+        Size="170,32"
+      />
+
+      <!--  PLAY! Button  -->
+      <!--  Should only be enabled when up to date and the game file is present  -->
+      <Button
+        x:Name="Button_PlayGame"
+        MouseDown="Button_PlayGame_Pressed"
+        MouseUp="Button_PlayGame_Released"
+        Text="PLAY!"
+        Size="170,32"
+        Visible="False"
+      />
+
+      <!--  Status Text  -->
+      <Label
+          x:Name="Label_Status"
+          VerticalAlignment="Bottom"
+          TextAlignment="Center"
+          Text="Status Text Goes Here"
+          TextColor="White"
+        />
+
+      <ProgressBar
+        x:Name="ProgressBar_Progress"
+        BackgroundColor="Black"
+        MinValue="0"
+        MaxValue="100"
+        Value="50"
+        Width="750"
+        Height="16"
+        Visible="True"
+        Enabled="True"      
+      />
+        
+        
+    </StackLayout>
+
+    <!-- Example Block -->
+  <!--  <Form.Menu>
 		<MenuBar>
 			<SubMenuItem Text="&amp;File">
 				<ButtonMenuItem Text="Click Me!" Click="HandleClickMe" />

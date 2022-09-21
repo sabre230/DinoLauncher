@@ -31,12 +31,14 @@ using Button = Eto.Forms.Button;
 using ProgressBar = Eto.Forms.ProgressBar;
 using Application = Eto.Forms.Application;
 using System.Collections;
-//using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Microsoft.VisualBasic;
 
 namespace DinoLauncher;
 
 // note to self: remember to pass object through parameters when you need
 // that specifically generated object for some reason like prefs
+// Note to Self: Visual element should rely on prefs, not the other way around
 
 public class MainForm : Eto.Forms.Form
 {
@@ -69,6 +71,7 @@ public class MainForm : Eto.Forms.Form
     public Label            Label_Status;
     public Button           Button_UpdatePatch;
     public Button           Button_BrowseForRom;
+ 
     public Button           Button_PatchExecute;
     public Button           Button_PlayGame;
     public ProgressBar      ProgressBar_Progress;
@@ -89,20 +92,43 @@ public class MainForm : Eto.Forms.Form
         // Setup our general file structure
         fileIO.SetupFileStructure();
 
-        // Note to Self: Visual element should rely on prefs, not the other way around
-        // Please clean this up soon
-        //prefs.useHQModels = CheckBox_UseHQModels.Checked;
 
-        // Don't do music right now please, look at this after base functionality is confirmed to be working
-        //extras.PlayMusic(@"\\Resources\\music.mp3");
 
-        // Populates on start
-        // Would rather do this sooner but ah well
+        // Would rather do this before building but it's fine for now
+        // Please focus on functionality first
         foreach (var item in DropDown_BranchPicker_Options)
         {
             DropDown_BranchPicker.Items.Add(item);
         }
     }
+
+    // Brain hurt fix later
+    //public Collection<FileFilter> FileFilter_Filter(int sel)
+    //{
+    //    // 0 = .Z64 Rom
+    //    // 1 = *.*
+
+    //    string fName = "";
+    //    string[] fExt = { "" };
+
+    //    Collection c = new Collection();
+    //    FileFilter f = new FileFilter();
+
+    //    if (sel == 0)
+    //    {
+    //        // 0 = .Z64 Rom
+    //        fName = new string("rom_crack.z64");
+    //        fExt[0] = ".z64";
+    //    }
+    //    else if (sel == 1)
+    //    {
+    //        // 1 = *.*
+    //        fName = new string("*.*");
+    //        fExt[0] = "*.*";
+    //    }
+
+    //    return f(out fName, out fExt);
+    //}
 
     // Control methods are in order from top to bottom
     #region UseHQModels CheckBox
@@ -328,29 +354,37 @@ public class MainForm : Eto.Forms.Form
     #endregion
 
     #region UpdateStatusText Methods
+    /// <summary>
+    /// Method to quickly update the status text at the bottom of the screen.
+    /// </summary>
+    /// <param name="statusText"></param>
     public void UpdateStatusText(string statusText)
     {
-        //// Makes updating the text on the UI thread much easier
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.Text = statusText);
-
+        Label_Status.Text = statusText;
     }
 
+    /// <summary>
+    /// Method to quickly update the status text at the bottom of the screen, including color.
+    /// </summary>
+    /// <param name="statusText"></param>
+    /// <param name="color"></param>
     public void UpdateStatusText(string statusText, Color color)
     {
-        // Maybe there's a better way of creating an overload...
-        // This works for now, look at this later
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.Text = statusText);
-        //Application.Current.MainPage.Dispatcher.Dispatch(() => Label_Status.TextColor = color);
+        // Overload to optionally change the color of the status text for quick readability
+        Label_Status.Text = statusText;
+        Label_Status.TextColor = color;
 
     }
     #endregion
 
+    #region ToggleAllControls
     /// <summary>
-    /// Feed in a bool value to enable/disable all controls. Useful in preventing
+    /// Feed in two bool values to enable/disable/hide/unhide all controls. Useful in preventing
     /// the user from getting confused or breaking something during the process.
     /// </summary>
-    /// <param name="b"></param>
-    public void ToggleAllControls(bool b)
+    /// <param name="enabled"></param>
+    /// <param name="visible"></param>
+    public void ToggleAllControls(bool enabled, bool visible)
     {
         Eto.Forms.Control[] controls = {CheckBox_UseHQModels,
                                         DropDown_BranchPicker,
@@ -363,12 +397,15 @@ public class MainForm : Eto.Forms.Form
         {
             try
             {
-                item.Enabled = b;
+                item.Enabled = enabled;
+                item.Visible = visible;
             }
             catch (Exception ex)
             {
+                // Just in case we're trying to enable/disable a UI control that doesn't work that way
                 Debug.WriteLine($"DisableAllControls: {ex}");
             }
         }
     }
+    #endregion
 }

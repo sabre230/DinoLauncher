@@ -10,7 +10,7 @@ using Debug = System.Diagnostics.Debug;
 
 namespace DinoLauncher;
 
-public class Extras //: IDinoLauncher
+public class Extras
 {
     // This does nothing for now
 
