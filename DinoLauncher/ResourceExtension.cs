@@ -2,21 +2,8 @@ using System;
 using sc = System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using Eto.Drawing;
-using Eto.Serialization.Xaml;
-<<<<<<< HEAD
-=======
-using System.Collections.Generic;
 using Portable.Xaml;
 using Portable.Xaml.Markup;
->>>>>>> 85be418b6eb4bcdd289c00dcca5bd87872c7fd92
-#if PORTABLE
-using Portable.Xaml;
-using Portable.Xaml.Markup;
-#else
-//using System.Xaml;
-using System.Windows.Markup;
-#endif
 
 
 // We need this to access embedded resources using XAML

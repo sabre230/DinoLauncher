@@ -1,11 +1,8 @@
-﻿//using Android.OS;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-//using Java.Lang;
 using Debug = System.Diagnostics.Debug; // We want to use the Windows debug out for, well, debugging
 
 //using static Android.Graphics.ImageDecoder;
