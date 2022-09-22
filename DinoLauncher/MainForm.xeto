@@ -32,10 +32,11 @@
         />
 
       <!--  Dino Planet logo  -->
+      <!--  Using a Resource Extension to grab embedded objects  -->
       <ImageView
           x:Name="Image_DinoPlanetLogo"
           Size="800,150"
-          Image="DinoLauncher.res.Images.dinoplanet_logo.png"
+          Image="{Resource DinoLauncher.res.Images.dinoplanet_logo.png, DinoLauncher}"
           />
 
       <!--  Main subtitle  -->
