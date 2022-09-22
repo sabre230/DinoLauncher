@@ -18,10 +18,10 @@ using System.Security.Cryptography;
 using System.ComponentModel;
 using LibGit2Sharp;
 using System.Threading.Tasks;
-using System.Windows.Media;
+//using System.Windows.Media;
 using System.Windows;
 using Color = Eto.Drawing.Color;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 // This could probably be done a lot better
 // But the goal is to make it work for now
 using Label = Eto.Forms.Label;
@@ -32,6 +32,7 @@ using ProgressBar = Eto.Forms.ProgressBar;
 using Application = Eto.Forms.Application;
 using System.Collections;
 using System.Collections.ObjectModel;
+using DinoLauncherLib;
 using Microsoft.VisualBasic;
 
 namespace DinoLauncher;

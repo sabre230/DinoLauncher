@@ -6,11 +6,13 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Serialization.Xaml;
 using System.Collections.Generic;
+using Portable.Xaml;
+using Portable.Xaml.Markup;
 #if PORTABLE
 using Portable.Xaml;
 using Portable.Xaml.Markup;
 #else
-using System.Xaml;
+//using System.Xaml;
 using System.Windows.Markup;
 #endif
 
@@ -130,4 +132,3 @@ public class ResourceExtension : MarkupExtension
 		return stream;
     }
 }
-
