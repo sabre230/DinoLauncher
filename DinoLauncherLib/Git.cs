@@ -3,8 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 
-//using Android.OS;
-
 namespace DinoLauncherLib;
 
 public class Git
