@@ -1,17 +1,16 @@
 ﻿//using Android.OS;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-//using Java.Lang;
-using System.Security.Cryptography;
-using Debug = System.Diagnostics.Debug; // We want to use the Windows debug out for, well, debugging
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+//using Java.Lang;
+using Debug = System.Diagnostics.Debug; // We want to use the Windows debug out for, well, debugging
+
 //using static Android.Graphics.ImageDecoder;
 
-namespace DinoLauncher;
+namespace DinoLauncherLib;
 
 public class FileIO //: IDinoLauncher
 {
@@ -87,7 +86,8 @@ public class FileIO //: IDinoLauncher
         }
         else
         {
-            File.Move(source, destination, true); // Will ALWAYS overwrite, be careful!
+            // TODO: .net standard does not allow overwriting on move
+            //File.Move(source, destination, true); // Will ALWAYS overwrite, be careful!
         }
     }
 

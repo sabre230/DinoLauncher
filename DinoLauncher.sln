@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DinoLauncher", "DinoLauncher\DinoLauncher.csproj", "{6E41E363-8EBF-455A-A54F-DCB01170D619}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinoLauncherLib", "DinoLauncherLib\DinoLauncherLib.csproj", "{9E2D76D4-EA0D-4C91-B184-E2B957E97418}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6E41E363-8EBF-455A-A54F-DCB01170D619}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E41E363-8EBF-455A-A54F-DCB01170D619}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E41E363-8EBF-455A-A54F-DCB01170D619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E2D76D4-EA0D-4C91-B184-E2B957E97418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E2D76D4-EA0D-4C91-B184-E2B957E97418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E2D76D4-EA0D-4C91-B184-E2B957E97418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E2D76D4-EA0D-4C91-B184-E2B957E97418}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

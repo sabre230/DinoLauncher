@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace DinoLauncher;
+namespace DinoLauncherLib;
 
 public class UserPrefs //: FileIO
 {
@@ -91,6 +91,3 @@ public class JSON
         return null;
     }
 }
-
-
-

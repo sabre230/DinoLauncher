@@ -32,6 +32,7 @@ using ProgressBar = Eto.Forms.ProgressBar;
 using Application = Eto.Forms.Application;
 using System.Collections;
 using System.Collections.ObjectModel;
+using DinoLauncherLib;
 using Microsoft.VisualBasic;
 
 namespace DinoLauncher;

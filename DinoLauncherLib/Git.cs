@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-//using Android.OS;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 
-namespace DinoLauncher;
+//using Android.OS;
+
+namespace DinoLauncherLib;
 
 public class Git
 {
@@ -32,7 +30,7 @@ public class Git
         {
             System.Diagnostics.Debug.WriteLine("Dir exists " + workingDir);
             // Remove that effing .git folder holy fart
-            foreach (var item in Directory.GetFiles(workingDir + "\\.git", "*", new EnumerationOptions { RecurseSubdirectories = true} ))
+            foreach (var item in Directory.GetFiles(workingDir + "\\.git", "*", SearchOption.AllDirectories ))
             {
                 await fileIO.DeleteFile(item);
             }

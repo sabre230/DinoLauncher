@@ -69,4 +69,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DinoLauncherLib\DinoLauncherLib.csproj" />
+  </ItemGroup>
+
 </Project>
