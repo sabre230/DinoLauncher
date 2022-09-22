@@ -1,8 +1,9 @@
-﻿namespace DinoLauncher;
+﻿namespace DinoLauncherLib;
 
 public class Extras
 {
     // This does nothing for now
+    // It will do something later, but right now it does nothing
 
     //FileIO fileIO;   // Use to reference and perform directory/file functions
     //Xdelta3 xdelta3; // Use to do patching stuff

@@ -12,8 +12,8 @@
   Maximizable="False"
 	>
 
-
-    
+  <!-- This form is currently in complete disarray as I focus on the backend -->
+  <!-- Things will be fixed, but for now actual funcionality is paramount -->
     <!-- Main Stack Layout -->
     <StackLayout
       x:Name="StackLayout"
@@ -78,7 +78,7 @@
           TextColor="White"
         />
 
-      <!-- Put your stupid dropdown stuff in here -->
+      <!-- Put stupid dropdown stuff in here -->
       <!-- Index "0" should always be Stable by default -->
       <!-- Look into DataStore later -->
       <DropDown
@@ -89,7 +89,7 @@
         ShowBorder="False"
       />
 
-      <!--  Check for new patch  -->
+      <!--  Check for most recent patch  -->
       <Button
         x:Name="Button_UpdatePatch"
         MouseDown="UpdatePatch_ButtonPress"
@@ -98,7 +98,8 @@
         Size="170,32"
       />
 
-      <!--  Browse for rom file  -->
+      <!--  Browse for rom_crack.z64  -->
+      <!--  PENDING REMOVAL  -->
       <Button
         x:Name="Button_BrowseForRom"
         MouseDown="BrowseForFile_ButtonPress"
@@ -106,7 +107,9 @@
         Text="Browse for rom_crack.z64"
         Size="170,32"
       />
-      <!--  Browse for rom file ALT -->
+      
+      <!--  Browse for rom file ALTERNATE -->
+      <!--  Probably going to just stick with this version  -->
       <FilePicker
         x:Name="FilePicker_BrowseForRom"
         Title="Browse for 'rom_crack.z64'"

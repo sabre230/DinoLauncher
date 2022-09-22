@@ -58,7 +58,7 @@ public class MainForm : Form
     void Start()
     {
         // We want these things to start up as soon as the window opens
-        // We want to test things before moving them around
+        // We want to test things before implementing them
         Testing();
 
         // Setup our general file structure
