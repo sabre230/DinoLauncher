@@ -47,7 +47,6 @@ public class MainForm : Eto.Forms.Form
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
     UserPrefs prefs = new UserPrefs();
-    Git git = new Git();
 
     // Get this info from prefs please
     bool useHQModels;
@@ -193,10 +192,10 @@ public class MainForm : Eto.Forms.Form
         // Actually, let's not do anything on press to prevent mis-clicks
     }
 
-    public void UpdatePatch_ButtonRelease(object sender, EventArgs e)
+    public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
         //Task.Run(async () => { await GitTestTask(); }).Wait();
-        git.CheckRepoForPatch(prefs, fileIO);
+        await Git.CheckRepoForPatch(prefs, fileIO);
         //Task.Run(async () => { await git.CheckRepoForPatch(prefs, fileIO); }).Wait();
 
         //// Resets the button back to "Normal" visual state on release
