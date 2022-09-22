@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//using WMPLib;
-//using DinoLauncherMAUI;
-//using Android.OS;
-using Debug = System.Diagnostics.Debug;
-
-namespace DinoLauncher;
+﻿namespace DinoLauncher;
 
 public class Extras
 {
@@ -53,4 +43,3 @@ public class Extras
         //mediaPlayer.controls.stop();
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using Eto.Drawing;
-using Eto.Forms;
+﻿using Eto.Forms;
 using System;
 
 namespace DinoLauncher
