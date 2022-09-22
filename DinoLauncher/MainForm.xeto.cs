@@ -120,13 +120,13 @@ public class MainForm : Form
         {
             // If toggled to true
             useHQModels = true;
-            UpdateStatusText("High quality player models will be used", Color.FromArgb(255, 255, 255, 255));
+            UpdateStatusText("High quality player models will be used", Color.FromArgb(255, 255, 255));
         }
         else
         {
             // Else toggled to false
             useHQModels = false;
-            UpdateStatusText("Standard quality player models will be used", Color.FromArgb(255, 255, 255, 255));
+            UpdateStatusText("Standard quality player models will be used", Color.FromArgb(255, 255, 255));
         }
     }
     #endregion
@@ -277,34 +277,32 @@ public class MainForm : Form
                                    (fileIO.currentDirectory + fileIO.patchedRomPath));
 
         // We will apply these changes AFTER patching, otherwise CRC will break
-        if (useHQModels == true)
+        if (useHQModels)
         {
             Debug.WriteLine("Using HQ Models...");
-            using (var stream = System.IO.File.Open((fileIO.currentDirectory + fileIO.patchedRomPath), FileMode.Open))
-            {
-                // It seems the position changes after any time it's read, so we have to keep setting the stream position
-                // Fix later, get working now
-                // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1
-                stream.Position = 0x037EECA1;
-                Debug.WriteLine($"Old Sabre Model Value: 0x037EECA1 0{stream.ReadByte()} ");
+            using var stream = System.IO.File.Open((fileIO.currentDirectory + fileIO.patchedRomPath), FileMode.Open);
+            // It seems the position changes after any time it's read, so we have to keep setting the stream position
+            // Fix later, get working now
+            // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1
+            stream.Position = 0x037EECA1;
+            Debug.WriteLine($"Old Sabre Model Value: 0x037EECA1 0{stream.ReadByte()} ");
 
-                stream.Position = 0x037EECA1;
-                stream.WriteByte(8);
+            stream.Position = 0x037EECA1;
+            stream.WriteByte(8);
 
-                stream.Position = 0x037EECA1;
-                Debug.WriteLine($"New Sabre Model Value: 0x037EECA1 0{stream.ReadByte()} ");
+            stream.Position = 0x037EECA1;
+            Debug.WriteLine($"New Sabre Model Value: 0x037EECA1 0{stream.ReadByte()} ");
 
 
-                // Swap Krystal's model to HQ (0x0 to 0x2) at position 0x37EF18D
-                stream.Position = 0x37EF18D;
-                Debug.WriteLine($"Old Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
+            // Swap Krystal's model to HQ (0x0 to 0x2) at position 0x37EF18D
+            stream.Position = 0x37EF18D;
+            Debug.WriteLine($"Old Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
 
-                stream.Position = 0x37EF18D;
-                stream.WriteByte(2);
+            stream.Position = 0x37EF18D;
+            stream.WriteByte(2);
 
-                stream.Position = 0x37EF18D;
-                Debug.WriteLine($"New Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
-            }
+            stream.Position = 0x37EF18D;
+            Debug.WriteLine($"New Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
         }
 
         //// Resets the button back to "Normal" visual state on release
