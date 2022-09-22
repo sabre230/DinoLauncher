@@ -7,12 +7,36 @@ using System.Diagnostics;
 using Debug = System.Diagnostics.Debug;
 using FileMode = System.IO.FileMode;
 using System.Reflection;
+<<<<<<< HEAD
 using Color = Eto.Drawing.Color;
+=======
+//using WMPLib;
+//using Microsoft.Maui.Controls;
+//using Microsoft.Maui.Storage;
+using System.Security.Cryptography;
+using System.ComponentModel;
+using LibGit2Sharp;
+using System.Threading.Tasks;
+//using System.Windows.Media;
+using System.Windows;
+using Color = Eto.Drawing.Color;
+//using System.Windows.Forms;
+// This could probably be done a lot better
+// But the goal is to make it work for now
+>>>>>>> 85be418b6eb4bcdd289c00dcca5bd87872c7fd92
 using Label = Eto.Forms.Label;
 using CheckBox = Eto.Forms.CheckBox;
 using DropDown = Eto.Forms.DropDown;
 using Button = Eto.Forms.Button;
 using ProgressBar = Eto.Forms.ProgressBar;
+<<<<<<< HEAD
+=======
+using Application = Eto.Forms.Application;
+using System.Collections;
+using System.Collections.ObjectModel;
+using DinoLauncherLib;
+using Microsoft.VisualBasic;
+>>>>>>> 85be418b6eb4bcdd289c00dcca5bd87872c7fd92
 
 namespace DinoLauncher;
 
@@ -25,7 +49,6 @@ public class MainForm : Eto.Forms.Form
     // I think it'll be easier to just pass these along in function parameters
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
-    Xdelta3 xdelta3 = new Xdelta3(); // xdelta stuff
     UserPrefs prefs = new UserPrefs();
     Git git = new Git();
 
@@ -282,7 +305,7 @@ public class MainForm : Eto.Forms.Form
         Debug.WriteLine("Button released");
 
 
-        xdelta3.ApplyPatch(fileIO, (fileIO.currentDirectory + fileIO.romCrackPath),
+        Xdelta3.ApplyPatch(fileIO, (fileIO.currentDirectory + fileIO.romCrackPath),
                                    (fileIO.currentDirectory + fileIO.chosenPatchPath),
                                    (fileIO.currentDirectory + fileIO.patchedRomPath));
 
