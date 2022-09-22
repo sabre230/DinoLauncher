@@ -46,7 +46,6 @@ public class MainForm : Eto.Forms.Form
     // I think it'll be easier to just pass these along in function parameters
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
-    Xdelta3 xdelta3 = new Xdelta3(); // xdelta stuff
     UserPrefs prefs = new UserPrefs();
     Git git = new Git();
 
@@ -303,7 +302,7 @@ public class MainForm : Eto.Forms.Form
         Debug.WriteLine("Button released");
 
 
-        xdelta3.ApplyPatch(fileIO, (fileIO.currentDirectory + fileIO.romCrackPath),
+        Xdelta3.ApplyPatch(fileIO, (fileIO.currentDirectory + fileIO.romCrackPath),
                                    (fileIO.currentDirectory + fileIO.chosenPatchPath),
                                    (fileIO.currentDirectory + fileIO.patchedRomPath));
 

@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace DinoLauncherLib;
 
-public class Xdelta3 //: IDinoLauncher
+public static class Xdelta3 //: IDinoLauncher
 {
-    public void ApplyPatch(FileIO f, string fBaseRomPath, string fPatchPath, string fPatchedRomPath)
+    public static void ApplyPatch(FileIO f, string fBaseRomPath, string fPatchPath, string fPatchedRomPath)
     {
         try
         {
