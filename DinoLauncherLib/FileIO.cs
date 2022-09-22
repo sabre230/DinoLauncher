@@ -5,11 +5,9 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Debug = System.Diagnostics.Debug; // We want to use the Windows debug out for, well, debugging
 
-//using static Android.Graphics.ImageDecoder;
-
 namespace DinoLauncherLib;
 
-public class FileIO //: IDinoLauncher
+public class FileIO
 {
     // Prepare file attribute variables
     public string lastWrite;

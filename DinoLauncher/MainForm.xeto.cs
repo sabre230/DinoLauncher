@@ -1,5 +1,4 @@
-﻿//using Eto.Drawing;
-using Eto.Forms;
+﻿using Eto.Forms;
 using Eto.Serialization.Xaml;
 using System;
 using System.Diagnostics;
@@ -7,25 +6,15 @@ using Debug = System.Diagnostics.Debug;
 using FileMode = System.IO.FileMode;
 using System.Reflection;
 using Color = Eto.Drawing.Color;
-//using System.Security.Cryptography;
-//using System.ComponentModel;
-//using LibGit2Sharp;
-//using System.Threading.Tasks;
-//using System.Windows;
-//using Color = Eto.Drawing.Color;
 using Label = Eto.Forms.Label;
 using CheckBox = Eto.Forms.CheckBox;
 using DropDown = Eto.Forms.DropDown;
 using Button = Eto.Forms.Button;
 using ProgressBar = Eto.Forms.ProgressBar;
-//using Application = Eto.Forms.Application;
-//using System.Collections;
-//using System.Collections.ObjectModel;
 using DinoLauncherLib;
-//using Microsoft.VisualBasic;
+
 
 namespace DinoLauncher;
-
 // note to self: remember to pass object through parameters when you need
 // that specifically generated object for some reason like prefs
 // Note to Self: Visual element should rely on prefs, not the other way around

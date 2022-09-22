@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DinoLauncherLib;
 
-public class UserPrefs //: FileIO
+public class UserPrefs
 {
     // Ayy yo handle save data dawg don't @ me
     public string desiredBranch;
