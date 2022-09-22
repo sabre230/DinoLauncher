@@ -7,7 +7,7 @@ namespace DinoLauncherLib;
 
 public static class Git
 {
-    const string dinoPatchURL = "https://github.com/sabre230/DinoPatchRepo.git";
+    private const string dinoPatchURL = "https://github.com/sabre230/DinoPatchRepo.git";
 
     // -- Functions Outline --
     // Check which branch we're using
