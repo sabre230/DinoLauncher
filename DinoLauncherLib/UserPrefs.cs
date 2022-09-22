@@ -25,19 +25,17 @@ public class UserPrefs
         }
 
         // Load up and parse the JSON file here
-        using (StreamReader reader = new StreamReader(configPath))
-        {
-            // Hook up all the JSON BS
-            string json = reader.ReadToEnd();
-            JsonTextReader jreader = new JsonTextReader(new StringReader(json));
-            JObject jObject = JObject.Parse(json);
+        using StreamReader reader = new StreamReader(configPath);
+        // Hook up all the JSON BS
+        string json = reader.ReadToEnd();
+        JsonTextReader jreader = new JsonTextReader(new StringReader(json));
+        JObject jObject = JObject.Parse(json);
 
-            // Set our variables with information parsed from the JSON config file
-            desiredBranch = (string)jObject.SelectToken("UpdateBranch"); // { stable, nightly, custom }
-            baseRomPath = (string)jObject.SelectToken("OriginalRomPath");
-            patchedRomPath = (string)jObject.SelectToken("PatchedRomPath");
-            useHQModels = (bool)jObject.SelectToken("useHQModels");
-        }
+        // Set our variables with information parsed from the JSON config file
+        desiredBranch = (string)jObject.SelectToken("UpdateBranch"); // { stable, nightly, custom }
+        baseRomPath = (string)jObject.SelectToken("OriginalRomPath");
+        patchedRomPath = (string)jObject.SelectToken("PatchedRomPath");
+        useHQModels = (bool)jObject.SelectToken("useHQModels");
 
         #region
         //// Might not need some of these but I like having them there for now
