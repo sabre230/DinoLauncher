@@ -41,7 +41,6 @@ public static class Xdelta3
                     Debug.WriteLine(process.StandardOutput.ReadToEnd());
                     Debug.WriteLine(exeDir + args);
                 }
-                //return true;
             }
             catch (Exception ex)
             {
@@ -49,7 +48,6 @@ public static class Xdelta3
                 Debug.WriteLine(exeDir);
                 Debug.WriteLine(args);
                 Debug.WriteLine(ex.Message);
-                //return false;
             }
         }
         catch (Exception ex)
@@ -57,6 +55,5 @@ public static class Xdelta3
             Debug.WriteLine(ex);
 
         }
-        return;
     }
 }

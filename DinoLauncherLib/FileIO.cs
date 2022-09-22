@@ -81,8 +81,11 @@ public class FileIO
         }
         else
         {
-            // TODO: .net standard does not allow overwriting on move
-            //File.Move(source, destination, true); // Will ALWAYS overwrite, be careful!
+            // .net standard does not allow overwriting on move
+            // Will ALWAYS overwrite, be careful!
+            if (File.Exists(destination))
+                File.Delete(destination);
+            File.Move(source, destination);
         }
     }
 

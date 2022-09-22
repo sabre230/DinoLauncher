@@ -2,24 +2,17 @@
 using Eto.Serialization.Xaml;
 using System;
 using System.Diagnostics;
-using Debug = System.Diagnostics.Debug;
-using FileMode = System.IO.FileMode;
+using System.IO;
 using System.Reflection;
-using Color = Eto.Drawing.Color;
-using Label = Eto.Forms.Label;
-using CheckBox = Eto.Forms.CheckBox;
-using DropDown = Eto.Forms.DropDown;
-using Button = Eto.Forms.Button;
-using ProgressBar = Eto.Forms.ProgressBar;
 using DinoLauncherLib;
-
+using Eto.Drawing;
 
 namespace DinoLauncher;
 // note to self: remember to pass object through parameters when you need
 // that specifically generated object for some reason like prefs
 // Note to Self: Visual element should rely on prefs, not the other way around
 
-public class MainForm : Eto.Forms.Form
+public class MainForm : Form
 {
     // I think it'll be easier to just pass these along in function parameters
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
