@@ -1,42 +1,28 @@
-﻿using Eto.Drawing;
+﻿//using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
 using System;
-// ------------------------------------------- From previous iteration
 using System.Diagnostics;
 using Debug = System.Diagnostics.Debug;
 using FileMode = System.IO.FileMode;
 using System.Reflection;
-<<<<<<< HEAD
 using Color = Eto.Drawing.Color;
-=======
-//using WMPLib;
-//using Microsoft.Maui.Controls;
-//using Microsoft.Maui.Storage;
-using System.Security.Cryptography;
-using System.ComponentModel;
-using LibGit2Sharp;
-using System.Threading.Tasks;
-//using System.Windows.Media;
-using System.Windows;
-using Color = Eto.Drawing.Color;
-//using System.Windows.Forms;
-// This could probably be done a lot better
-// But the goal is to make it work for now
->>>>>>> 85be418b6eb4bcdd289c00dcca5bd87872c7fd92
+//using System.Security.Cryptography;
+//using System.ComponentModel;
+//using LibGit2Sharp;
+//using System.Threading.Tasks;
+//using System.Windows;
+//using Color = Eto.Drawing.Color;
 using Label = Eto.Forms.Label;
 using CheckBox = Eto.Forms.CheckBox;
 using DropDown = Eto.Forms.DropDown;
 using Button = Eto.Forms.Button;
 using ProgressBar = Eto.Forms.ProgressBar;
-<<<<<<< HEAD
-=======
-using Application = Eto.Forms.Application;
-using System.Collections;
-using System.Collections.ObjectModel;
+//using Application = Eto.Forms.Application;
+//using System.Collections;
+//using System.Collections.ObjectModel;
 using DinoLauncherLib;
-using Microsoft.VisualBasic;
->>>>>>> 85be418b6eb4bcdd289c00dcca5bd87872c7fd92
+//using Microsoft.VisualBasic;
 
 namespace DinoLauncher;
 
