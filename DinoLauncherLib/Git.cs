@@ -7,10 +7,9 @@ using LibGit2Sharp;
 
 namespace DinoLauncherLib;
 
-public class Git
+public static class Git
 {
     const string dinoPatchURL = "https://github.com/sabre230/DinoPatchRepo.git";
-    string workingDir;
 
     // -- Functions Outline --
     // Check which branch we're using
@@ -19,11 +18,11 @@ public class Git
     // Check latest patch against local patch
     // Download latest patch and pass to Xdelta3
 
-    public async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
+    public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
     {
         // workingDir should be the subfolder "git" in the "PatchData" folder
         // ".git" may be causing issues
-        workingDir = fileIO.currentDirectory + "\\PatchData\\git";
+        string workingDir = fileIO.currentDirectory + "\\PatchData\\git";
 
         // Remove the git folder for testing purposes
         if (Directory.Exists(workingDir))
