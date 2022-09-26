@@ -17,6 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="%2a%2a\**" />
+    <EmbeddedResource Remove="%2a%2a\**" />
+    <None Remove="%2a%2a\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ResourceReference.txt" />
     <None Remove="res\AppIcon\krystalicon.png" />
     <None Remove="res\Audio\Music.mp3" />
@@ -33,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="MainForm.xeto" />
     <EmbeddedResource Include="res\AppIcon\krystalicon.png" />
     <EmbeddedResource Include="res\Audio\Music.mp3" />
     <EmbeddedResource Include="res\Fonts\FF Priska Serif Not That Fat.ttf" />
@@ -56,8 +63,8 @@
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.315" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,6 +78,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DinoLauncherLib\DinoLauncherLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="%2a%2a\%2a.xeto" />
   </ItemGroup>
 
 </Project>

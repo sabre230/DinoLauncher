@@ -63,6 +63,9 @@ public class MainForm : Form
 
         // Setup our general file structure
         fileIO.SetupFileStructure();
+        
+        // Setup preferences after folder layout is finished
+        prefs.Setup();
 
         // Would rather do this before building but it's fine for now
         // Please focus on functionality first
@@ -366,6 +369,7 @@ public class MainForm : Form
     /// <param name="visible"></param>
     public void ToggleAllControls(bool enabled, bool visible)
     {
+        // These are the controls that will be toggleable, add/remove as necessary
         Eto.Forms.Control[] controls = {CheckBox_UseHQModels,
                                         DropDown_BranchPicker,
                                         Button_UpdatePatch,

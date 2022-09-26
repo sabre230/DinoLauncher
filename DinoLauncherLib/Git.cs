@@ -62,5 +62,6 @@ public static class Git
     }
 
     // Perhaps we should be putting together a progress bar for this?
+    // Yes.
 
 }

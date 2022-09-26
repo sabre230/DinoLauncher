@@ -13,7 +13,7 @@ public class UserPrefs
     public string patchedRomPath;
     public bool useHQModels;
 
-    public string configPath = @"config.json";
+    public string configPath = "config.json";
 
     public void Setup()
     {
@@ -36,29 +36,6 @@ public class UserPrefs
         baseRomPath = (string)jObject.SelectToken("OriginalRomPath");
         patchedRomPath = (string)jObject.SelectToken("PatchedRomPath");
         useHQModels = (bool)jObject.SelectToken("useHQModels");
-
-        #region
-        //// Might not need some of these but I like having them there for now
-        //void LoadAllUserPreferences()
-        //{
-
-        //}
-
-        //void LoadUserPreference(DataMemberAttribute dma)
-        //{
-
-        //}
-
-        //void SaveAllUserPreferences()
-        //{
-
-        //}
-
-        //void SaveUserPreference(DataMemberAttribute dma)
-        //{
-
-        //}
-        #endregion
     }
 
     public static async Task CreateJSONTask()
@@ -74,7 +51,6 @@ public class UserPrefs
 // Do the JSON BS
 public class JSON
 {
-
     public static Task CreateJSON()
     {
         // Create a .json file with these tokens 
@@ -85,7 +61,7 @@ public class JSON
             new JProperty("useHQModels", "false")                           // Default to false
             );
 
-        File.WriteAllText("%appdata%\\config.json", configFile.ToString());
+        File.WriteAllText("config.json", configFile.ToString());
         return null;
     }
 }

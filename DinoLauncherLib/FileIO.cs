@@ -71,6 +71,16 @@ public class FileIO
     }
 
     /// <summary>
+    /// Helper class to create directories with specific permissions. 
+    /// This should help with I/O permissions issues.
+    /// </summary>
+    void CreateDirectory(string path)
+    {
+        DirectoryInfo dir = new DirectoryInfo(path);
+        var dirSec = dir.GetAccessControl();
+    }
+
+    /// <summary>
     /// Simple tool for moving files (string source, string destination)
     /// </summary>
     public void MoveFile(string source, string destination)
@@ -115,6 +125,7 @@ public class FileIO
         }
         else
         {
+            // Need to give permission to this somehow
             File.Delete(path); 
         }
 
