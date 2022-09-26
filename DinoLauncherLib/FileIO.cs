@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.AccessControl;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ public class FileIO
     public string originalMd5 = "c4c1b52f9c4469c6c747942891de3cfd";
 
     // Get the application directory
-    public string currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+    public string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
     // Paths and path extensions
     public string chosenPatchPath = "\\_PatchData\\dp-stable.xdelta";
@@ -29,44 +30,34 @@ public class FileIO
     public string musicPath = "\\_Resources\\Music.mp3";
     public string assemblyPath;
 
-    // -- Functions Outline --
-    // Need to figure out the working directory for cross-platform
-    // Almost entirely a helper class to simplify read/writes
-    // MoveFile(string source, string out) <!>
-    // CopyFile(string source, string out) <!>
-    // FileCheck(string path) // Return a bool <!>
-    // GetFileInfo(string path)
-    // RenameFile(string originalName, string desiredName)
-    // bool MD5Check(string output) // Return a bool AND a string
-
     /// <summary>
     /// Function to quickly build the folder structure required by DinoLauncher
     /// </summary>
     public void SetupFileStructure()
     {
         // Store executable directory
-        string currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         // Set the current working directory to the application root
-        System.IO.Directory.SetCurrentDirectory(currentDirectory);
+        System.IO.Directory.SetCurrentDirectory(baseDir);
 
         // Create a directory to handle all the things
         // Really just add a bunch of folders if they don't exist, write this better later, make it work for now
-        if (!Directory.Exists($"{currentDirectory}\\_PatchData"))
+        if (!Directory.Exists($"{baseDir}\\_PatchData"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\_PatchData");
+            CreateDirectory($"{baseDir}\\_PatchData");
         }
-        if (!Directory.Exists($"{currentDirectory}\\_PatchData\\git"))
+        if (!Directory.Exists($"{baseDir}\\_PatchData\\git"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\_PatchData\\git");
+            CreateDirectory($"{baseDir}\\_PatchData\\git");
         }
-        if (!Directory.Exists($"{currentDirectory}\\_Resources"))
+        if (!Directory.Exists($"{baseDir}\\_Resources"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\_Resources");
+            CreateDirectory($"{baseDir}\\_Resources");
         }
-        if (!Directory.Exists($"{currentDirectory}\\_Game"))
+        if (!Directory.Exists($"{baseDir}\\_Game"))
         {
-            Directory.CreateDirectory($"{currentDirectory}\\_Game");
+            CreateDirectory($"{baseDir}\\_Game");
         }
     }
 
@@ -76,8 +67,13 @@ public class FileIO
     /// </summary>
     void CreateDirectory(string path)
     {
+        Directory.CreateDirectory(path);
+
         DirectoryInfo dir = new DirectoryInfo(path);
         var dirSec = dir.GetAccessControl();
+
+        //dirSec.AddAccessRule(new FileSystemAccessRule(path, FileSystemRights.FullControl, AccessControlType.Allow));
+        //dir.SetAccessControl(dirSec);
     }
 
     /// <summary>
@@ -126,7 +122,8 @@ public class FileIO
         else
         {
             // Need to give permission to this somehow
-            File.Delete(path); 
+            File.Delete(path);
+            System.Diagnostics.Debug.WriteLine($"FileIO.DeleteFile: Deleted {path}");
         }
 
         // Some magic internet C# BS 
@@ -166,7 +163,7 @@ public class FileIO
     /// <summary>
     /// Use to get the file's creation date, last write date, and generate an Md5 (string path)
     /// </summary>
-    public void GetFileInfo(string path) // Parameter will need to be currentDirectory + chosenPatchPath (FileIO.currentDir + FileIO.chosenPatch?)
+    public void GetFileInfo(string path) // Parameter will need to be baseDir + chosenPatchPath (FileIO.currentDir + FileIO.chosenPatch?)
     {
         // Get the creation date of the most recent patch and format it as YYYYMMDD
         creationDate = File.GetCreationTime(path).ToString("yyyyMMdd");

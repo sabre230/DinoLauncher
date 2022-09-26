@@ -15,12 +15,9 @@ namespace DinoLauncher;
 public class MainForm : Form
 {
     // I think it'll be easier to just pass these along in function parameters
-    FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
-    Extras extras = new Extras();// Use for fun things like music or w/e
-    UserPrefs prefs = new UserPrefs();
-
-    // Get this info from prefs please
-    bool useHQModels;
+    FileIO fileIO = new DinoLauncherLib.FileIO(); // Use to reference and perform directory/file functions
+    Extras extras = new DinoLauncherLib.Extras();// Use for fun things like music or w/e
+    UserPrefs prefs = new DinoLauncherLib.UserPrefs();
 
     // Looks like Eto doesn't auto-generate controls in the xeto form
     // According to internet wizards, I have to add them to my class as data members
@@ -61,6 +58,10 @@ public class MainForm : Form
         // We want to test things before implementing them
         Testing();
 
+        // Update options to match JSON
+        DropDown_BranchPicker.SelectedValue = prefs.desiredBranch;
+        CheckBox_UseHQModels.Checked = prefs.useHQModels;
+
         // Setup our general file structure
         fileIO.SetupFileStructure();
         
@@ -87,34 +88,6 @@ public class MainForm : Form
         }
     }
 
-    // Brain hurt fix later
-    //public Collection<FileFilter> FileFilter_Filter(int sel)
-    //{
-    //    // 0 = .Z64 Rom
-    //    // 1 = *.*
-
-    //    string fName = "";
-    //    string[] fExt = { "" };
-
-    //    Collection c = new Collection();
-    //    FileFilter f = new FileFilter();
-
-    //    if (sel == 0)
-    //    {
-    //        // 0 = .Z64 Rom
-    //        fName = new string("rom_crack.z64");
-    //        fExt[0] = ".z64";
-    //    }
-    //    else if (sel == 1)
-    //    {
-    //        // 1 = *.*
-    //        fName = new string("*.*");
-    //        fExt[0] = "*.*";
-    //    }
-
-    //    return f(out fName, out fExt);
-    //}
-
     // Control methods are in order from top to bottom
     #region UseHQModels CheckBox
     private void UseHQModels_CheckedChanged(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
@@ -122,20 +95,23 @@ public class MainForm : Form
         if (CheckBox_UseHQModels.Checked == true)
         {
             // If toggled to true
-            useHQModels = true;
+            prefs.useHQModels = true;
             UpdateStatusText("High quality player models will be used", Color.FromArgb(255, 255, 255));
         }
         else
         {
             // Else toggled to false
-            useHQModels = false;
+            prefs.useHQModels = false;
             UpdateStatusText("Standard quality player models will be used", Color.FromArgb(255, 255, 255));
         }
+
+        // Update our JSON after making adjustments
+        prefs.SaveJSON(prefs);
     }
     #endregion
 
     #region DropDown BranchPicker
-    private void DropDown_BranchPicker_SelectionChanged(object sender, EventArgs e)
+    public void DropDown_BranchPicker_SelectionChanged(object sender, EventArgs e)
     {
         // Get the selected item value as a lower-case string
         string selBranch = DropDown_BranchPicker.SelectedValue.ToString().ToLower();
@@ -146,17 +122,22 @@ public class MainForm : Form
             if (selBranch == "stable")
             {
                 // Choose the stable branch
-                prefs.desiredBranch = "stable";
+                prefs.desiredBranch = "Stable";
             }
             else if (selBranch == "nightly")
             {
                 // Choose the nightly branch
-                prefs.desiredBranch = "nightly";
+                prefs.desiredBranch = "Nightly";
             }
-        }
 
-        Debug.WriteLine("desired branch: " + prefs.desiredBranch);
-        Debug.WriteLine("selected branch: " + selBranch);
+            prefs.SaveJSON(prefs);
+            Debug.WriteLine($"MainForm.cs: Selected branch: {selBranch}");
+
+        }
+        else
+        {
+            Debug.WriteLine("MainForm.cs: DropDown is null? That can't be right...");
+        }
     }
     #endregion
 
@@ -275,15 +256,15 @@ public class MainForm : Form
         Debug.WriteLine("Button released");
 
 
-        Xdelta3.ApplyPatch(fileIO, (fileIO.currentDirectory + fileIO.romCrackPath),
-                                   (fileIO.currentDirectory + fileIO.chosenPatchPath),
-                                   (fileIO.currentDirectory + fileIO.patchedRomPath));
+        Xdelta3.ApplyPatch(fileIO, (fileIO.baseDir + fileIO.romCrackPath),
+                                   (fileIO.baseDir + fileIO.chosenPatchPath),
+                                   (fileIO.baseDir + fileIO.patchedRomPath));
 
         // We will apply these changes AFTER patching, otherwise CRC will break
-        if (useHQModels)
+        if (prefs.useHQModels)
         {
             Debug.WriteLine("Using HQ Models...");
-            using var stream = System.IO.File.Open((fileIO.currentDirectory + fileIO.patchedRomPath), FileMode.Open);
+            using var stream = System.IO.File.Open((fileIO.baseDir + fileIO.patchedRomPath), FileMode.Open);
             // It seems the position changes after any time it's read, so we have to keep setting the stream position
             // Fix later, get working now
             // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1

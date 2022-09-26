@@ -87,6 +87,7 @@
         Size="170,32"
         TextColor="Black"
         ShowBorder="False"
+        SelectedValueChanged="DropDown_BranchPicker_SelectionChanged"
       />
 
       <!--  Check for most recent patch  -->
@@ -98,15 +99,15 @@
         Size="170,32"
       />
 
-      <!--  Browse for rom_crack.z64  -->
-      <!--  PENDING REMOVAL  -->
+      <!--  Browse for rom_crack.z64 -->
+      <!--  PENDING REMOVAL
       <Button
         x:Name="Button_BrowseForRom"
         MouseDown="BrowseForFile_ButtonPress"
         MouseUp="BrowseForFile_ButtonRelease"
         Text="Browse for rom_crack.z64"
         Size="170,32"
-      />
+      /> -->
       
       <!--  Browse for rom file ALTERNATE -->
       <!--  Probably going to just stick with this version  -->

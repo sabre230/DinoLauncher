@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using LibGit2Sharp;
@@ -9,55 +10,59 @@ public static class Git
 {
     private const string dinoPatchURL = "https://github.com/sabre230/DinoPatchRepo.git";
 
-    // -- Functions Outline --
-    // Check which branch we're using
-    // LOW PRIORTY: Check for custom source (possibility of 3rd party patches, user will be warned before this is enabled)
-    // Check git repos, including backups
-    // Check latest patch against local patch
-    // Download latest patch and pass to Xdelta3
-
     public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
     {
-        // workingDir should be the subfolder "git" in the "PatchData" folder
-        // ".git" may be causing issues
-        string workingDir = fileIO.currentDirectory + "\\PatchData\\git";
-
-        // Remove the git folder for testing purposes
-        if (Directory.Exists(workingDir))
-        {
-            System.Diagnostics.Debug.WriteLine("Dir exists " + workingDir);
-            // Remove that effing .git folder holy fart
-            foreach (var item in Directory.GetFiles(workingDir + "\\.git", "*", SearchOption.AllDirectories ))
-            {
-                await fileIO.DeleteFile(item);
-            }
-
-            // Please remove this damn thing already
-            await fileIO.DeleteDirectory(workingDir + "\\git");
-            await fileIO.DeleteDirectory(workingDir);
-            System.Diagnostics.Debug.WriteLine(workingDir);
-        }
+        string workingDir = $"{ fileIO.baseDir }\\_PatchData\\git";
 
         try
         {
-            if (!Directory.Exists(workingDir))
+            // First check if the working directory exists
+            if (Directory.Exists(workingDir))
             {
-                System.Diagnostics.Debug.WriteLine("workingDir with .git exists");
-                if (prefs.desiredBranch == "nightly")
+                System.Diagnostics.Debug.WriteLine($"CheckRepoForPatch: Found working path: {workingDir}");
+
+
+                fileIO.DeleteFile($"{workingDir}\\.git\\objects\\pack\\*.idx");
+
+                // Go through the directory and remove all items
+                foreach (var item in Directory.GetFiles($"{workingDir}", "*", SearchOption.AllDirectories ))
                 {
-                    // We want the Nightly branch
-                    await Task.Run(() => Repository.Clone(dinoPatchURL, workingDir, new CloneOptions { BranchName = "nightly" }));
+                    await fileIO.DeleteFile(item);
                 }
-                else
-                {
-                    // We want the Stable branch
-                    await Task.Run(() => Repository.Clone(dinoPatchURL, workingDir, new CloneOptions { BranchName = "stable" }));
-                }
+
+                // Please remove this damn thing already
+                //await fileIO.DeleteDirectory($"{workingDir}\\git");
+                //await fileIO.DeleteDirectory(workingDir);
             }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"CheckRepoForPatch: Did not find working path at: {workingDir}!");
+                // Kill the method
+                return;
+            }
+
+            // Then update git stuff
+            // We've already confirmed the workingDir exists, so...
+
+            if (prefs.desiredBranch.ToLower() == "nightly")
+            {
+                // We want the Nightly branch
+                System.Diagnostics.Debug.WriteLine($"CheckRepoForPatch: Nightly branch downloading...");
+                await Task.Run(() => Repository.Clone(dinoPatchURL, workingDir, new CloneOptions { BranchName = "nightly" }));
+                System.Diagnostics.Debug.WriteLine($"CheckRepoForPatch: Nightly branch downloaded!");
+            }
+            else
+            {
+                // We want the Stable branch
+                System.Diagnostics.Debug.WriteLine($"CheckRepoForPatch: Stable branch downloading...");
+                await Task.Run(() => Repository.Clone(dinoPatchURL, workingDir, new CloneOptions { BranchName = "stable" }));
+                System.Diagnostics.Debug.WriteLine($"CheckRepoForPatch: Stable branch downloaded!");
+            }
+
         }
         catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine("Stupid Directory Delete: " + e);
+            System.Diagnostics.Debug.WriteLine("CheckForRepoPatch: " + e);
         }
     }
 

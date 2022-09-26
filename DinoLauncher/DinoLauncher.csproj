@@ -17,12 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="%2a%2a\**" />
-    <EmbeddedResource Remove="%2a%2a\**" />
-    <None Remove="%2a%2a\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="ResourceReference.txt" />
     <None Remove="res\AppIcon\krystalicon.png" />
     <None Remove="res\Audio\Music.mp3" />
@@ -81,7 +75,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="%2a%2a\%2a.xeto" />
+    <EmbeddedResource Remove="MainForm.xeto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="MainForm.xeto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="MainForm.xeto" />
   </ItemGroup>
 
 </Project>

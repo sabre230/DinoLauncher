@@ -13,7 +13,7 @@ public static class Xdelta3
             f.SetupFileStructure();
 
             // Point to 'xdelta3.exe' in the dumbest way possible
-            string exeDir = f.currentDirectory + f.xdeltaPath;
+            string exeDir = f.baseDir + f.xdeltaPath;
             // Specify arguments for procStartInfo()
             string args = $" -d -s {fBaseRomPath} {fPatchPath} {fPatchedRomPath}";
 
