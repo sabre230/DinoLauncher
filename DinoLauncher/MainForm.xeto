@@ -81,6 +81,7 @@
       <!-- Put stupid dropdown stuff in here -->
       <!-- Index "0" should always be Stable by default -->
       <!-- Look into DataStore later -->
+      <!--  -->
       <DropDown
         x:Name="DropDown_BranchPicker"
         SelectedIndex="0"
@@ -88,6 +89,7 @@
         TextColor="Black"
         ShowBorder="False"
         SelectedValueChanged="DropDown_BranchPicker_SelectionChanged"
+        SelectedValue="Stable"
       />
 
       <!--  Check for most recent patch  -->

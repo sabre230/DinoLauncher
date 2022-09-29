@@ -79,14 +79,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="MainForm.xeto" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="MainForm.xeto" />
   </ItemGroup>
 

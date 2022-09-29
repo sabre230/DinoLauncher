@@ -130,20 +130,32 @@ public class FileIO
         return Task.FromResult<string>(null);
     }
 
-    public Task<string> DeleteDirectory(string path)
+	/// <summary>
+	/// This is a custom method, that deletes a Directory. The reason this is used, instead of <see cref="Directory.Delete(string)"/>,
+	/// is because this one sets the attributes of all files to be deletable, while <see cref="Directory.Delete(string)"/> does not do that on it's own.
+	/// It's needed, because sometimes there are read-only files being generated, that would normally need more code in order to reset the attributes.<br/>
+	/// Note, that this method acts recursively. Stolen from AM2R Community 👀.
+	/// </summary>
+	/// <param name="path">The directory to delete.</param>
+	public static void DeleteDirectory(string path)
     {
-        if (!File.Exists(path))
-        {
-            Debug.WriteLine($"FileIO.DeleteDirectory(): {path} does not exist.");
-        }
-        else
-        {
-            Directory.Delete(path, true);
-        }
-        
-        // Some magic internet C# BS 
-        return Task.FromResult<string>(null);
-    }
+		if (!Directory.Exists(path)) return;
+
+		File.SetAttributes(path, FileAttributes.Normal);
+
+		foreach (string file in Directory.GetFiles(path))
+		{
+			File.SetAttributes(file, FileAttributes.Normal);
+			File.Delete(file);
+		}
+
+		foreach (string dir in Directory.GetDirectories(path))
+		{
+			DeleteDirectory(dir);
+		}
+
+		Directory.Delete(path, false);
+	}
 
     /// <summary>
     /// Returns a bool value depending on whether or not a file exists (string path)

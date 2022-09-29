@@ -97,7 +97,7 @@ public class JSON
         System.Diagnostics.Debug.WriteLine("JSON.SaveJSON: Saving JSON...");
         // Create a new JSON object with these tokens 
         JObject configFile = new JObject(
-            new JProperty("UpdateBranch".ToUpperInvariant(), prefs.desiredBranch),
+            new JProperty("UpdateBranch", prefs.desiredBranch.ToLowerInvariant()),
             new JProperty("OriginalRomPath", prefs.baseRomPath),
             new JProperty("PatchedRomPath", prefs.patchedRomPath),
             new JProperty("useHQModels", prefs.useHQModels)

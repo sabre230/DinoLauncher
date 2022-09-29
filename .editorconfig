@@ -1,4 +1,0 @@
-﻿[*.cs]
-
-# CS2021: File name '**\*.xeto' is empty, contains invalid characters, has a drive specification without an absolute path, or is too long
-dotnet_diagnostic.CS2021.severity = suggestion

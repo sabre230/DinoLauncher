@@ -2,10 +2,14 @@
 using Eto.Serialization.Xaml;
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using DinoLauncherLib;
 using Eto.Drawing;
+using LibGit2Sharp;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DinoLauncher;
 // note to self: remember to pass object through parameters when you need
@@ -42,6 +46,8 @@ public class MainForm : Form
     public Button           Button_PatchExecute;
     public Button           Button_PlayGame;
     public ProgressBar      ProgressBar_Progress;
+
+	private static int currentGitObject = 0;
 
     #endregion Form Controls
 
@@ -149,19 +155,60 @@ public class MainForm : Form
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
-        //Task.Run(async () => { await GitTestTask(); }).Wait();
-        await Git.CheckRepoForPatch(prefs, fileIO);
-        //Task.Run(async () => { await git.CheckRepoForPatch(prefs, fileIO); }).Wait();
+		//await Git.CheckRepoForPatch(prefs, fileIO);
+		Git.PullPatchData(TransferProgressHandlerMethod);
 
         //// Resets the button back to "Normal" visual state on release
         //// Only necessary on Windows because of course it is
         //Button b = (Button)sender;
         //VisualStateManager.GoToState(b, "Normal");
     }
-    #endregion
 
-    #region BrowseForFile Button
-    void BrowseForFile_ButtonPress(object sender, EventArgs e)
+	/// <summary>
+	/// This is just a helper method for the git commands in order to have a progress bar display for them.
+	/// </summary>
+	private bool TransferProgressHandlerMethod(TransferProgress transferProgress)
+	{
+		// Thank you random issue on the gitlib2sharp repo!!!!
+		// Also tldr; rtfm
+		//if (isGitProcessGettingCancelled) return false;
+
+		// This needs to be in an Invoke, in order to access the variables from the main thread
+		// Otherwise this will throw a runtime exception
+		Eto.Forms.Application.Instance.Invoke(() =>
+		{
+			ProgressBar_Progress.MinValue = 0;
+			ProgressBar_Progress.MaxValue = transferProgress.TotalObjects;
+			if (currentGitObject >= transferProgress.ReceivedObjects)
+				return;
+			Label_Status.Text = transferProgress.ReceivedObjects + " (" + ((int)transferProgress.ReceivedBytes / 1000000) + "MB) / " + transferProgress.TotalObjects + " objects";
+			currentGitObject = transferProgress.ReceivedObjects;
+			ProgressBar_Progress.Value = transferProgress.ReceivedObjects;
+		});
+
+		return true;
+	}
+
+	
+    /// <summary>
+    /// Method that updates <see cref="progressBar"/>.
+    /// </summary>
+    /// <param name="value">The value that <see cref="progressBar"/> should be set to.</param>
+    /// <param name="min">The min value that <see cref="progressBar"/> should be set to.</param>
+    /// <param name="max">The max value that <see cref="progressBar"/> should be set to.</param>
+    private void UpdateProgressBar(int value, int min, int max)
+	{
+		Eto.Forms.Application.Instance.Invoke(() =>
+		{
+			ProgressBar_Progress.MinValue = min;
+			ProgressBar_Progress.MaxValue = max;
+			ProgressBar_Progress.Value = value;
+		});
+	}
+	#endregion
+
+	#region BrowseForFile Button
+	void BrowseForFile_ButtonPress(object sender, EventArgs e)
     {
         // Do nothing on press to prevent misclicks, maybe play a partial sound idk 
         // But for now just do nothing
