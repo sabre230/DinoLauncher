@@ -90,7 +90,7 @@ public class MainForm : Form
         string[] names = myAssembly.GetManifestResourceNames();
         foreach (string name in names)
         {
-            Debug.WriteLine(name);
+            Debug.WriteLine($"MainForm.Testing: {name}");
         }
     }
 
@@ -155,13 +155,10 @@ public class MainForm : Form
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
-		//await Git.CheckRepoForPatch(prefs, fileIO);
-		Git.PullPatchData(TransferProgressHandlerMethod);
-
-        //// Resets the button back to "Normal" visual state on release
-        //// Only necessary on Windows because of course it is
-        //Button b = (Button)sender;
-        //VisualStateManager.GoToState(b, "Normal");
+        // Dumb method
+		await Git.CheckRepoForPatch(prefs, fileIO);
+        // AM2R Launcher method
+		//Git.PullPatchData(TransferProgressHandlerMethod);
     }
 
 	/// <summary>
@@ -169,8 +166,6 @@ public class MainForm : Form
 	/// </summary>
 	private bool TransferProgressHandlerMethod(TransferProgress transferProgress)
 	{
-		// Thank you random issue on the gitlib2sharp repo!!!!
-		// Also tldr; rtfm
 		//if (isGitProcessGettingCancelled) return false;
 
 		// This needs to be in an Invoke, in order to access the variables from the main thread

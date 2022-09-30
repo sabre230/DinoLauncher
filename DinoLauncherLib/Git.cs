@@ -12,7 +12,9 @@ namespace DinoLauncherLib;
 public static class Git
 {
     private const string dinoPatchURL = "https://github.com/sabre230/DinoPatchRepo.git";
-	public static readonly Repository repo = new Repository(dinoPatchURL);
+    private const string dinoPatchNightlyBareURL = "https://github.com/sabre230/DinoPatchRepo/tree/nightly/active";
+    private const string dinoPatchStaticBareURL = "https://github.com/sabre230/DinoPatchRepo/tree/stable/active";
+    public static readonly Repository repo = new Repository(dinoPatchURL);
 
 	public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
     {
@@ -35,10 +37,6 @@ public static class Git
                 {
                     await fileIO.DeleteFile(item);
                 }
-
-                // Please remove this damn thing already
-                //await fileIO.DeleteDirectory($"{workingDir}\\git");
-                //await fileIO.DeleteDirectory(workingDir);
             }
             else
             {
@@ -51,9 +49,33 @@ public static class Git
             // We've already confirmed the workingDir exists, so...
             if (prefs.desiredBranch.ToLower() == "nightly")
             {
+                // Experimenting here -------------------------------------------------------------------------------------------------------
+                // Keep getting LibGit2Sharp.RepositoryNotFoundException
+                // I can't figure out why it doesn't see the git url...
+                var repoOptions = new RepositoryOptions
+                {
+                    Identity = new Identity("dino","launcher"),
+                    WorkingDirectoryPath = workingDir
+                };
+                CheckoutOptions options = new CheckoutOptions
+                {
+                    CheckoutModifiers = CheckoutModifiers.Force
+                };
+                CloneOptions cloneOptions = new CloneOptions
+                {
+                    IsBare = false,
+                    BranchName = "nightly",
+                };
+
+                // Create repository object
+                // This is where it breaks, not sure what I'm doing wrong...
+                var repo = new Repository(dinoPatchURL, repoOptions);
+                repo.CheckoutPaths(repo.Head.FriendlyName, new string[] { workingDir }, options);
+
                 // We want the Nightly branch
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
-                await Task.Run(() => Repository.Clone(dinoPatchURL, workingDir, new CloneOptions { BranchName = "nightly", Checkout = true, OnCheckoutProgress = CheckoutProgress() }));
+                //System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
+                //await Task.Run(() => Repository.Clone(dinoPatchNightlyBareURL, workingDir, new CloneOptions { BranchName = "nightly", Checkout = true, OnCheckoutProgress = CheckoutProgress()}));
+                //await Task.Run(() => Repository.Clone(dinoPatchNightlyBareURL, workingDir, new CloneOptions { BranchName = "nightly", Checkout = true, OnCheckoutProgress = CheckoutProgress() }));
                 System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloaded!");
             }
             else
@@ -76,10 +98,7 @@ public static class Git
 		return null;
 	}
 
-	// Perhaps we should be putting together a progress bar for this?
-	// Yes.
-
-	// We are stealing
+	// We are stealing this
 	/// <summary>
 	/// Git Pulls patching content from the repository.
 	/// </summary>
@@ -93,11 +112,19 @@ public static class Git
         // Throws a RepositoryNotFoundException for some reason :/
         // Works fine in the other methods, but why not here?
 
-        List<Branch> branches = repo.Branches.ToList();
-        foreach (var item in branches)
+        try
         {
-            Debug.WriteLine($"{item.FriendlyName}, {item.CanonicalName}, {item.Commits}");
+            List<Branch> branches = repo.Branches.ToList();
+            foreach (var item in branches)
+            {
+                Debug.WriteLine($"Git.PullPatchData: {item.FriendlyName}, {item.CanonicalName}, {item.Commits}");
+            }
         }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Git.PullPatchData: {e}");
+        }
+
 
         Branch originMaster = repo.Branches.FirstOrDefault(b => b.FriendlyName.Contains("stable") || b.FriendlyName.Contains("nightly"));
         if (originMaster == null)
