@@ -81,7 +81,7 @@
       <!-- Put stupid dropdown stuff in here -->
       <!-- Index "0" should always be Stable by default -->
       <!-- Look into DataStore later -->
-      <!--  -->
+      <!--  Line break = &#x0a;-->
       <DropDown
         x:Name="DropDown_BranchPicker"
         SelectedIndex="0"
@@ -90,6 +90,11 @@
         ShowBorder="False"
         SelectedValueChanged="DropDown_BranchPicker_SelectionChanged"
         SelectedValue="Stable"
+        ToolTip="Stable: Dinosaur Planet is an inherently unfinished game, 
+        &#x0a;but this will make it as stable as possible for casual play.
+        &#x0a;
+        &#x0a;Nightly: You will get updates as soon as they come out. 
+        &#x0a;Save states will be your best friend, use at your own risk."
       />
 
       <!--  Check for most recent patch  -->

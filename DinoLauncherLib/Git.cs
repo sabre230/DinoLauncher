@@ -6,83 +6,62 @@ using System.Linq;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
+using static System.Net.WebRequestMethods;
 
 namespace DinoLauncherLib;
 
 public static class Git
 {
-    private const string dinoPatchURL = "https://github.com/sabre230/DinoPatchRepo.git";
-    private const string dinoPatchNightlyBareURL = "https://github.com/sabre230/DinoPatchRepo/tree/nightly/active";
-    private const string dinoPatchStaticBareURL = "https://github.com/sabre230/DinoPatchRepo/tree/stable/active";
-    public static readonly Repository repo = new Repository(dinoPatchURL);
+    // Let's do a create a fresh outline
+    //
+    // [ ] Try to Fetch the selected online repo
+    // [ ] Incorporate fallback repos, just in case
+    // [ ] After Fetching, pull the latest commit
+    // [ ] Show a progress bar for progress
 
-	public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
+    private const string remoteRepo = "https://github.com/sabre230/DinoPatchRepo.git";
+    public static readonly Repository localRepo = new Repository(@"\PatchData\Git");
+
+    public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
     {
-        string workingDir = $"{ fileIO.baseDir }\\_PatchData\\git";
+        string workingDir = $"{fileIO.baseDir}\\_PatchData\\git";
 
-		foreach (var item in Repository.ListRemoteReferences(dinoPatchURL).ToList())
-		{
-			Debug.WriteLine("ListRemoteReferences: " + item);
-		}
+        
+        //foreach (var item in Repository.ListRemoteReferences(remoteRepo).ToList())
+		//{
+            // List all remote references (branches, heads, etc.)
+		//	Debug.WriteLine("ListRemoteReferences: " + item);
+		//}
 
 		try
         {
             // First check if the working directory exists
+            // It should be made as soon as the application starts, but redundancy isn't a bad thing here
             if (Directory.Exists(workingDir))
             {
                 System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Found working path: {workingDir}");
-
-                // Go through the directory and remove all items
-                foreach (var item in Directory.GetFiles($"{workingDir}", "*", SearchOption.AllDirectories ))
-                {
-                    await fileIO.DeleteFile(item);
-                }
             }
             else
             {
+                // We shouldn't ever get this far, but just in case
                 System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Did not find working path at: {workingDir}!");
-                // Kill the method
                 return;
             }
 
-            // Then update git stuff
+
             // We've already confirmed the workingDir exists, so...
             if (prefs.desiredBranch.ToLower() == "nightly")
             {
-                // Experimenting here -------------------------------------------------------------------------------------------------------
-                // Keep getting LibGit2Sharp.RepositoryNotFoundException
-                // I can't figure out why it doesn't see the git url...
-                var repoOptions = new RepositoryOptions
-                {
-                    Identity = new Identity("dino","launcher"),
-                    WorkingDirectoryPath = workingDir
-                };
-                CheckoutOptions options = new CheckoutOptions
-                {
-                    CheckoutModifiers = CheckoutModifiers.Force
-                };
-                CloneOptions cloneOptions = new CloneOptions
-                {
-                    IsBare = false,
-                    BranchName = "nightly",
-                };
-
-                // Create repository object
-                // This is where it breaks, not sure what I'm doing wrong...
-                var repo = new Repository(dinoPatchURL, repoOptions);
-                repo.CheckoutPaths(repo.Head.FriendlyName, new string[] { workingDir }, options);
-
                 // We want the Nightly branch
-                //System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
-                //await Task.Run(() => Repository.Clone(dinoPatchNightlyBareURL, workingDir, new CloneOptions { BranchName = "nightly", Checkout = true, OnCheckoutProgress = CheckoutProgress()}));
-                //await Task.Run(() => Repository.Clone(dinoPatchNightlyBareURL, workingDir, new CloneOptions { BranchName = "nightly", Checkout = true, OnCheckoutProgress = CheckoutProgress() }));
+                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
+                await Task.Run(() => Repository.Clone(remoteRepo, workingDir, new CloneOptions { BranchName = "nightly", OnCheckoutProgress = CheckoutProgress()})); // Possibly need Checkout
                 System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloaded!");
             }
             else
             {
-                // We want the Stable branch
+                // We want the Stable branch by default
                 System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloading...");
-                await Task.Run(() => Repository.Clone(dinoPatchURL, workingDir, new CloneOptions { BranchName = "stable" }));
+                await Task.Run(() => Repository.Clone(remoteRepo, workingDir, new CloneOptions { BranchName = "stable" }));
                 System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloaded!");
             }
         }
@@ -114,7 +93,7 @@ public static class Git
 
         try
         {
-            List<Branch> branches = repo.Branches.ToList();
+            List<Branch> branches = localRepo.Branches.ToList();
             foreach (var item in branches)
             {
                 Debug.WriteLine($"Git.PullPatchData: {item.FriendlyName}, {item.CanonicalName}, {item.Commits}");
@@ -126,12 +105,12 @@ public static class Git
         }
 
 
-        Branch originMaster = repo.Branches.FirstOrDefault(b => b.FriendlyName.Contains("stable") || b.FriendlyName.Contains("nightly"));
+        Branch originMaster = localRepo.Branches.FirstOrDefault(b => b.FriendlyName.Contains("stable") || b.FriendlyName.Contains("nightly"));
         if (originMaster == null)
-            throw new UserCancelledException("Neither branch 'stable' nor branch 'nightly' could be found! Corrupted or invalid git repo?");
+            throw new UserCancelledException("Stable/Nightly branches not found! Corrupted or invalid git repo?");
 
         // Permanently undo commits not pushed to remote
-        repo.Reset(ResetMode.Hard);
+        localRepo.Reset(ResetMode.Hard);
 
 		// Credential information to fetch
 		PullOptions options = new PullOptions
@@ -145,13 +124,13 @@ public static class Git
 		// Pull
 		try
 		{
-			Commands.Pull(repo, signature, options);
+			Commands.Pull(localRepo, signature, options);
 		}
-		catch
+		catch (Exception e)
 		{
-			Debug.WriteLine("Repository pull attempt failed!");
+			Debug.WriteLine($"Git.PullPatchData: ERROR {e}");
 			return;
 		}
-		Debug.WriteLine("Repository pulled successfully.");
+		Debug.WriteLine($"Git.PullPatchData: Repository pulled successfully.");
 	}
 };
