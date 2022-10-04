@@ -5,15 +5,14 @@ namespace DinoLauncherLib;
 
 public static class Xdelta3
 {
-    public static void ApplyPatch(FileIO f, string fBaseRomPath, string fPatchPath, string fPatchedRomPath)
+    public static void ApplyPatch(FileIO fio, string fBaseRomPath, string fPatchPath, string fPatchedRomPath)
     {
         try
         {
-            // This can't be right...
-            f.SetupFileStructure();
+            fio.SetupFileStructure();
 
             // Point to 'xdelta3.exe' in the dumbest way possible
-            string exeDir = f.baseDir + f.xdeltaPath;
+            string exeDir = fio.baseDir + fio.xdeltaPath;
             // Specify arguments for procStartInfo()
             string args = $" -d -s {fBaseRomPath} {fPatchPath} {fPatchedRomPath}";
 

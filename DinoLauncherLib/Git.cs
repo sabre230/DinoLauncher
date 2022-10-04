@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
@@ -19,14 +20,19 @@ public static class Git
     // [ ] After Fetching, pull the latest commit
     // [ ] Show a progress bar for progress
 
+    // Primary remote repository
     private const string remoteRepo = "https://github.com/sabre230/DinoPatchRepo.git";
-    public static readonly Repository localRepo = new Repository(@"\PatchData\Git");
+    // The local repo should be using relative paths, use Path.Combine to account for multi-platform
+    public static readonly Repository localRepo = new Repository(Path.Combine("_PatchData", "git"));
+
+
 
     public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
     {
-        string workingDir = $"{fileIO.baseDir}\\_PatchData\\git";
-
+        // Use Path.Combine to account for other operating systems instead of simply writing out the whole path
+        string workingDir = Path.Combine(fileIO.baseDir, "_PatchData", "git");
         
+        // Get available references from git
         //foreach (var item in Repository.ListRemoteReferences(remoteRepo).ToList())
 		//{
             // List all remote references (branches, heads, etc.)
@@ -36,38 +42,24 @@ public static class Git
 		try
         {
             // First check if the working directory exists
-            // It should be made as soon as the application starts, but redundancy isn't a bad thing here
+            // It should be made as soon as the application starts, but reduncancy doesn't hurt here
             if (Directory.Exists(workingDir))
             {
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Found working path: {workingDir}");
+                Debug.WriteLine($"Git.CheckRepoForPatch: Found working path: {workingDir}");
             }
             else
             {
                 // We shouldn't ever get this far, but just in case
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Did not find working path at: {workingDir}!");
+                Debug.WriteLine($"Git.CheckRepoForPatch: Did not find working path at: {workingDir}!");
                 return;
             }
 
-
-            // We've already confirmed the workingDir exists, so...
-            if (prefs.desiredBranch.ToLower() == "nightly")
-            {
-                // We want the Nightly branch
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
-                await Task.Run(() => Repository.Clone(remoteRepo, workingDir, new CloneOptions { BranchName = "nightly", OnCheckoutProgress = CheckoutProgress()})); // Possibly need Checkout
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloaded!");
-            }
-            else
-            {
-                // We want the Stable branch by default
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloading...");
-                await Task.Run(() => Repository.Clone(remoteRepo, workingDir, new CloneOptions { BranchName = "stable" }));
-                System.Diagnostics.Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloaded!");
-            }
+            // 
+            CloneRemoteRepo(prefs, workingDir);
         }
         catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine("Git.CheckForRepoPatch: " + e);
+            Debug.WriteLine("Git.CheckForRepoPatch: " + e);
         }
     }
 
@@ -76,6 +68,32 @@ public static class Git
 		Debug.WriteLine("Git.CheckoutProgress");
 		return null;
 	}
+
+    //public static void CloneRemoteRepo(Func<TransferProgress, bool>, UserPrefs prefs)
+    public static async void CloneRemoteRepo(UserPrefs prefs, string localRepo)
+    {
+        // We've already confirmed the workingDir exists, so...
+        // We clone the repo to a local path and will use that from now on
+        if (prefs.desiredBranch.ToLower() == "nightly")
+        {
+            // We want the Nightly branch
+            Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
+            await CloneRemoteRepoAsync(localRepo, "nightly");
+            Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloaded!");
+        }
+        else
+        {
+            // We want the Stable branch (Default)
+            Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloading...");
+            await CloneRemoteRepoAsync(localRepo, "stable");
+            Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloaded!");
+        }
+    }
+
+    public static async Task CloneRemoteRepoAsync(string localRepo, string branch)
+    {
+        await Task.Run(() => Repository.Clone(remoteRepo, localRepo, new CloneOptions { BranchName = branch, OnCheckoutProgress = CheckoutProgress() })); // Possibly need Checkout
+    }
 
 	// We are stealing this
 	/// <summary>

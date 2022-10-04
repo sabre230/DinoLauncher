@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Debug = System.Diagnostics.Debug; // We want to use the Windows debug out for, well, debugging
+using System.Data.Common;
 
 namespace DinoLauncherLib;
 
@@ -21,13 +22,13 @@ public class FileIO
     public string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
     // Paths and path extensions
-    public string chosenPatchPath = "\\_PatchData\\dp-stable.xdelta";
-    public string romCrackPath = "\\_PatchData\\rom_crack.z64";
-    public string xdeltaPath = "\\_PatchData\\xdelta3.exe";
-    public string patchedRomPath = "\\_Game\\dinosaurplanet.z64";
-    public string gitWorkDir;
+    public string chosenPatchPath = Path.Combine("_PatchData", "dp-stable.xdelta"); // We'll need to change this to not rely on a hardcoded name
+    public string romCrackPath = Path.Combine("_PatchData", "rom_crack.z64"); // Same with this
+    public string xdeltaPath = Path.Combine("_PatchData", "Xdelta3.exe");
+    public string patchedRomPath = Path.Combine("_PatchData", "dinoplanet.z64");
+    public string gitWorkDir; // Why do I have this again?
 
-    public string musicPath = "\\_Resources\\Music.mp3";
+    public string musicPath = Path.Combine("_PatchData", "music.mp3");
     public string assemblyPath;
 
     /// <summary>
@@ -43,21 +44,21 @@ public class FileIO
 
         // Create a directory to handle all the things
         // Really just add a bunch of folders if they don't exist, write this better later, make it work for now
-        if (!Directory.Exists($"{baseDir}\\_PatchData"))
+        if (!Directory.Exists(Path.Combine(baseDir, "_PatchData")))
         {
-            CreateDirectory($"{baseDir}\\_PatchData");
+            CreateDirectory(Path.Combine(baseDir, "_PatchData")); // \\$"{baseDir}\\_PatchData");
         }
-        if (!Directory.Exists($"{baseDir}\\_PatchData\\git"))
+        if (!Directory.Exists(Path.Combine(baseDir, "_PatchData", "git")))
         {
-            CreateDirectory($"{baseDir}\\_PatchData\\git");
+            CreateDirectory(Path.Combine(baseDir, "_PatchData", "git"));
         }
-        if (!Directory.Exists($"{baseDir}\\_Resources"))
+        if (!Directory.Exists(Path.Combine(baseDir, "_Resources")))
         {
-            CreateDirectory($"{baseDir}\\_Resources");
+            CreateDirectory(Path.Combine(baseDir, "_Resources"));
         }
-        if (!Directory.Exists($"{baseDir}\\_Game"))
+        if (!Directory.Exists(Path.Combine(baseDir, "_Game")))
         {
-            CreateDirectory($"{baseDir}\\_Game");
+            CreateDirectory(Path.Combine(baseDir, "_Game"));
         }
     }
 

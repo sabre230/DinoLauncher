@@ -49,21 +49,19 @@ public class UserPrefs
 
     public void CreateJSON()
     {
+        // Not concerned about actually running async
         CreateJSONTask();
     }
     
     // There's a better way surely but I can't keep staring a this
     public void SaveJSON(UserPrefs prefs)
     {
+        // Not concerned about actually running async
         SaveJSONTask(prefs);
     }
 
     public static async Task CreateJSONTask()
     {
-        // Let's make our JSON file
-        //System.Threading.Thread createFileThread = new System.Threading.Thread(delegate () { JSON.CreateJSON(); });
-        //createFileThread.Start();
-
         await JSON.CreateJSON();
     }
 
