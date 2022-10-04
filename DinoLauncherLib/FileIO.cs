@@ -23,10 +23,10 @@ public class FileIO
 
     // Paths and path extensions
     public string chosenPatchPath = Path.Combine("_PatchData", "dp-stable.xdelta"); // We'll need to change this to not rely on a hardcoded name
-    public string romCrackPath = Path.Combine("_PatchData", "rom_crack.z64"); // Same with this
+    public string baseRomPath = Path.Combine("_PatchData", "rom_crack.z64"); // Same with this
     public string xdeltaPath = Path.Combine("_PatchData", "Xdelta3.exe");
     public string patchedRomPath = Path.Combine("_PatchData", "dinoplanet.z64");
-    public string gitWorkDir; // Why do I have this again?
+    public string gitWorkDir;
 
     public string musicPath = Path.Combine("_PatchData", "music.mp3");
     public string assemblyPath;
@@ -38,6 +38,7 @@ public class FileIO
     {
         // Store executable directory
         string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        gitWorkDir = Path.Combine(baseDir, "_PatchData");
 
         // Set the current working directory to the application root
         System.IO.Directory.SetCurrentDirectory(baseDir);
@@ -73,6 +74,7 @@ public class FileIO
         DirectoryInfo dir = new DirectoryInfo(path);
         var dirSec = dir.GetAccessControl();
 
+        // Directory security BS, futz with later
         //dirSec.AddAccessRule(new FileSystemAccessRule(path, FileSystemRights.FullControl, AccessControlType.Allow));
         //dir.SetAccessControl(dirSec);
     }

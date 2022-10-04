@@ -2,14 +2,12 @@
 using Eto.Serialization.Xaml;
 using System;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Configuration;
 using System.IO;
 using System.Reflection;
 using DinoLauncherLib;
 using Eto.Drawing;
 using LibGit2Sharp;
-using static System.Net.Mime.MediaTypeNames;
+using System.Windows;
 
 namespace DinoLauncher;
 // note to self: remember to pass object through parameters when you need
@@ -42,7 +40,7 @@ public class MainForm : Form
     public Label            Label_Status;
     public Button           Button_UpdatePatch;
     public Button           Button_BrowseForRom;
- 
+    public Button           Button_TestButton; 
     public Button           Button_PatchExecute;
     public Button           Button_PlayGame;
     public ProgressBar      ProgressBar_Progress;
@@ -73,6 +71,8 @@ public class MainForm : Form
         
         // Setup preferences after folder layout is finished
         prefs.Setup();
+
+        // Do a check for the patch file and inform the user
 
         // Would rather do this before building but it's fine for now
         // Please focus on functionality first
@@ -298,7 +298,7 @@ public class MainForm : Form
         Debug.WriteLine("Button released");
 
 
-        Xdelta3.ApplyPatch(fileIO, (fileIO.baseDir + fileIO.romCrackPath),
+        Xdelta3.ApplyPatch(fileIO, (fileIO.baseDir + fileIO.baseRomPath),
                                    (fileIO.baseDir + fileIO.chosenPatchPath),
                                    (fileIO.baseDir + fileIO.patchedRomPath));
 
@@ -359,6 +359,16 @@ public class MainForm : Form
     }
     #endregion
 
+    void TestButton_ButtonPress(object sender, EventArgs e)
+    {
+        InfoPopup("ALERT", "This is a test!");
+    }
+
+    void TestButton_ButtonRelease(object sender, EventArgs e)
+    {
+
+    }
+
     #region UpdateStatusText Methods
     /// <summary>
     /// Method to quickly update the status text at the bottom of the screen.
@@ -415,4 +425,57 @@ public class MainForm : Form
         }
     }
     #endregion
+
+
+    // I'm worried Popups may be a Windows thing...
+    public void InfoPopup(string titleText, string bodyText)
+    {
+        Dialog dialog = new Dialog();
+
+        // Controls and layout
+        var layout = new DynamicLayout(dialog);
+        var label = new Label { Text = bodyText };
+        var okayButton = new Button { Text = "Okay!" };
+        dialog.DefaultButton = okayButton;
+        dialog.DefaultButton.Click += (sender, e) =>
+        {
+            Debug.WriteLine(dialog, "Default button clicked");
+            dialog.Close();
+        };
+
+        // Generate layout for the dialog popup
+        layout.BeginVertical();
+        layout.Width = 315;
+        layout.Height = 235;
+        layout.AddRow(new Label { Text = bodyText });
+        layout.EndBeginVertical();
+        layout.AddRow(null, okayButton);
+        layout.EndVertical();
+
+        // dialog properties
+        dialog.DisplayMode = DialogDisplayMode.Default;
+        dialog.Topmost = true;
+        dialog.Resizable = true;
+        dialog.Width = 320;
+        dialog.Height = 240;
+
+        dialog.Title = titleText;
+
+
+        // Show the dialog box
+        // Need to clarify the parent is derived from Window
+        try
+        {
+            Debug.WriteLine(this.ToString());
+            dialog.Content = layout;
+            // MainForm.InfoPopup: System.InvalidOperationException: Window must be the root of the tree. Cannot add Window as a child of Visual.
+            // Figure it out later I guess
+            dialog.ShowModal(this);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"MainForm.InfoPopup: {e}");
+        }
+        
+    }
 }

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form
+  x:Name="DinoLauncherMainForm"
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:DinoLauncher;assembly=DinoLauncher"
@@ -103,6 +104,15 @@
         MouseDown="UpdatePatch_ButtonPress"
         MouseUp="UpdatePatch_ButtonRelease"
         Text="Check for most recent patch"
+        Size="170,32"
+      />
+
+      <!--  Test button to test things  -->
+      <Button
+        x:Name="Button_TestButton"
+        MouseDown="TestButton_ButtonPress"
+        MouseUp="TestButton_ButtonRelease"
+        Text="TEST"
         Size="170,32"
       />
       
