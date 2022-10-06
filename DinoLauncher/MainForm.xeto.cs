@@ -62,6 +62,9 @@ public class MainForm : Form
         // We want to test things before implementing them
         Testing();
 
+        // Update the status text with a random string from Extras
+        UpdateInitialStatusMessage();
+
         // Update options to match JSON
         DropDown_BranchPicker.SelectedValue = prefs.desiredBranch;
         CheckBox_UseHQModels.Checked = prefs.useHQModels;
@@ -73,6 +76,9 @@ public class MainForm : Form
         prefs.Setup();
 
         // Do a check for the patch file and inform the user
+
+        // Check for the game and activate the PLAY button if it exists
+        CheckForGame();
 
         // Would rather do this before building but it's fine for now
         // Please focus on functionality first
@@ -91,6 +97,14 @@ public class MainForm : Form
         foreach (string name in names)
         {
             Debug.WriteLine($"MainForm.Testing: {name}");
+        }
+    }
+
+    public void CheckForGame()
+    {
+        if (File.Exists(fileIO.patchedRomPath))
+        {
+            Button_PlayGame.Visible = true;
         }
     }
 
@@ -150,15 +164,18 @@ public class MainForm : Form
     #region UpdatePatch Button
     public void UpdatePatch_ButtonPress(object sender, EventArgs e)
     {
-        // Actually, let's not do anything on press to prevent mis-clicks
+        
     }
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
-        // Dumb method
+        Debug.WriteLine("MainForm.UpdatePatch: Checking for updates...");
+
 		await Git.CheckRepoForPatch(prefs, fileIO);
+
         // AM2R Launcher method
-		//Git.PullPatchData(TransferProgressHandlerMethod);
+        //Git.PullPatchData(TransferProgressHandlerMethod);
+        Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
     }
 
 	/// <summary>
@@ -330,12 +347,6 @@ public class MainForm : Form
             stream.Position = 0x37EF18D;
             Debug.WriteLine($"New Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
         }
-
-        //// Resets the button back to "Normal" visual state on release
-        //// Only necessary on Windows because of course it is
-        //// Apparently it's related to how Windows handles object focus
-        //Button b = (Button)sender;
-        //VisualStateManager.GoToState(b, "Normal");
     }
     #endregion
 
@@ -426,8 +437,15 @@ public class MainForm : Form
     }
     #endregion
 
+    public void UpdateInitialStatusMessage()
+    {
+        // Feeding Random a seed based on current milliconds and not CPU frequency because why would I?
+        Random r = new Random(DateTime.Now.Millisecond);
+        int i = r.Next(extras.randomStatusMessages.Length);
+        Label_Status.Text = extras.randomStatusMessages[i];
+    }
 
-    // I'm worried Popups may be a Windows thing...
+    // Pop ups! Ain't working right now. Not a priority, fix later.
     public void InfoPopup(string titleText, string bodyText)
     {
         Dialog dialog = new Dialog();

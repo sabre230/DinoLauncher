@@ -22,6 +22,8 @@ public static class Git
 
     // Primary remote repository
     private const string remoteRepo = "https://github.com/sabre230/DinoPatchRepo.git";
+    private static string[] backupRemoteRepos = { "Put", "Backup", "Git", "Repos", "Here" };
+
     // The local repo should be using relative paths, use Path.Combine to account for multi-platform
     public static readonly Repository localRepo = new Repository(Path.Combine("_PatchData", "git"));
 
@@ -30,18 +32,21 @@ public static class Git
     public static async Task CheckRepoForPatch(UserPrefs prefs, FileIO fileIO)
     {
         // Use Path.Combine to account for other operating systems instead of simply writing out the whole path
+        //                              "fileIO.baseDir/_PatchData/git"
         string workingDir = Path.Combine(fileIO.baseDir, "_PatchData", "git");
-        
+
+        #region ListRemoteReferences
         // Get available references from git
         //foreach (var item in Repository.ListRemoteReferences(remoteRepo).ToList())
-		//{
-            // List all remote references (branches, heads, etc.)
-		//	Debug.WriteLine("ListRemoteReferences: " + item);
-		//}
+        //{
+        // List all remote references (branches, heads, etc.)
+        //	Debug.WriteLine("ListRemoteReferences: " + item);
+        //}
+        #endregion
 
-		try
+        // First check if the working directory exists
+        try
         {
-            // First check if the working directory exists
             // It should be made as soon as the application starts, but reduncancy doesn't hurt here
             if (Directory.Exists(workingDir))
             {
@@ -51,20 +56,48 @@ public static class Git
             {
                 // We shouldn't ever get this far, but just in case
                 Debug.WriteLine($"Git.CheckRepoForPatch: Did not find working path at: {workingDir}!");
+                // Kill the thread
                 return;
             }
-
-            // 
-            CloneRemoteRepo(prefs, workingDir);
         }
         catch (Exception e)
         {
             Debug.WriteLine("Git.CheckForRepoPatch: " + e);
         }
+
+        try
+        {
+            if (Directory.Exists(Path.Combine(workingDir, ".git")))
+            {
+                Debug.WriteLine("Git.CheckRepoForPatch: .git folder exists, previous patch has been downloaded");
+                return;
+                // If we don't return, git will throw an error
+            }
+            else
+            {
+                Debug.WriteLine("Git.CheckRepoForPatch: .git folder exists, previous patch has been downloaded");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Git.CheckRepoForPatch: ERROR: {e}");
+        }
+
+        // Now check the remote repo
+        // But for now, just Clone the repo
+        CloneRemoteRepo(prefs, workingDir);
+
+        // Now, check if we've already downloaded a patch
+        bool wegood = fileIO.GetLocalPatchPath();
+        if (!wegood)
+        {
+            return;
+        }
     }
 
 	public static CheckoutProgressHandler CheckoutProgress()
 	{
+        // I will learn this eventually!
 		Debug.WriteLine("Git.CheckoutProgress");
 		return null;
 	}
@@ -77,16 +110,12 @@ public static class Git
         if (prefs.desiredBranch.ToLower() == "nightly")
         {
             // We want the Nightly branch
-            Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloading...");
             await CloneRemoteRepoAsync(localRepo, "nightly");
-            Debug.WriteLine($"Git.CheckRepoForPatch: Nightly branch downloaded!");
         }
         else
         {
             // We want the Stable branch (Default)
-            Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloading...");
             await CloneRemoteRepoAsync(localRepo, "stable");
-            Debug.WriteLine($"Git.CheckRepoForPatch: Stable branch downloaded!");
         }
     }
 
@@ -104,10 +133,6 @@ public static class Git
         //// Throw if we neither have a master nor main branch
         // We will not be allowing pulling from main/master
         // Instead we are pulling from stable/nightly
-
-        // Can't seem to find our repo?
-        // Throws a RepositoryNotFoundException for some reason :/
-        // Works fine in the other methods, but why not here?
 
         try
         {

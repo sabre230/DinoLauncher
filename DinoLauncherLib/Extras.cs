@@ -2,6 +2,27 @@
 
 public class Extras
 {
+    public string[] randomStatusMessages =
+    {
+        "Two roots is never enough!", // Random Snowhorn meme I guess
+        "It's good to see you, Kyte.", // Krystal
+        "My name is Krystal, and I'm here for the Princess!", // Krystal
+        "Can we go to Cloudrunner Fortress now?", // Kyte
+        "So this is Discovery Falls!", // Kyte
+        "The Quan Ata Lachu are not what you say!", // Sabre
+        "My name is Sabre, royal knight from the planet Animus.", // Sabre
+        "Hey, look at this!", // Tricky
+        "My dad's a King Earthwalker and he'll bash you up!", // Tricky
+        "You must go to Discovery Falls, you will find some answers there.", // Randorn
+        "My dear, Dinosaur Planet is in extreme danger.", // Randorn
+        "Who might you be, animal girl?", //Scales
+        "I can't believe the wizard sent a girl to do his dirty work.", // Scales
+        "Do not hit Sharpclaw. Me give you Food Bag if you let me go!", // Sharpclaw
+        "No food been delivered, me starving!", // Sharpclaw
+        "You will find us all, we must continue!", // Quan Ata Lachu
+        "I can taste your fear, animal. It is very sweet.", // Drakor
+        "As you wish. If you will not see the truth, then you must die!" // Drakor
+    };
     // This does nothing for now
     // It will do something later, but right now it does nothing
 

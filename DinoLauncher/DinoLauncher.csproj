@@ -13,7 +13,7 @@
 
     <PackageIcon>krystalicon.png</PackageIcon>
 
-    <ApplicationIcon>res\Images\favicon.ico</ApplicationIcon>
+    <ApplicationIcon>res\AppIcon\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,7 +41,7 @@
     <EmbeddedResource Include="res\Fonts\OpenSans-Regular.ttf" />
     <EmbeddedResource Include="res\Fonts\OpenSans-Semibold.ttf" />
     <EmbeddedResource Include="res\Fonts\Penumbra Half Serif Semibold.ttf" />
-    <EmbeddedResource Include="res\Images\favicon.ico" />
+    <EmbeddedResource Include="res\AppIcon\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,6 +76,10 @@
 
   <ItemGroup>
     <EmbeddedResource Remove="MainForm.xeto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="res\AppIcon\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>

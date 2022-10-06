@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Debug = System.Diagnostics.Debug; // We want to use the Windows debug out for, well, debugging
 using System.Data.Common;
+using System.Linq;
 
 namespace DinoLauncherLib;
 
@@ -215,5 +216,33 @@ public class FileIO
             Debug.WriteLine("Md5 checksum failed.");
             return false;
         }
+    }
+
+    public bool GetLocalPatchPath()
+    {
+        // This is going to be important to making sure the patch always works regardless of name
+        // The most recent patch should always be in the "active" folder
+        var files = Directory.GetFiles(Path.Combine(baseDir, "_PatchData", "git", "active"), "*.xdelta", SearchOption.AllDirectories).ToList();
+
+        if (files.Count > 1)
+        {
+            Debug.WriteLine("FileIO.GetLocalPatchPath: Multiple files found in \"active\" which is not allowed!");
+            return false;
+        }
+        else if (files.Count == 0)
+        {
+            Debug.WriteLine("FileIO.GetLocalPatchPath: No xdelta patch found in \"active\"!");
+            return false;
+        }
+
+        foreach (var item in files)
+        {
+            // Need to find which is the most recent and assign that to our selected patch file
+            FileInfo info = new FileInfo(item);
+            Debug.WriteLine(item.ToString(), info.CreationTime, info.LastWriteTime);
+        }
+        // If we made it this far, we good
+        return true;
+        //chosenPatchPath 
     }
 }

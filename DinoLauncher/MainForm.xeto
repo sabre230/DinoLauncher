@@ -103,7 +103,7 @@
         x:Name="Button_UpdatePatch"
         MouseDown="UpdatePatch_ButtonPress"
         MouseUp="UpdatePatch_ButtonRelease"
-        Text="Check for most recent patch"
+        Text="Check for Updates"
         Size="170,32"
       />
 
@@ -113,6 +113,7 @@
         MouseDown="TestButton_ButtonPress"
         MouseUp="TestButton_ButtonRelease"
         Text="TEST"
+        Visible="False"
         Size="170,32"
       />
       
@@ -149,28 +150,36 @@
         Visible="False"
       />
 
-      <!--  Status Text  -->
-      <Label
+      <StackLayoutItem
+        VerticalAlignment="Bottom"
+        Expand="True">
+        <!--  Status Text  -->
+        <Label
           x:Name="Label_Status"
           VerticalAlignment="Bottom"
           TextAlignment="Center"
           Text="Status Text Goes Here"
           TextColor="White"
-        />
+          />      
+      </StackLayoutItem>
+      
+      <StackLayoutItem
+        VerticalAlignment="Bottom"
+        >
+        <!-- Progress Bar -->
+        <ProgressBar
+          x:Name="ProgressBar_Progress"
+          BackgroundColor="Black"
+          MinValue="0"
+          MaxValue="100"
+          Value="50"
+          Width="750"
+          Height="16"
+          Visible="True"
+          Enabled="True"
+          />
 
-      <ProgressBar
-        x:Name="ProgressBar_Progress"
-        BackgroundColor="Black"
-        MinValue="0"
-        MaxValue="100"
-        Value="50"
-        Width="750"
-        Height="16"
-        Visible="True"
-        Enabled="True"      
-      />
-        
-        
+      </StackLayoutItem>  
     </StackLayout>
 
     <!-- Example Block -->
