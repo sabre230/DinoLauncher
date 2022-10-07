@@ -63,14 +63,22 @@ public class FileIO
         {
             CreateDirectory(Path.Combine(baseDir, "_Game"));
         }
+        if (!File.Exists(xdeltaPath))
+        {
+            // Make sure to copy over the xdelta3 utility so patching actually works
+            WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
+        }
+    }
 
-        // Make sure to copy over the xdelta3 utility so patching actually works
-        //var stream = assembly.GetManifestResourceStream("name of the manifest resourse");
-        //var fileStream = File.Create(@"C:\Test.xml");
-        //stream.Seek(0, SeekOrigin.Begin);
-        //stream.CopyTo(fileStream);
-        //fileStream.Close();
-        //CopyFile();
+    public void WriteResourceToFile(string resourceName, string fileName)
+    {
+        using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+        {
+            using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                resource.CopyTo(file);
+            }
+        }
     }
 
     /// <summary>
