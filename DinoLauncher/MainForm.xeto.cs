@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using DinoLauncherLib;
 using Eto.Drawing;
 using LibGit2Sharp;
@@ -44,6 +45,7 @@ public class MainForm : Form
     public Button           Button_PatchExecute;
     public Button           Button_PlayGame;
     public ProgressBar      ProgressBar_Progress;
+    public FilePicker       FilePicker_BrowseForRom;
 
 	private static int currentGitObject = 0;
 
@@ -100,6 +102,11 @@ public class MainForm : Form
         }
     }
 
+    public void BrowseForFile()
+    {
+
+    }
+
     public void CheckForGame()
     {
         if (File.Exists(fileIO.patchedRomPath))
@@ -135,6 +142,7 @@ public class MainForm : Form
     {
         // Get the selected item value as a lower-case string
         string selBranch = DropDown_BranchPicker.SelectedValue.ToString().ToLower();
+        fileIO.currentBranch = selBranch;
 
         if (selBranch != null)
         {
@@ -219,88 +227,17 @@ public class MainForm : Form
 	}
 	#endregion
 
-	#region BrowseForFile Button
-	void BrowseForFile_ButtonPress(object sender, EventArgs e)
+    // This button doesn't exist anymore...
+	#region FilePicker
+	void FilePicker_DragDrop(object sender, EventArgs e)
     {
-        // Do nothing on press to prevent misclicks, maybe play a partial sound idk 
-        // But for now just do nothing
+        // Do nothing on press to prevent misclicks
     }
 
-    void BrowseForFile_ButtonRelease(object sender, EventArgs e)
+    void FilePicker_PathChanged(object sender, EventArgs e)
     {
-        //// Resets the button back to "Normal" visual state on release
-        //// Only necessary on Windows because of course it is
-        //Button b = (Button)sender;
-        //VisualStateManager.GoToState(b, "Normal");
-
-        // File pick on a separate thread
-        FilePicker o = new()
-        {
-            Title = "Browse for \'rom_crack.z64\'"
-            // We can specify file type later
-        };
-
-        //Task.Run(async () => { await BrowseForFileTask(o); }).Wait();
+        Debug.WriteLine(FilePicker_BrowseForRom.FilePath);
     }
-
-    // Re-do the FilePicker method
-    //// I don't think I can reuse a lot of this with Eto
-    //public async Task<FilePicker> BrowseForFileTask()
-    //{
-    //    try
-    //    {
-    //        // Opens the file picker
-    //        var result = await FilePicker.Callback();
-
-    //        if (result != null)
-    //        {
-    //            if (result.FileName.EndsWith(".z64", StringComparison.OrdinalIgnoreCase))
-    //            {
-    //                using var stream = await result.OpenReadAsync();
-    //                var romFile = ImageSource.FromStream(() => stream);
-
-    //                if (fileIO.MD5Checksum((fileIO.currentDirectory + fileIO.romCrackPath)) == true)
-    //                {
-    //                    // Md5 check should be successful
-    //                    Debug.WriteLine("Md5 Checksum successful!");
-
-    //                    UpdateStatusText(fileIO.CalculateMD5(result.FullPath.ToString()), Color.FromArgb(255, 0, 255, 0));
-
-    //                    // Load the result path
-    //                    // load load load load load...
-
-    //                    // No need to get rom_crack.z64 again
-    //                    // Disable the button to prevent confusion
-    //                    // Enable the patch button
-    //                    //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_BrowseForRom.IsVisible = false);
-
-    //                    // Enable the patch button
-    //                    //Application.Current.MainPage.Dispatcher.Dispatch(() => Button_PatchExecute.IsEnabled = true);
-    //                }
-    //                else
-    //                {
-    //                    Debug.WriteLine("Yours: " + fileIO.CalculateMD5(result.FullPath));
-    //                    Debug.WriteLine("OG: " + fileIO.originalMd5);
-    //                    // Md5 was not successful
-    //                    UpdateStatusText("Bad Checksum! Check your file and try again.", Color.FromArgb(255 ,255 ,0 ,0));
-    //                }
-    //            }
-    //            else
-    //            {
-    //                Debug.WriteLine("Incorrect file type chosen", Color.FromArgb(255 ,255 ,0 ,0));
-
-    //                UpdateStatusText("That's not a .Z64 file.", Color.FromArgb(255, 255, 0, 0));
-    //            }
-    //        }
-    //        return result;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        // The user canceled or something went wrong
-    //        Debug.WriteLine(e);
-    //    }
-    //    return null;
-    //}
     #endregion
 
     #region PatchExecute Button
@@ -314,6 +251,11 @@ public class MainForm : Form
         // MAUI doesn't handle button releases at this time, so we need to account for that
         Debug.WriteLine("Button released");
 
+        // Copy the original rom file to the patchdata folder so we can have a controlled version
+        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
+        {
+            fileIO.CopyFile(FilePicker_BrowseForRom.FilePath, prefs.baseRomPath);
+        }
 
         Xdelta3.ApplyPatch(fileIO, (fileIO.baseDir + fileIO.baseRomPath),
                                    (fileIO.baseDir + fileIO.chosenPatchPath),
@@ -372,12 +314,12 @@ public class MainForm : Form
 
     void TestButton_ButtonPress(object sender, EventArgs e)
     {
-        InfoPopup("ALERT", "This is a test!");
+        //InfoPopup("ALERT", "This is a test!");
     }
 
     void TestButton_ButtonRelease(object sender, EventArgs e)
     {
-
+        Testing();
     }
 
     #region UpdateStatusText Methods

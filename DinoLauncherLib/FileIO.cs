@@ -31,6 +31,7 @@ public class FileIO
 
     public string musicPath = Path.Combine("_PatchData", "music.mp3");
     public string assemblyPath;
+    public string currentBranch;
 
     /// <summary>
     /// Function to quickly build the folder structure required by DinoLauncher
@@ -62,6 +63,14 @@ public class FileIO
         {
             CreateDirectory(Path.Combine(baseDir, "_Game"));
         }
+
+        // Make sure to copy over the xdelta3 utility so patching actually works
+        //var stream = assembly.GetManifestResourceStream("name of the manifest resourse");
+        //var fileStream = File.Create(@"C:\Test.xml");
+        //stream.Seek(0, SeekOrigin.Begin);
+        //stream.CopyTo(fileStream);
+        //fileStream.Close();
+        //CopyFile();
     }
 
     /// <summary>
@@ -220,6 +229,7 @@ public class FileIO
 
     public bool GetLocalPatchPath()
     {
+        // This must be done AFTER cloning!!
         // This is going to be important to making sure the patch always works regardless of name
         // The most recent patch should always be in the "active" folder
         var files = Directory.GetFiles(Path.Combine(baseDir, "_PatchData", "git", "active"), "*.xdelta", SearchOption.AllDirectories).ToList();
@@ -238,10 +248,15 @@ public class FileIO
         foreach (var item in files)
         {
             // Need to find which is the most recent and assign that to our selected patch file
+            // We'll figure this out later since we already are checking for a single xdelta file
             FileInfo info = new FileInfo(item);
-            Debug.WriteLine(item.ToString(), info.CreationTime, info.LastWriteTime);
+            Debug.WriteLine($"FileIO.GetLocalPatchPath: {item.ToString()}, {info.CreationTime}, {info.LastWriteTime}");
         }
-        // If we made it this far, we good
+
+        // If we made it this far, everything should be good
+        // Return True and set our patch path so we can use it!
+        chosenPatchPath = files[0]; // I mean, it's simple and it should work, so...
+
         return true;
         //chosenPatchPath 
     }

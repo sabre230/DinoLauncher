@@ -26,7 +26,7 @@
       <!-- Version Number -->
       <Label
         x:Name="Label_VerNum"
-        Text="DinoLauncher v0.01"
+        Text="DinoLauncher v0.0"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
@@ -113,18 +113,21 @@
         MouseDown="TestButton_ButtonPress"
         MouseUp="TestButton_ButtonRelease"
         Text="TEST"
-        Visible="False"
+        Visible="True"
         Size="170,32"
       />
       
-      <!--  Browse for rom file ALTERNATE -->
-      <!--  Probably going to just stick with this version  -->
+      <!--  Browse for rom file -->
       <FilePicker
         x:Name="FilePicker_BrowseForRom"
+        FilePathChanged="FilePicker_PathChanged"
+        DragDrop="FilePicker_DragDrop"
+        AllowDrop="True"
         Title="Browse for 'rom_crack.z64'"
+        FileAction="OpenFile"
         FilePath="rom_crack.z64"
         Size="170,32"
-        AllowDrop="True"
+        Tag="FilePath"
         Enabled="True"
         Visible="True"
       />

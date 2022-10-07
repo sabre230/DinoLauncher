@@ -20,6 +20,10 @@ public static class Git
     // [ ] After Fetching, pull the latest commit
     // [ ] Show a progress bar for progress
 
+    // In case of a branch change, we need to checkout
+    // In case of a new commit, we need to fetch and then pull!
+    // We will do NO pushing; this is a read-only operation
+
     // Primary remote repository
     private const string remoteRepo = "https://github.com/sabre230/DinoPatchRepo.git";
     private static string[] backupRemoteRepos = { "Put", "Backup", "Git", "Repos", "Here" };
@@ -65,17 +69,20 @@ public static class Git
             Debug.WriteLine("Git.CheckForRepoPatch: " + e);
         }
 
+        // Then see if we've already cloned previously
         try
         {
             if (Directory.Exists(Path.Combine(workingDir, ".git")))
             {
                 Debug.WriteLine("Git.CheckRepoForPatch: .git folder exists, previous patch has been downloaded");
-                return;
-                // If we don't return, git will throw an error
             }
             else
             {
-                Debug.WriteLine("Git.CheckRepoForPatch: .git folder exists, previous patch has been downloaded");
+                // We should have a good working directory
+                Debug.WriteLine("Git.CheckRepoForPatch: .git folder is missing, this is a fresh install!");
+                // And there's no .git folder yet, so we will need a fresh clone
+                await CloneRemoteRepo(prefs, workingDir);
+                // And wait until the clone is done to continue
             }
         }
         catch (Exception e)
@@ -83,15 +90,11 @@ public static class Git
             Debug.WriteLine($"Git.CheckRepoForPatch: ERROR: {e}");
         }
 
-        // Now check the remote repo
-        // But for now, just Clone the repo
-        CloneRemoteRepo(prefs, workingDir);
-
-        // Now, check if we've already downloaded a patch
-        bool wegood = fileIO.GetLocalPatchPath();
-        if (!wegood)
+        // Now, check if there's a patch already ready to go
+        bool patchExists = fileIO.GetLocalPatchPath();
+        if (!patchExists)
         {
-            return;
+            Debug.WriteLine("Git.CheckRepoForPatch: No patch exists, did cloning fail?");
         }
     }
 
@@ -103,7 +106,7 @@ public static class Git
 	}
 
     //public static void CloneRemoteRepo(Func<TransferProgress, bool>, UserPrefs prefs)
-    public static async void CloneRemoteRepo(UserPrefs prefs, string localRepo)
+    public static async Task CloneRemoteRepo(UserPrefs prefs, string localRepo)
     {
         // We've already confirmed the workingDir exists, so...
         // We clone the repo to a local path and will use that from now on
@@ -130,7 +133,6 @@ public static class Git
 	/// </summary>
 	public static void PullPatchData(Func<TransferProgress, bool> transferProgressHandlerMethod)
 	{
-        //// Throw if we neither have a master nor main branch
         // We will not be allowing pulling from main/master
         // Instead we are pulling from stable/nightly
 
