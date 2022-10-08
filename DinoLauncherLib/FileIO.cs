@@ -67,7 +67,7 @@ public class FileIO
         {
             // Make sure to copy over the xdelta3 utility so patching actually works
             //WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
-            CopyFile(Path.Combine("res", "xdelta3.exe"), (Path.Combine("_Resources","xdelta3.exe")));
+            CopyFile(Path.Combine("res", "xdelta3.exe"), Path.Combine("_Resources","xdelta3.exe"));
         }
     }
 
@@ -80,7 +80,6 @@ public class FileIO
         Directory.CreateDirectory(path);
 
         DirectoryInfo dir = new DirectoryInfo(path);
-        var dirSec = dir.GetAccessControl();
     }
 
     /// <summary>

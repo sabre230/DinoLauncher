@@ -1,14 +1,12 @@
-﻿using Eto.Forms;
-using Eto.Serialization.Xaml;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using DinoLauncherLib;
 using Eto.Drawing;
+using Eto.Forms;
+using Eto.Serialization.Xaml;
 using LibGit2Sharp;
-using System.Windows;
 
 namespace DinoLauncher;
 // note to self: remember to pass object through parameters when you need
@@ -18,9 +16,9 @@ namespace DinoLauncher;
 public class MainForm : Form
 {
     // I think it'll be easier to just pass these along in function parameters
-    FileIO fileIO = new DinoLauncherLib.FileIO(); // Use to reference and perform directory/file functions
-    Extras extras = new DinoLauncherLib.Extras();// Use for fun things like music or w/e
-    UserPrefs prefs = new DinoLauncherLib.UserPrefs();
+    FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
+    Extras extras = new Extras();// Use for fun things like music or w/e
+    UserPrefs prefs = new UserPrefs();
 
     // Looks like Eto doesn't auto-generate controls in the xeto form
     // According to internet wizards, I have to add them to my class as data members
@@ -47,7 +45,7 @@ public class MainForm : Form
     public ProgressBar      ProgressBar_Progress;
     public FilePicker       FilePicker_BrowseForRom;
 
-	private static int currentGitObject = 0;
+	private static int currentGitObject;
 
     #endregion Form Controls
 
@@ -197,7 +195,7 @@ public class MainForm : Form
 
 		// This needs to be in an Invoke, in order to access the variables from the main thread
 		// Otherwise this will throw a runtime exception
-		Eto.Forms.Application.Instance.Invoke(() =>
+		Application.Instance.Invoke(() =>
 		{
 			ProgressBar_Progress.MinValue = 0;
 			ProgressBar_Progress.MaxValue = transferProgress.TotalObjects;
@@ -220,7 +218,7 @@ public class MainForm : Form
     /// <param name="max">The max value that <see cref="progressBar"/> should be set to.</param>
     private void UpdateProgressBar(int value, int min, int max)
 	{
-		Eto.Forms.Application.Instance.Invoke(() =>
+		Application.Instance.Invoke(() =>
 		{
 			ProgressBar_Progress.MinValue = min;
 			ProgressBar_Progress.MaxValue = max;
@@ -272,7 +270,7 @@ public class MainForm : Form
         if (prefs.useHQModels)
         {
             Debug.WriteLine("Using HQ Models...");
-            using var stream = System.IO.File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
+            using var stream = File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
             // It seems the position changes after any time it's read, so we have to keep setting the stream position
             // Fix later, get working now
             // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1
@@ -363,7 +361,7 @@ public class MainForm : Form
     public void ToggleAllControls(bool enabled, bool visible)
     {
         // These are the controls that will be toggleable, add/remove as necessary
-        Eto.Forms.Control[] controls = {CheckBox_UseHQModels,
+        Control[] controls = {CheckBox_UseHQModels,
                                         DropDown_BranchPicker,
                                         Button_UpdatePatch,
                                         FilePicker_BrowseForRom,
@@ -432,7 +430,7 @@ public class MainForm : Form
         // Need to clarify the parent is derived from Window
         try
         {
-            Debug.WriteLine(this.ToString());
+            Debug.WriteLine(ToString());
             dialog.Content = layout;
             // MainForm.InfoPopup: System.InvalidOperationException: Window must be the root of the tree. Cannot add Window as a child of Visual.
             // Figure it out later I guess
