@@ -25,11 +25,11 @@ public class FileIO
     // Paths and path extensions
     public string chosenPatchPath = Path.Combine("_PatchData", "dp-stable.xdelta"); // We'll need to change this to not rely on a hardcoded name
     public string baseRomPath = Path.Combine("_PatchData", "rom_crack.z64"); // Same with this
-    public string xdeltaPath = Path.Combine("_PatchData", "Xdelta3.exe");
-    public string patchedRomPath = Path.Combine("_PatchData", "dinoplanet.z64");
+    public string xdeltaPath = Path.Combine("_Resources", "xdelta3.exe");
+    public string patchedRomPath = Path.Combine("_Game", "dinosaurplanet.z64");
     public string gitWorkDir;
 
-    public string musicPath = Path.Combine("_PatchData", "music.mp3");
+    public string musicPath = Path.Combine("_Resources", "music.mp3");
     public string assemblyPath;
     public string currentBranch;
 
@@ -66,18 +66,8 @@ public class FileIO
         if (!File.Exists(xdeltaPath))
         {
             // Make sure to copy over the xdelta3 utility so patching actually works
-            WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
-        }
-    }
-
-    public void WriteResourceToFile(string resourceName, string fileName)
-    {
-        using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-        {
-            using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-            {
-                resource.CopyTo(file);
-            }
+            //WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
+            CopyFile(Path.Combine("res", "xdelta3.exe"), (Path.Combine("_Resources","xdelta3.exe")));
         }
     }
 
@@ -91,10 +81,6 @@ public class FileIO
 
         DirectoryInfo dir = new DirectoryInfo(path);
         var dirSec = dir.GetAccessControl();
-
-        // Directory security BS, futz with later
-        //dirSec.AddAccessRule(new FileSystemAccessRule(path, FileSystemRights.FullControl, AccessControlType.Allow));
-        //dir.SetAccessControl(dirSec);
     }
 
     /// <summary>

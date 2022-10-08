@@ -37,7 +37,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MainForm.xeto" />
     <EmbeddedResource Include="res\AppIcon\krystalicon.png" />
-    <EmbeddedResource Include="res\xdelta3.exe" />
+    <EmbeddedResource Include="res\xdelta3.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="res\Audio\Music.mp3" />
     <EmbeddedResource Include="res\Fonts\FF Priska Serif Not That Fat.ttf" />
     <EmbeddedResource Include="res\Fonts\ITC Anima Regular.ttf" />

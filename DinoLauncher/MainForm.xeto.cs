@@ -178,12 +178,14 @@ public class MainForm : Form
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
         Debug.WriteLine("MainForm.UpdatePatch: Checking for updates...");
+        ToggleAllControls(false, true);
 
 		await Git.CheckRepoForPatch(prefs, fileIO);
 
         // AM2R Launcher method
         //Git.PullPatchData(TransferProgressHandlerMethod);
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
+        ToggleAllControls(true, true);
     }
 
 	/// <summary>
@@ -237,6 +239,11 @@ public class MainForm : Form
     void FilePicker_PathChanged(object sender, EventArgs e)
     {
         Debug.WriteLine(FilePicker_BrowseForRom.FilePath);
+
+        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
+        {
+            fileIO.CopyFile(FilePicker_BrowseForRom.FilePath, fileIO.baseRomPath);
+        }
     }
     #endregion
 
@@ -257,15 +264,15 @@ public class MainForm : Form
             fileIO.CopyFile(FilePicker_BrowseForRom.FilePath, prefs.baseRomPath);
         }
 
-        Xdelta3.ApplyPatch(fileIO, (fileIO.baseDir + fileIO.baseRomPath),
-                                   (fileIO.baseDir + fileIO.chosenPatchPath),
-                                   (fileIO.baseDir + fileIO.patchedRomPath));
+        Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
+                                   (fileIO.chosenPatchPath),
+                                   (Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)));
 
         // We will apply these changes AFTER patching, otherwise CRC will break
         if (prefs.useHQModels)
         {
             Debug.WriteLine("Using HQ Models...");
-            using var stream = System.IO.File.Open((fileIO.baseDir + fileIO.patchedRomPath), FileMode.Open);
+            using var stream = System.IO.File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
             // It seems the position changes after any time it's read, so we have to keep setting the stream position
             // Fix later, get working now
             // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1
@@ -359,9 +366,8 @@ public class MainForm : Form
         Eto.Forms.Control[] controls = {CheckBox_UseHQModels,
                                         DropDown_BranchPicker,
                                         Button_UpdatePatch,
-                                        Button_BrowseForRom,
-                                        Button_PatchExecute,
-                                        Button_PlayGame};
+                                        FilePicker_BrowseForRom,
+                                        Button_PatchExecute };
 
         foreach (var item in controls)
         {

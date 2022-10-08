@@ -76,15 +76,16 @@ public class UserPrefs
 // Do the JSON BS
 public class JSON
 {
+    // Really only used during initial use
     public static Task<string> CreateJSON()
     {
         System.Diagnostics.Debug.WriteLine("JSON.SaveJSON: Creating new JSON...");
         // Create a .json file with these tokens 
         JObject configFile = new JObject(
-            new JProperty("UpdateBranch", "stable"),                        // Default to stable
-            new JProperty("OriginalRomPath", "_PatchData\\rom_crack.z64"),   // Default to PatchData/rom_crack.z64
-            new JProperty("PatchedRomPath", "_Game\\dinosaurplanet.z64"),
-            new JProperty("useHQModels", "false")                           // Default to false
+            new JProperty("UpdateBranch", "stable"),                                        // Default to stable
+            new JProperty("OriginalRomPath", Path.Combine("_PatchData", "rom_crack.z64")),  // Default to PatchData/rom_crack.z64
+            new JProperty("PatchedRomPath", Path.Combine("_Game", "dinosaurplanet.z64")),
+            new JProperty("useHQModels", "false")                                           // Default to false
             );
 
         File.WriteAllText("config.json", configFile.ToString());

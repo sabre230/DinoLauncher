@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace DinoLauncherLib;
 
@@ -9,10 +10,11 @@ public static class Xdelta3
     {
         try
         {
-            fio.SetupFileStructure();
+            //fio.SetupFileStructure();
 
             // Point to 'xdelta3.exe' in the dumbest way possible
-            string exeDir = fio.baseDir + fio.xdeltaPath;
+            string exeDir = System.IO.Path.Combine(fio.baseDir, fio.xdeltaPath);
+
             // Specify arguments for procStartInfo()
             string args = $" -d -s {fBaseRomPath} {fPatchPath} {fPatchedRomPath}";
 
@@ -22,11 +24,11 @@ public static class Xdelta3
                 {
                     FileName = exeDir,
                     Arguments = args,
-                    // Supposed to output executable output to something readable but it doesn't seem to work that way
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     // Don't bother opening a window for this
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    WorkingDirectory = System.IO.Path.Combine(fio.baseDir)
                 };
 
                 // Wait for the process to complete before exiting
@@ -42,9 +44,9 @@ public static class Xdelta3
             catch (Exception ex)
             {
                 Debug.WriteLine("*** Error occured executing the following commands.");
-                Debug.WriteLine(exeDir);
-                Debug.WriteLine(args);
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("exeDir: " + exeDir);
+                Debug.WriteLine("args: " + args);
+                Debug.WriteLine("exception: " + ex.Message);
             }
         }
         catch (Exception ex)
