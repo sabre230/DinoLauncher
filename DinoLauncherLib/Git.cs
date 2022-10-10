@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
-using static System.Net.WebRequestMethods;
 
 namespace DinoLauncherLib;
 
@@ -176,6 +174,6 @@ public static class Git
 			Debug.WriteLine($"Git.PullPatchData: ERROR {e}");
 			return;
 		}
-		Debug.WriteLine($"Git.PullPatchData: Repository pulled successfully.");
+		Debug.WriteLine("Git.PullPatchData: Repository pulled successfully.");
 	}
-};
+}

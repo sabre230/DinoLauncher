@@ -13,7 +13,7 @@ public static class Xdelta3
             //fio.SetupFileStructure();
 
             // Point to 'xdelta3.exe' in the dumbest way possible
-            string exeDir = System.IO.Path.Combine(fio.baseDir, fio.xdeltaPath);
+            string exeDir = Path.Combine(fio.baseDir, fio.xdeltaPath);
 
             // Specify arguments for procStartInfo()
             string args = $" -d -s {fBaseRomPath} {fPatchPath} {fPatchedRomPath}";
@@ -28,7 +28,7 @@ public static class Xdelta3
                     UseShellExecute = false,
                     // Don't bother opening a window for this
                     CreateNoWindow = true,
-                    WorkingDirectory = System.IO.Path.Combine(fio.baseDir)
+                    WorkingDirectory = Path.Combine(fio.baseDir)
                 };
 
                 // Wait for the process to complete before exiting

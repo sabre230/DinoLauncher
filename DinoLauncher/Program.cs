@@ -1,14 +1,13 @@
 ﻿using Eto.Forms;
 using System;
 
-namespace DinoLauncher
+namespace DinoLauncher;
+
+internal class Program
 {
-    internal class Program
+    [STAThread]
+    static void Main(string[] args)
     {
-        [STAThread]
-        static void Main(string[] args)
-        {
-            new Application(Eto.Platform.Detect).Run(new MainForm());
-        }
+        new Application(Eto.Platform.Detect).Run(new MainForm());
     }
 }
