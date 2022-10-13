@@ -5,6 +5,7 @@ public class Extras
     public string[] randomStatusMessages =
     {
         "One root is never enough!", // SnowHorn
+        "I'm too hungry to talk to strangers.", // SnowHorn
         "It's good to see you, Kyte.", // Krystal
         "My name is Krystal, and I'm here for the Princess!", // Krystal
         "I've got a feeling Scales isn't doing this alone...", // Krystal
@@ -30,7 +31,6 @@ public class Extras
         "You will find us all, we must continue!", // Quan Ata Lachu
         "I can taste your fear, animal. It is very sweet.", // Drakor
         "As you wish. If you will not see the truth, then you must die!", // Drakor
-        "I'm too hungry to talk to srangers.", // ThornTail
         "A log for a fish!", // Thorntail
         "How's Randorn? I hope he's okay...", // Thorntail
         "Take these seeds to Moon Mountain Pass, you will know what to do.", // Krazoa
@@ -70,11 +70,11 @@ public class Extras
 
     public void PauseMusic()
     {
-        //mediaPlayer.controls.pause();
+
     }
 
     public void StopMusic()
     {
-        //mediaPlayer.controls.stop();
+
     }
 }

@@ -367,3 +367,6 @@ FodyWeavers.xsd
 
 # Resource file for readme stuff
 .res/
+
+#Shortcut
+git - Shortcut.lnk

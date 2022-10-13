@@ -26,7 +26,7 @@
       <!-- Version Number -->
       <Label
         x:Name="Label_VerNum"
-        Text="DinoLauncher v0.0"
+        Text="DinoLauncher v0.1"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
@@ -43,7 +43,7 @@
       <!--  Main subtitle  -->
       <Label
           x:Name="Label_MainSubtitle"
-          Text=""
+          Text="PREPARE TO LAUNCH SOME DINOS"
           Size="640,32"
           TextAlignment="Center"
           TextColor="White"
@@ -56,7 +56,10 @@
           x:Name="Label_MainTextBody"
           TextAlignment="Center"
           Wrap="Word"
-          Text="Prepare to launch some Dinos."
+          Text="This is DinoLauncher! There should be basic instructions on how to
+          use this application in this block of text. We want to add a bit more
+          to this paragraph because we're also testing how the word wrapping 
+          looks at this resolution. So far so good!"
           Size="365,65"
           TextColor="White"
         />
@@ -113,7 +116,7 @@
         MouseDown="TestButton_ButtonPress"
         MouseUp="TestButton_ButtonRelease"
         Text="TEST"
-        Visible="True"
+        Visible="False"
         Size="170,32"
       />
       

@@ -31,7 +31,7 @@ public class MainForm : Form
     public ImageView        Image_DinosaurPlanetLogo;
     public CheckBox         CheckBox_UseHQModels;
     public DropDown         DropDown_BranchPicker;
-    public string[]         DropDown_BranchPicker_Options = { "Stable", "Nightly" }; // Is there a better way?
+    public string[]         DropDown_BranchPicker_Options = { "stable", "nightly" }; // Is there a better way?
     public Label            Label_VerNum;
     public Label            Label_MainSubtitle;
     public Label            Label_MainTextBody;
@@ -44,8 +44,6 @@ public class MainForm : Form
     public Button           Button_PlayGame;
     public ProgressBar      ProgressBar_Progress;
     public FilePicker       FilePicker_BrowseForRom;
-
-	private static int currentGitObject;
 
     #endregion Form Controls
 
@@ -66,7 +64,7 @@ public class MainForm : Form
         UpdateInitialStatusMessage();
 
         // Update options to match JSON
-        DropDown_BranchPicker.SelectedValue = prefs.desiredBranch;
+        DropDown_BranchPicker.SelectedValue = prefs.desiredBranch.ToLower();
         CheckBox_UseHQModels.Checked = prefs.useHQModels;
 
         // Setup our general file structure
@@ -80,7 +78,7 @@ public class MainForm : Form
         // Check for the game and activate the PLAY button if it exists
         CheckForGame();
 
-        // Would rather do this before building but it's fine for now
+        // Would rather do this before the window is rendered but it's fine for now
         // Please focus on functionality first
         foreach (var item in DropDown_BranchPicker_Options)
         {
@@ -144,17 +142,7 @@ public class MainForm : Form
 
         if (selBranch != null)
         {
-            // Dropdown has an item selected
-            if (selBranch == "stable")
-            {
-                // Choose the stable branch
-                prefs.desiredBranch = "Stable";
-            }
-            else if (selBranch == "nightly")
-            {
-                // Choose the nightly branch
-                prefs.desiredBranch = "Nightly";
-            }
+            prefs.desiredBranch = selBranch.ToLower();
 
             prefs.SaveJSON(prefs);
             Debug.WriteLine($"MainForm.cs: Selected branch: {selBranch}");
@@ -164,6 +152,9 @@ public class MainForm : Form
         {
             Debug.WriteLine("MainForm.cs: DropDown is null? That can't be right...");
         }
+
+        // Update our JSON file please
+        prefs.SaveJSON(prefs);
     }
     #endregion
 
@@ -185,30 +176,6 @@ public class MainForm : Form
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
     }
-
-	/// <summary>
-	/// This is just a helper method for the git commands in order to have a progress bar display for them.
-	/// </summary>
-	private bool TransferProgressHandlerMethod(TransferProgress transferProgress)
-	{
-		//if (isGitProcessGettingCancelled) return false;
-
-		// This needs to be in an Invoke, in order to access the variables from the main thread
-		// Otherwise this will throw a runtime exception
-		Application.Instance.Invoke(() =>
-		{
-			ProgressBar_Progress.MinValue = 0;
-			ProgressBar_Progress.MaxValue = transferProgress.TotalObjects;
-			if (currentGitObject >= transferProgress.ReceivedObjects)
-				return;
-			Label_Status.Text = transferProgress.ReceivedObjects + " (" + ((int)transferProgress.ReceivedBytes / 1000000) + "MB) / " + transferProgress.TotalObjects + " objects";
-			currentGitObject = transferProgress.ReceivedObjects;
-			ProgressBar_Progress.Value = transferProgress.ReceivedObjects;
-		});
-
-		return true;
-	}
-
 	
     /// <summary>
     /// Method that updates <see cref="progressBar"/>.
@@ -231,17 +198,21 @@ public class MainForm : Form
 	#region FilePicker
 	void FilePicker_DragDrop(object sender, EventArgs e)
     {
-        // Do nothing on press to prevent misclicks
+        // Worry about this later
     }
 
     void FilePicker_PathChanged(object sender, EventArgs e)
     {
-        Debug.WriteLine(FilePicker_BrowseForRom.FilePath);
+        var path = FilePicker_BrowseForRom.FilePath;
+        Debug.WriteLine($"MainForm.FilePicker_PathChanged: {path}");
 
         if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
         {
-            fileIO.CopyFile(FilePicker_BrowseForRom.FilePath, fileIO.baseRomPath);
+            fileIO.CopyFile(path, fileIO.baseRomPath);
         }
+
+        prefs.baseRomPath = path;
+        prefs.SaveJSON(prefs);
     }
     #endregion
 

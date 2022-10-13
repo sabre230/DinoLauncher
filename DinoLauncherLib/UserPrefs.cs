@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -8,10 +9,10 @@ namespace DinoLauncherLib;
 
 public class UserPrefs
 {
-    public string desiredBranch;
-    public string baseRomPath;
-    public string patchedRomPath;
-    public bool useHQModels;
+    public string desiredBranch = "";
+    public string baseRomPath = "";
+    public string patchedRomPath = "";
+    public bool useHQModels = false;
 
     public string configFile = "config.json";
 
@@ -49,7 +50,7 @@ public class UserPrefs
 
     public void CreateJSON()
     {
-        // Not concerned about actually running async
+        // Not concerned about actually running async yet
         CreateJSONTask();
     }
     
@@ -96,13 +97,20 @@ public class JSON
         System.Diagnostics.Debug.WriteLine("JSON.SaveJSON: Saving JSON...");
         // Create a new JSON object with these tokens 
         JObject configFile = new JObject(
-            new JProperty("UpdateBranch", prefs.desiredBranch.ToLowerInvariant()),
+            new JProperty("UpdateBranch", prefs.desiredBranch.ToLower()),
             new JProperty("OriginalRomPath", prefs.baseRomPath),
             new JProperty("PatchedRomPath", prefs.patchedRomPath),
             new JProperty("useHQModels", prefs.useHQModels)
             );
 
         File.WriteAllText("config.json", configFile.ToString());
+
+        // Now update our local variables with what's been saved!
+        Debug.WriteLine($"desiredBranch: {prefs.desiredBranch}");
+        Debug.WriteLine($"baseRomPath: {prefs.baseRomPath}");
+        Debug.WriteLine($"patchedRomPath: {prefs.patchedRomPath}");
+        Debug.WriteLine($"useHQModels: {prefs.useHQModels}");
+
         return Task.FromResult<string>(null); // Magic
     }
 }
