@@ -365,8 +365,5 @@ FodyWeavers.xsd
 # JetBrains Rider IDE files
 .idea/
 
-# Resource file for readme stuff
-.res/
-
 #Shortcut
 git - Shortcut.lnk
