@@ -128,22 +128,14 @@ public class UserPrefs
     #endregion
 
     #region Load
-    public void Load()
+    public async Task LoadJSON(string path)
     {
-        // Not concerned about actually running async
-        LoadJSONTask(configFile);
-    }
-
-    public static async Task LoadJSONTask(string path)
-    {
-        await LoadJSON(path);
+        await LoadJSONTask(path);
     }
 
     // This might not be necessary, we will see
-    public static Task<string> LoadJSON(string path)
+    public Task<string> LoadJSONTask(string path)
     {
-        
-
         try
         {
             Debug.WriteLine($"JSON: Loading...");

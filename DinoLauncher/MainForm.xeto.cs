@@ -66,8 +66,6 @@ public class MainForm : Form
         // We want to test things before implementing them
         //Testing();
 
-        prefs.Load();
-
         // Would rather do this before the window is rendered but it's fine for now
         // Please focus on functionality first
         foreach (var item in DropDown_BranchPicker_Options)
