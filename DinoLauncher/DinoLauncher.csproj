@@ -17,10 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="git - Shortcut.lnk" />
     <None Remove="ResourceReference.txt" />
     <None Remove="res\AppIcon\krystalicon.png" />
     <None Remove="res\AppIcon\xdelta3.exe" />
     <None Remove="res\Audio\Music.mp3" />
+    <None Remove="res\config.json" />
     <None Remove="res\Fonts\FF Priska Serif Not That Fat.ttf" />
     <None Remove="res\Fonts\ITC Anima Regular.ttf" />
     <None Remove="res\Fonts\OpenSans-Regular.ttf" />
@@ -58,6 +60,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="res\Images\unknown.png" />
     <EmbeddedResource Include="res\Splash\dinoplanet_logo_splash.png" />
+    <Resource Include="res\config.json" />
     <Resource Include="res\xdelta3.exe" />
   </ItemGroup>
 

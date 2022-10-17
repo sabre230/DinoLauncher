@@ -77,7 +77,7 @@ public static class Git
                 Debug.WriteLine("Git.CheckRepoForPatch: .git folder exists, previous patch has been downloaded");
                 // We should begin checkout, fetch, and pull here 
                 //FetchRemoteRepo(prefs, localRepo);
-                PullPatchData(prefs.desiredBranch);
+                PullPatchData(prefs.UpdateBranch);
             }
             else
             {
@@ -113,25 +113,26 @@ public static class Git
     {
         // We've already confirmed the workingDir exists, so...
         // We clone the repo to a local path and will use that from now on
-        if (prefs.desiredBranch.ToLower() == "nightly")
+        if (prefs.UpdateBranch.ToLower() != "nightly" || prefs.UpdateBranch.ToLower() !=  "stable")
         {
-            // We want the Nightly branch
-            await CloneRemoteRepoAsync(localRepo, "nightly");
+            // Shouldn't be here
+            Debug.WriteLine("Git.CloneRemoteRepo: Invalid repo, must be stable or nightly!");
         }
         else
         {
             // We want the Stable branch (Default)
-            await CloneRemoteRepoAsync(localRepo, "stable");
+            await CloneRemoteRepoAsync(localRepo, prefs.UpdateBranch.ToLower());
         }
     }
 
     public static void FetchRemoteRepo(UserPrefs prefs, Repository localRepo)
     {
+        // Lots of this might be unnecessary
+        // I'm leaving it here in case I need to use it later and don't want to re-write it
         Debug.WriteLine("Git.FetchRemoteRepo");
 
         Debug.WriteLine(localRepo);
         // Remember awaiter
-        // Prune after pull?
         var pullOptions = new PullOptions();
         var fOptions = new FetchOptions();
         var mOptions = new MergeOptions();
@@ -145,12 +146,10 @@ public static class Git
         Commands.Fetch(localRepo, remote.Name, refSpecs, fOptions, msg);
         Debug.WriteLine($"Git.FetchRemoteRepo: Fetched?");
 
-        // Have to pull separately?
-        //PullPatchData(transfer);
         // Was getting mad about null values so I fed it butts
         //Commands.Pull(localRepo, new Signature("butt", "butt@butt.butt", DateTime.Now), new PullOptions());
         //localRepo.MergeFetchedRefs(new Signature("butt", "butt@butt.butt", DateTime.Now), new MergeOptions());
-        PullPatchData(prefs.desiredBranch.ToLower());
+        PullPatchData(prefs.UpdateBranch.ToLower());
     }
 
     public static async Task CloneRemoteRepoAsync(string localRepo, string branch)
@@ -195,6 +194,9 @@ public static class Git
         // Credential information to fetch
         PullOptions options = new PullOptions
         {
+            // We will fix this in a future revision
+            // More concerned with making things work first
+            // UX polish can come later
             //FetchOptions = new FetchOptions { OnTransferProgress = tp => transferProgressHandlerMethod(tp) }
         };
 

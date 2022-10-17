@@ -67,7 +67,8 @@ public class FileIO
         {
             // Make sure to copy over the xdelta3 utility so patching actually works
             //WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
-            CopyFile(Path.Combine("res", "xdelta3.exe"), Path.Combine("_Resources","xdelta3.exe"));
+            // This is completely unnecessary and should probably change
+            File.Copy(Path.Combine("res", "xdelta3.exe"), Path.Combine("_Resources","xdelta3.exe"));
         }
     }
 
@@ -82,63 +83,9 @@ public class FileIO
         DirectoryInfo dir = new DirectoryInfo(path);
     }
 
-    /// <summary>
-    /// Simple tool for moving files (string source, string destination)
-    /// </summary>
-    public void MoveFile(string source, string destination)
-    {
-        if (!File.Exists(source))
-        {
-            Debug.WriteLine($"FileIO.MoveFile(): {source} does not exist.");
-        }
-        else
-        {
-            // .net standard does not allow overwriting on move
-            // Will ALWAYS overwrite, be careful!
-            if (File.Exists(destination))
-                File.Delete(destination);
-            File.Move(source, destination);
-        }
-    }
-
-    /// <summary>
-    /// Simple tool for copying files (string source, string destination)
-    /// </summary>
-    public void CopyFile(string source, string destination)
-    {
-        if (!File.Exists(source))
-        {
-            Debug.WriteLine($"FileIO.CopyFile(): {source} does not exist.");
-        }
-        else
-        {
-            File.Copy(source, destination, true); // Will ALWAYS overwrite, be careful!
-        }
-    }
-
-    /// <summary>
-    /// Simple tool for deleting files (string path)
-    /// </summary>
-    public Task<string> DeleteFile(string path)
-    {
-        if (!File.Exists(path))
-        {
-            Debug.WriteLine($"FileIO.DeleteFile(): {path} does not exist.");
-        }
-        else
-        {
-            // Need to give permission to this somehow
-            File.Delete(path);
-            System.Diagnostics.Debug.WriteLine($"FileIO.DeleteFile: Deleted {path}");
-        }
-
-        // Some magic internet C# BS 
-        return Task.FromResult<string>(null);
-    }
-
 	/// <summary>
 	/// This is a custom method, that deletes a Directory. The reason this is used, instead of <see cref="Directory.Delete(string)"/>,
-	/// is because this one sets the attributes of all files to be deletable, while <see cref="Directory.Delete(string)"/> does not do that on it's own.
+	/// is because this one sets the attributes of all files to be deletable, while <see cref="Directory.Delete(string)"/> does not do that on its own.
 	/// It's needed, because sometimes there are read-only files being generated, that would normally need more code in order to reset the attributes.<br/>
 	/// Note, that this method acts recursively. Stolen from AM2R Community 👀.
 	/// </summary>
@@ -225,32 +172,41 @@ public class FileIO
         // This must be done AFTER cloning!!
         // This is going to be important to making sure the patch always works regardless of name
         // The most recent patch should always be in the "active" folder
-        var files = Directory.GetFiles(Path.Combine(baseDir, "_PatchData", "git", "active"), "*.xdelta", SearchOption.AllDirectories).ToList();
 
-        if (files.Count > 1)
+        try
         {
-            Debug.WriteLine("FileIO.GetLocalPatchPath: Multiple files found in \"active\" which is not allowed!");
+            var files = Directory.GetFiles(Path.Combine(baseDir, "_PatchData", "git", "active"), "*.xdelta", SearchOption.AllDirectories).ToList();
+
+            if (files.Count > 1)
+            {
+                Debug.WriteLine("FileIO.GetLocalPatchPath: Multiple files found in \"active\" which is not allowed!");
+                return false;
+            }
+            else if (files.Count == 0)
+            {
+                Debug.WriteLine("FileIO.GetLocalPatchPath: No xdelta patch found in \"active\"!");
+                return false;
+            }
+
+            foreach (var item in files)
+            {
+                // Need to find which is the most recent and assign that to our selected patch file
+                // We'll figure this out later since we already are checking for a single xdelta file
+                FileInfo info = new FileInfo(item);
+                Debug.WriteLine($"FileIO.GetLocalPatchPath: {item.ToString()}, {info.CreationTime}, {info.LastWriteTime}");
+            }
+
+            // If we made it this far, everything should be good
+            // Return True and set our patch path so we can use it!
+            chosenPatchPath = files[0]; // I mean, it's simple and it should work, so...
+
+            return true;
+            //chosenPatchPath 
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"FileIO.GetLocalPatchPath: {e}");
             return false;
         }
-        else if (files.Count == 0)
-        {
-            Debug.WriteLine("FileIO.GetLocalPatchPath: No xdelta patch found in \"active\"!");
-            return false;
-        }
-
-        foreach (var item in files)
-        {
-            // Need to find which is the most recent and assign that to our selected patch file
-            // We'll figure this out later since we already are checking for a single xdelta file
-            FileInfo info = new FileInfo(item);
-            Debug.WriteLine($"FileIO.GetLocalPatchPath: {item.ToString()}, {info.CreationTime}, {info.LastWriteTime}");
-        }
-
-        // If we made it this far, everything should be good
-        // Return True and set our patch path so we can use it!
-        chosenPatchPath = files[0]; // I mean, it's simple and it should work, so...
-
-        return true;
-        //chosenPatchPath 
     }
 }

@@ -2,16 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Windows.Documents;
 using DinoLauncherLib;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
 using LibGit2Sharp;
+using Xceed.Wpf.AvalonDock.Properties;
 
 namespace DinoLauncher;
-// note to self: remember to pass object through parameters when you need
-// that specifically generated object for some reason like prefs
-// Note to Self: Visual element should rely on prefs, not the other way around
 
 public class MainForm : Form
 {
@@ -19,6 +18,12 @@ public class MainForm : Form
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
     UserPrefs prefs = new UserPrefs();
+    JSON json = new JSON();
+
+    // Quick and dirty copy/paste to get embedded background playing nice
+    static Assembly ass = Assembly.GetExecutingAssembly();
+    static Stream stream = ass.GetManifestResourceStream("DinoLauncher.res.Images.background.png");
+    private readonly Bitmap formBG = new Bitmap(stream);
 
     // Looks like Eto doesn't auto-generate controls in the xeto form
     // According to internet wizards, I have to add them to my class as data members
@@ -26,7 +31,7 @@ public class MainForm : Form
     // Weird
 
     #region Form Controls
-
+    // When adding/removing any controls from MainForm.xeto, these need to be adjusted to match
     public StackLayout      StackLayout;
     public ImageView        Image_DinosaurPlanetLogo;
     public CheckBox         CheckBox_UseHQModels;
@@ -44,6 +49,7 @@ public class MainForm : Form
     public Button           Button_PlayGame;
     public ProgressBar      ProgressBar_Progress;
     public FilePicker       FilePicker_BrowseForRom;
+    public Drawable         Drawable_Drawable;
 
     #endregion Form Controls
 
@@ -54,29 +60,13 @@ public class MainForm : Form
         Start();
     }
 
-    void Start()
+    async void Start()
     {
-        // We want these things to start up as soon as the window opens
+        // We want these things to start up as soon as the window opens, be careful with the order!
         // We want to test things before implementing them
-        Testing();
+        //Testing();
 
-        // Update the status text with a random string from Extras
-        UpdateInitialStatusMessage();
-
-        // Update options to match JSON
-        DropDown_BranchPicker.SelectedValue = prefs.desiredBranch.ToLower();
-        CheckBox_UseHQModels.Checked = prefs.useHQModels;
-
-        // Setup our general file structure
-        fileIO.SetupFileStructure();
-        
-        // Setup preferences after folder layout is finished
-        prefs.Setup();
-
-        // Do a check for the patch file and inform the user
-
-        // Check for the game and activate the PLAY button if it exists
-        CheckForGame();
+        prefs.Load();
 
         // Would rather do this before the window is rendered but it's fine for now
         // Please focus on functionality first
@@ -84,85 +74,130 @@ public class MainForm : Form
         {
             DropDown_BranchPicker.Items.Add(item);
         }
+
+        // Update the status text with a random string from Extras
+        UpdateInitialStatusMessage();
+
+        // Setup our general file structure
+        fileIO.SetupFileStructure();
+
+        // Setup preferences after folder layout is finished
+        prefs.Setup();
+
+        // Update UI to match saved prefs
+        UpdateUI();
+
+        // Check for the game and activate the PLAY button if it exists
+        // NONFUNCTIONAL FOR NOW
+        //CheckForGame();
+
+
+    }
+
+    // Stealing again
+    // Use this to draw the background
+    // Maybe change the background with branch chosen? Eventually maybe later or not who knows 
+    private void Drawable_Paint(object sender, PaintEventArgs e)
+    {
+        // Exit if sender is not a Drawable
+        Drawable drawable = sender as Drawable;
+        if (drawable == null) return;
+        
+        // Our form will not be changing dimensions, so we can keep this nice and simple
+        e.Graphics.DrawImage(formBG, 0, 0, 800, 600);
     }
 
     void Testing()
     {
         // Show all embedded resources in debug output
         // Useful for getting exact object references
-        Assembly myAssembly = Assembly.GetExecutingAssembly();
-        string[] names = myAssembly.GetManifestResourceNames();
-        foreach (string name in names)
-        {
-            Debug.WriteLine($"MainForm.Testing: {name}");
-        }
+        //Assembly myAssembly = Assembly.GetExecutingAssembly();
+        //string[] names = myAssembly.GetManifestResourceNames();
+        //foreach (string name in names)
+        //{
+        //    Debug.WriteLine($"MainForm.Testing: {name}");
+        //}
+
+        // Maybe use this to test some menu sounds, idk
     }
 
-    public void BrowseForFile()
+    void UpdateUI()
     {
+        // Load the JSON stuff to our variables in prefs first
+        //prefs.Load();
+        //prefs.DebugJSON();
 
+        CheckBox_UseHQModels.Checked = prefs.useHQModels;
+        DropDown_BranchPicker.SelectedValue = prefs.UpdateBranch;
+        FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
+
+    // Legacy method marked for disposal
+    //public void BrowseForFile() { }
 
     public void CheckForGame()
     {
         if (File.Exists(fileIO.patchedRomPath))
         {
-            Button_PlayGame.Visible = true;
+            // Wait on this until we can figure out a viable way to launch N64 games reliably
+            //Button_PlayGame.Visible = true;
         }
     }
 
-    // Control methods are in order from top to bottom
+    // Control methods shoule be in order from top to bottom
     #region UseHQModels CheckBox
     private void UseHQModels_CheckedChanged(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
     {
         if (CheckBox_UseHQModels.Checked == true)
         {
-            // If toggled to true
             prefs.useHQModels = true;
-            UpdateStatusText("High quality player models will be used", Color.FromArgb(255, 255, 255));
         }
         else
         {
-            // Else toggled to false
             prefs.useHQModels = false;
-            UpdateStatusText("Standard quality player models will be used", Color.FromArgb(255, 255, 255));
         }
+    }
 
-        // Update our JSON after making adjustments
-        prefs.SaveJSON(prefs);
+    private void UseHQModels_MouseUp(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
+    {
+        // Save our JSON after making adjustments, typically on MouseUp
+        prefs.Save();
     }
     #endregion
 
     #region DropDown BranchPicker
     public void DropDown_BranchPicker_SelectionChanged(object sender, EventArgs e)
     {
-        // Get the selected item value as a lower-case string
+        // Moved to DropDown_BranchPicker_MouseUp to prevent issues with saving prefs
         string selBranch = DropDown_BranchPicker.SelectedValue.ToString().ToLower();
         fileIO.currentBranch = selBranch;
 
         if (selBranch != null)
         {
-            prefs.desiredBranch = selBranch.ToLower();
+            prefs.UpdateBranch = selBranch.ToLower();
 
-            prefs.SaveJSON(prefs);
-            Debug.WriteLine($"MainForm.cs: Selected branch: {selBranch}");
+            // Should be doing this on Picker_MouseUp
+            //prefs.SaveJSON(prefs);
+            Debug.WriteLine($"MainForm.DropDown: Selected branch: {selBranch}");
 
+            Button_UpdatePatch.Enabled = true;
         }
         else
         {
-            Debug.WriteLine("MainForm.cs: DropDown is null? That can't be right...");
+            Debug.WriteLine($"MainForm.DropDown: DropDown is {selBranch}? That can't be right...");
         }
+    }
 
+    public void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
+    {
+        // Get the selected item value as a lower-case string
         // Update our JSON file please
-        prefs.SaveJSON(prefs);
+        prefs.Save();
     }
     #endregion
 
     #region UpdatePatch Button
-    public void UpdatePatch_ButtonPress(object sender, EventArgs e)
-    {
-        
-    }
+    public void UpdatePatch_ButtonPress(object sender, EventArgs e) { }
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
@@ -176,22 +211,6 @@ public class MainForm : Form
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
     }
-	
-    /// <summary>
-    /// Method that updates <see cref="progressBar"/>.
-    /// </summary>
-    /// <param name="value">The value that <see cref="progressBar"/> should be set to.</param>
-    /// <param name="min">The min value that <see cref="progressBar"/> should be set to.</param>
-    /// <param name="max">The max value that <see cref="progressBar"/> should be set to.</param>
-    private void UpdateProgressBar(int value, int min, int max)
-	{
-		Application.Instance.Invoke(() =>
-		{
-			ProgressBar_Progress.MinValue = min;
-			ProgressBar_Progress.MaxValue = max;
-			ProgressBar_Progress.Value = value;
-		});
-	}
 	#endregion
 
     // This button doesn't exist anymore...
@@ -204,15 +223,31 @@ public class MainForm : Form
     void FilePicker_PathChanged(object sender, EventArgs e)
     {
         var path = FilePicker_BrowseForRom.FilePath;
-        Debug.WriteLine($"MainForm.FilePicker_PathChanged: {path}");
+        Debug.WriteLine($"MainForm.FilePicker_PathChanged: Looking for {path}");
 
-        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
+        try
         {
-            fileIO.CopyFile(path, fileIO.baseRomPath);
+            // Copy the rom to our working directory
+            if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
+            {
+                // Set the baserom path to be the local copy from now on
+                File.Copy(path, fileIO.baseRomPath, true); // True for overwrite
+
+                // Enable the Apply Patch button
+                Button_PatchExecute.Enabled = true;
+
+                // Only do this if the path is valid
+                prefs.OriginalRomPath = path;
+                prefs.Save();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"MainForm.FilePicker_PathChanged: {ex}");
         }
 
-        prefs.baseRomPath = path;
-        prefs.SaveJSON(prefs);
+
+
     }
     #endregion
 
@@ -230,7 +265,7 @@ public class MainForm : Form
         // Copy the original rom file to the patchdata folder so we can have a controlled version
         if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
         {
-            fileIO.CopyFile(FilePicker_BrowseForRom.FilePath, prefs.baseRomPath);
+            File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath);
         }
 
         Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
@@ -412,5 +447,21 @@ public class MainForm : Form
             Debug.WriteLine($"MainForm.InfoPopup: {e}");
         }
         
+    }
+
+    /// <summary>
+    /// Method that updates <see cref="progressBar"/>.
+    /// </summary>
+    /// <param name="value">The value that <see cref="progressBar"/> should be set to.</param>
+    /// <param name="min">The min value that <see cref="progressBar"/> should be set to.</param>
+    /// <param name="max">The max value that <see cref="progressBar"/> should be set to.</param>
+    private void UpdateProgressBar(int value, int min, int max)
+    {
+        Application.Instance.Invoke(() =>
+        {
+            ProgressBar_Progress.MinValue = min;
+            ProgressBar_Progress.MaxValue = max;
+            ProgressBar_Progress.Value = value;
+        });
     }
 }

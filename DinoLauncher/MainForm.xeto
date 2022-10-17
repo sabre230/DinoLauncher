@@ -13,6 +13,10 @@
   Maximizable="False"
 	>
 
+  <Drawable
+    Paint="Drawable_Paint"    
+    >
+  
   <!-- This form is currently in complete disarray as I focus on the backend -->
   <!-- Things will be fixed, but for now actual funcionality is paramount -->
     <!-- Main Stack Layout -->
@@ -26,7 +30,7 @@
       <!-- Version Number -->
       <Label
         x:Name="Label_VerNum"
-        Text="DinoLauncher v0.1"
+        Text="DinoLauncher v0.0x"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
@@ -44,7 +48,8 @@
       <Label
           x:Name="Label_MainSubtitle"
           Text="PREPARE TO LAUNCH SOME DINOS"
-          Size="640,32"
+          Size="640,64"
+          Font="24"
           TextAlignment="Center"
           TextColor="White"
           />
@@ -56,10 +61,10 @@
           x:Name="Label_MainTextBody"
           TextAlignment="Center"
           Wrap="Word"
-          Text="This is DinoLauncher! There should be basic instructions on how to
-          use this application in this block of text. We want to add a bit more
-          to this paragraph because we're also testing how the word wrapping 
-          looks at this resolution. So far so good!"
+          Text="Welcome to DinoLauncher! This tool is design to make it easier to 
+          casually keep your copy of Dinoaur Planet up to date with the most 
+          recent patches, enabling you to experience a formerly-lost piece of 
+          Nintendo and Rare Ltd. history, have fun!"
           Size="365,65"
           TextColor="White"
         />
@@ -72,6 +77,7 @@
           CheckedChanged="UseHQModels_CheckedChanged"
           Size="140,64"
           TextColor="White"
+          MouseUp="UseHQModels_MouseUp"
         
         />
 
@@ -88,12 +94,11 @@
       <!--  Line break = &#x0a;-->
       <DropDown
         x:Name="DropDown_BranchPicker"
-        SelectedIndex="0"
         Size="170,32"
         TextColor="Black"
         ShowBorder="False"
+        MouseUp="DropDown_BranchPicker_MouseUp"
         SelectedValueChanged="DropDown_BranchPicker_SelectionChanged"
-        SelectedValue="Stable"
         ToolTip="Stable: Dinosaur Planet is an inherently unfinished game, 
         &#x0a;but this will make it as stable as possible for casual play.
         &#x0a;
@@ -107,6 +112,7 @@
         MouseDown="UpdatePatch_ButtonPress"
         MouseUp="UpdatePatch_ButtonRelease"
         Text="Check for Updates"
+        Enabled="False"
         Size="170,32"
       />
 
@@ -128,9 +134,7 @@
         AllowDrop="True"
         Title="Browse for 'rom_crack.z64'"
         FileAction="OpenFile"
-        FilePath="rom_crack.z64"
         Size="170,32"
-        Tag="FilePath"
         Enabled="True"
         Visible="True"
       />
@@ -143,6 +147,7 @@
         MouseUp="PatchExecute_ButtonRelease"
         Text="Apply Patch"
         Size="170,32"
+        Enabled="False"
       />
 
       <!--  PLAY! Button  -->
@@ -153,6 +158,7 @@
         MouseUp="Button_PlayGame_Released"
         Text="PLAY!"
         Size="170,32"
+        Font="12"
         Visible="False"
       />
 
@@ -181,7 +187,7 @@
           Value="50"
           Width="750"
           Height="16"
-          Visible="True"
+          Visible="False"
           Enabled="True"
           />
 
@@ -210,5 +216,7 @@
 			<ButtonToolItem Text="Click Me!" Click="HandleClickMe" />
 		</ToolBar>
 	</Form.ToolBar> -->
+
+  </Drawable>
   
   </Form>
