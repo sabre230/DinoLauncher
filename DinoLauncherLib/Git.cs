@@ -111,12 +111,18 @@ public static class Git
     //public static void CloneRemoteRepo(Func<TransferProgress, bool>, UserPrefs prefs)
     public static async Task CloneRemoteRepo(UserPrefs prefs, string localRepo)
     {
+        var branch = prefs.UpdateBranch.ToString().ToLower();
+        branch.Normalize();
+
         // We've already confirmed the workingDir exists, so...
         // We clone the repo to a local path and will use that from now on
-        if (prefs.UpdateBranch.ToLower() != "nightly" || prefs.UpdateBranch.ToLower() !=  "stable")
+        // This string check is not accurate! Not sure why, will require some fiddling
+        if (branch != "nightly" || branch != "stable")
         {
             // Shouldn't be here
-            Debug.WriteLine("Git.CloneRemoteRepo: Invalid repo, must be stable or nightly!");
+            Debug.WriteLine($"Git.CloneRemoteRepo: '{prefs.UpdateBranch}' is an invalid repo, must be stable or nightly!");
+            // In the meantime, just clone anwyay
+            await CloneRemoteRepoAsync(localRepo, prefs.UpdateBranch.ToLower());
         }
         else
         {
@@ -139,7 +145,7 @@ public static class Git
         mOptions.MergeFileFavor = MergeFileFavor.Theirs;
         fOptions.Prune = true;
         fOptions.TagFetchMode = TagFetchMode.Auto;
-        // No credentials necessary for public repo
+        // No credentials should be necessary for public repo
         var remote = localRepo.Network.Remotes["origin"];
         var msg = "Fetching remote...";
         var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
@@ -147,8 +153,6 @@ public static class Git
         Debug.WriteLine($"Git.FetchRemoteRepo: Fetched?");
 
         // Was getting mad about null values so I fed it butts
-        //Commands.Pull(localRepo, new Signature("butt", "butt@butt.butt", DateTime.Now), new PullOptions());
-        //localRepo.MergeFetchedRefs(new Signature("butt", "butt@butt.butt", DateTime.Now), new MergeOptions());
         PullPatchData(prefs.UpdateBranch.ToLower());
     }
 

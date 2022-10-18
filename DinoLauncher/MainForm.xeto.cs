@@ -67,7 +67,6 @@ public class MainForm : Form
         //Testing();
 
         // Would rather do this before the window is rendered but it's fine for now
-        // Please focus on functionality first
         foreach (var item in DropDown_BranchPicker_Options)
         {
             DropDown_BranchPicker.Items.Add(item);
@@ -85,8 +84,7 @@ public class MainForm : Form
         // Update UI to match saved prefs
         UpdateUI();
 
-        // Check for the game and activate the PLAY button if it exists
-        // NONFUNCTIONAL FOR NOW
+        // Check for the game and activate the PLAY button if it exists (later)
         //CheckForGame();
 
 
@@ -121,17 +119,11 @@ public class MainForm : Form
 
     void UpdateUI()
     {
-        // Load the JSON stuff to our variables in prefs first
-        //prefs.Load();
-        //prefs.DebugJSON();
-
-        CheckBox_UseHQModels.Checked = prefs.useHQModels;
+        // Load JSON stuff
+        CheckBox_UseHQModels.Checked = prefs.UseHQModels;
         DropDown_BranchPicker.SelectedValue = prefs.UpdateBranch;
         FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
-
-    // Legacy method marked for disposal
-    //public void BrowseForFile() { }
 
     public void CheckForGame()
     {
@@ -148,18 +140,18 @@ public class MainForm : Form
     {
         if (CheckBox_UseHQModels.Checked == true)
         {
-            prefs.useHQModels = true;
+            prefs.UseHQModels = true;
         }
         else
         {
-            prefs.useHQModels = false;
+            prefs.UseHQModels = false;
         }
     }
 
-    private void UseHQModels_MouseUp(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
+    private async void UseHQModels_MouseUp(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
     {
         // Save our JSON after making adjustments, typically on MouseUp
-        prefs.Save();
+        await prefs.SaveJSON();
     }
     #endregion
 
@@ -186,11 +178,11 @@ public class MainForm : Form
         }
     }
 
-    public void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
+    public async void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
     {
         // Get the selected item value as a lower-case string
         // Update our JSON file please
-        prefs.Save();
+        await prefs.SaveJSON();
     }
     #endregion
 
@@ -218,7 +210,7 @@ public class MainForm : Form
         // Worry about this later
     }
 
-    void FilePicker_PathChanged(object sender, EventArgs e)
+    async void FilePicker_PathChanged(object sender, EventArgs e)
     {
         var path = FilePicker_BrowseForRom.FilePath;
         Debug.WriteLine($"MainForm.FilePicker_PathChanged: Looking for {path}");
@@ -236,7 +228,7 @@ public class MainForm : Form
 
                 // Only do this if the path is valid
                 prefs.OriginalRomPath = path;
-                prefs.Save();
+                await prefs.SaveJSON();
             }
         }
         catch (Exception ex)
@@ -257,13 +249,10 @@ public class MainForm : Form
 
     void PatchExecute_ButtonRelease(object sender, EventArgs e)
     {
-        // MAUI doesn't handle button releases at this time, so we need to account for that
-        Debug.WriteLine("Button released");
-
         // Copy the original rom file to the patchdata folder so we can have a controlled version
-        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64"))
+        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64") && File.Exists(fileIO.patchedRomPath))
         {
-            File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath);
+            File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath, true); // true for overwrite
         }
 
         Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
@@ -271,7 +260,7 @@ public class MainForm : Form
                                    (Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)));
 
         // We will apply these changes AFTER patching, otherwise CRC will break
-        if (prefs.useHQModels)
+        if (prefs.UseHQModels)
         {
             Debug.WriteLine("Using HQ Models...");
             using var stream = File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
@@ -309,15 +298,8 @@ public class MainForm : Form
 
     private void Button_PlayGame_Released(object sender, EventArgs e)
     {
-        //// Reset button appearance on release
-        //Button b = (Button)sender;
-        //VisualStateManager.GoToState(b, "Normal");
-
         // There are many different N64 emulators, it's tough to account for that
-        // So we may need to rely on the user's preferences for Z64 files
         // Find a way to initiate playing the game
-        // Quick and dirty that isn't reliable
-        Process.Start(@"cmd -c C:\Users\sabre\source\repos\DinoLauncherMAUI\DinoLauncherMAUI\bin\Debug\net6.0-windows10.0.19041.0\win10-x64\AppX\Game\dinosaurplanet.z64");
     }
     #endregion
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 using Newtonsoft.Json;
@@ -15,23 +16,22 @@ namespace DinoLauncherLib;
 // Having a hard time passing objects back and forth in a cleanly fashion
 public class UserPrefs
 {
-    public string UpdateBranch;
-    public string OriginalRomPath;
-    public string PatchedRomPath;
-    public bool useHQModels;
+    // Am I doing this correctly?
+    [JsonProperty("UpdateBranch")]
+    public string UpdateBranch { get; set; }
+    [JsonProperty("OriginalRomPath")]
+    public string OriginalRomPath { get; set; }
+    [JsonProperty("PatchedRomPath")]
+    public string PatchedRomPath { get; set; }
+    [JsonProperty("UseHQModels")]
+    public bool UseHQModels { get; set; }
 
-    public string configFile = "config.json";
-
-    //readonly static JObject jObj = new JObject(
-    //new JProperty("UpdateBranch", ""),
-    //new JProperty("OriginalRomPath", ""),
-    //new JProperty("PatchedRomPath", ""),
-    //new JProperty("useHQModels", ""));
+    public readonly string configFile = "config.json";
 
     readonly static JsonSerializer serializer = new JsonSerializer();
 
     #region Setup and Prepare
-    public void Setup()
+    public async void Setup()
     {
         // Check if the config file already exists
         if (!File.Exists(configFile))
@@ -39,7 +39,8 @@ public class UserPrefs
             Task.Run(async () => { await CreateJSONTask(); }).Wait();
         }
 
-        PrepareJSON();
+        await LoadJSON();
+
         // Just to confirm we are loading our JSON data correctly
         DebugJSON();
     }
@@ -49,11 +50,6 @@ public class UserPrefs
         // Maybe handle our reader stuff here?
         //StreamReader reader = new StreamReader(configFile);
 
-        //JSON.Deserialize(configFile);
-        DebugJSON();
-        //JSON.Serialize(jObj, this);
-        DebugJSON();
-
         // Hook up all the JSON stuff
         //var json = reader.ReadToEnd();
         //JsonTextReader jreader = new JsonTextReader(new StringReader(json));
@@ -62,26 +58,22 @@ public class UserPrefs
     #endregion
 
     #region Create
-    public void CreateJSON(UserPrefs prefs)
+    public async Task CreateJSON()
     {
-        // Not concerned about actually running async yet
-        CreateJSONTask();
+        await CreateJSONTask();
     }
 
-    public static async Task CreateJSONTask()
+    public Task<string> CreateJSONTask()
     {
-        await CreateJSON();
-    }
+        ////Create a new JSON object with these tokens
+        JObject configFile = new JObject(
+            new JProperty("UpdateBranch", UpdateBranch),
+            new JProperty("OriginalRomPath", OriginalRomPath),
+            new JProperty("PatchedRomPath", PatchedRomPath),
+            new JProperty("UseHQModels", UseHQModels)
+            );
 
-    public static Task<string> CreateJSON()
-    {
-        // Create a new JSON object with these tokens 
-        //JObject configFile = new JObject(
-        //    new JProperty("UpdateBranch", desiredBranch.ToLower()),
-        //    new JProperty("OriginalRomPath", baseRomPath),
-        //    new JProperty("PatchedRomPath", patchedRomPath),
-        //    new JProperty("UseHQModels", useHQModels)
-        //    );
+        File.WriteAllText(Path.Combine("res", "config.json"), configFile.ToString());
 
         // Lol just copy the resource for now
         // No need to overcomplicate; time is running out
@@ -92,64 +84,41 @@ public class UserPrefs
     #endregion
 
     #region Save
-    // There's a better way surely but I can't keep staring a this
-    public void Save()
-    {
-        // Not concerned about actually running async
-        SaveJSONTask();
-    }
-
-    public static async Task SaveJSONTask()
+    public async Task SaveJSON()
     {
         // We need to update our JSON config file with the most recent settings
-        await SaveJSON();
+        await SaveJSONTask(this);
     }
 
-    public static Task<string> SaveJSON()
+    public Task<string> SaveJSONTask(UserPrefs prefs)
     {
         Debug.WriteLine("JSON.SaveJSON: Saving JSON...");
         serializer.NullValueHandling = NullValueHandling.Ignore;
 
-        // Create a new JSON object with these tokens 
-        //JObject configFile = new JObject(
-        //    new JProperty("UpdateBranch", prefs.desiredBranch.ToLower()),
-        //    new JProperty("OriginalRomPath", prefs.baseRomPath),
-        //    new JProperty("PatchedRomPath", prefs.patchedRomPath),
-        //    new JProperty("useHQModels", prefs.useHQModels)
-        //    );
-
-        //File.WriteAllText("config.json", jObj.ToString());
-
-
-
+        JSON.Serialize(this, prefs);
         return Task.FromResult<string>(null); // Magic
-
     }
     #endregion
 
     #region Load
-    public async Task LoadJSON(string path)
+    public async Task LoadJSON()
     {
-        await LoadJSONTask(path);
+        await LoadJSONTask();
     }
 
     // This might not be necessary, we will see
-    public Task<string> LoadJSONTask(string path)
+    public Task<string> LoadJSONTask()
     {
         try
         {
             Debug.WriteLine($"JSON: Loading...");
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            JSON json = new JSON().FromJson(File.ReadAllText(configFile));
 
-            JSON.Deserialize("config.json");
-            JSON config = new JSON().FromJson(File.ReadAllText(path));
-
-            // Set our variables with information parsed from the JSON config file
-            // I think I'm doing this wrong
-            UpdateBranch = config.UpdateBranch;
-            OriginalRomPath = config.OriginalRomPath;
-            PatchedRomPath = config.PatchedRomPath;
-            useHQModels = config.useHQModels;
-
+            UpdateBranch = json.UpdateBranch;
+            OriginalRomPath = json.OriginalRomPath;
+            PatchedRomPath = json.PatchedRomPath;
+            UseHQModels = json.UseHQModels;
 
             Debug.WriteLine($"JSON: Done loading.");
         }
@@ -166,10 +135,10 @@ public class UserPrefs
     public void DebugJSON()
     {
         // Putting this all in its own method to keep things organized
-        Debug.WriteLine($"UserPrefs.desiredBranch = {UpdateBranch}");
-        Debug.WriteLine($"UserPrefs.baseRomPath = {OriginalRomPath}");
-        Debug.WriteLine($"UserPrefs.patchedRomPath = {PatchedRomPath}");
-        Debug.WriteLine($"UserPrefs.useHQModels = {useHQModels}");
+        Debug.WriteLine($"UserPrefs.UpdateBranch = {UpdateBranch}");
+        Debug.WriteLine($"UserPrefs.OriginalRomPath = {OriginalRomPath}");
+        Debug.WriteLine($"UserPrefs.PatchedRomPath = {PatchedRomPath}");
+        Debug.WriteLine($"UserPrefs.UseHQModels = {UseHQModels}");
     }
     #endregion
 
@@ -178,6 +147,7 @@ public class UserPrefs
 
 public class JSON
 {
+    // Am I doing this correctly?
     [JsonProperty("UpdateBranch")]
     public string UpdateBranch { get; set; }
     [JsonProperty("OriginalRomPath")]
@@ -185,7 +155,7 @@ public class JSON
     [JsonProperty("PatchedRomPath")]
     public string PatchedRomPath { get; set; }
     [JsonProperty("UseHQModels")]
-    public bool useHQModels { get; set; }
+    public bool UseHQModels { get; set; }
 
     public JSON FromJson(string json) => JsonConvert.DeserializeObject<JSON>(json, s);
 
