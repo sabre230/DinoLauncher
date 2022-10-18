@@ -249,9 +249,6 @@ public class MainForm : Form
         {
             Debug.WriteLine($"MainForm.FilePicker_PathChanged: {ex}");
         }
-
-
-
     }
     #endregion
 
@@ -281,7 +278,6 @@ public class MainForm : Form
             Debug.WriteLine("Using HQ Models...");
             using var stream = File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
             // It seems the position changes after any time it's read, so we have to keep setting the stream position
-            // Fix later, get working now
             // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1
             stream.Position = 0x037EECA1;
             Debug.WriteLine($"Old Sabre Model Value: 0x037EECA1 0{stream.ReadByte()} ");
@@ -303,8 +299,24 @@ public class MainForm : Form
             stream.Position = 0x37EF18D;
             Debug.WriteLine($"New Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
         }
+        else
+        {
+            // Just to keep track of things
+        }
+
+        // Want to open a window to the finished rom here
 
         ProgressBar_Progress.Visible = false;
+        try
+        {
+            var fileBrowser = new System.Diagnostics.ProcessStartInfo() { FileName = Path.Combine(fileIO.baseDir, "_Game"), UseShellExecute = true };
+            Process.Start(fileBrowser);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"MainForm.PatchExecute_ButtonRelease: ERROR: {ex}");
+        }
+
     }
     #endregion
 
