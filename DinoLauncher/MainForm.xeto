@@ -30,7 +30,7 @@
       <!-- Version Number -->
       <Label
         x:Name="Label_VerNum"
-        Text="DinoLauncher v0.0x"
+        Text="DinoLauncher v0.01a"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
