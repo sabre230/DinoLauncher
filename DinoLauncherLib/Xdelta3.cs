@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DinoLauncherLib;
 
 public static class Xdelta3
 {
-    public static void ApplyPatch(FileIO fio, string fBaseRomPath, string fPatchPath, string fPatchedRomPath)
+    public static Task<string> ApplyPatch(FileIO fio, string fBaseRomPath, string fPatchPath, string fPatchedRomPath)
     {
         try
         {
@@ -54,5 +55,7 @@ public static class Xdelta3
             Debug.WriteLine(ex);
 
         }
+
+        return Task.FromResult<string>(null);
     }
 }

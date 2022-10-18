@@ -82,6 +82,11 @@ public class MainForm : Form
         // Update UI to match saved prefs
         UpdateUI();
 
+        if (File.Exists(fileIO.patchedRomPath))
+        {
+            ToggleAllControls(true, true);
+        }
+
         // Check for the game and activate the PLAY button if it exists (later)
         //CheckForGame();
 
@@ -184,7 +189,7 @@ public class MainForm : Form
         prefs.SaveJSON();
     }
 
-    public async void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
+    public void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
     {
 
     }
@@ -195,6 +200,9 @@ public class MainForm : Form
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
+        ProgressBar_Progress.Visible = true;
+        ProgressBar_Progress.Indeterminate = true; // Indeterminate until I get progress hooked up
+
         Debug.WriteLine("MainForm.UpdatePatch: Checking for updates...");
         ToggleAllControls(false, true);
 
@@ -204,6 +212,9 @@ public class MainForm : Form
         //Git.PullPatchData(TransferProgressHandlerMethod);
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
+
+        ProgressBar_Progress.Visible = false;
+        ProgressBar_Progress.Indeterminate = false;
     }
 	#endregion
 
@@ -250,15 +261,17 @@ public class MainForm : Form
         //Debug.WriteLine("Button pressed");
     }
 
-    void PatchExecute_ButtonRelease(object sender, EventArgs e)
+    async void PatchExecute_ButtonRelease(object sender, EventArgs e)
     {
-        // Copy the original rom file to the patchdata folder so we can have a controlled version
-        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64") && File.Exists(fileIO.patchedRomPath))
-        {
-            File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath, true); // true for overwrite
-        }
+        ProgressBar_Progress.Visible = true;
 
-        Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
+        // Copy the original rom file to the patchdata folder so we can have a controlled version
+        //if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64") && File.Exists(fileIO.patchedRomPath))
+        //{
+        //    File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath, true); // true for overwrite
+        //}
+
+        await Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
                                    (fileIO.chosenPatchPath),
                                    (Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)));
 
@@ -290,6 +303,8 @@ public class MainForm : Form
             stream.Position = 0x37EF18D;
             Debug.WriteLine($"New Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
         }
+
+        ProgressBar_Progress.Visible = false;
     }
     #endregion
 
