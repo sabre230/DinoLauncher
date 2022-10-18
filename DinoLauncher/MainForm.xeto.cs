@@ -51,7 +51,7 @@ public class MainForm : Form
     public FilePicker       FilePicker_BrowseForRom;
     public Drawable         Drawable_Drawable;
 
-    #endregion Form Controls
+    #endregion 
 
 
     public MainForm()
@@ -60,7 +60,7 @@ public class MainForm : Form
         Start();
     }
 
-    async void Start()
+    void Start()
     {
         // We want these things to start up as soon as the window opens, be careful with the order!
         // We want to test things before implementing them
@@ -90,9 +90,7 @@ public class MainForm : Form
 
     }
 
-    // Stealing again
     // Use this to draw the background
-    // Maybe change the background with branch chosen? Eventually maybe later or not who knows 
     private void Drawable_Paint(object sender, PaintEventArgs e)
     {
         // Exit if sender is not a Drawable
@@ -105,21 +103,19 @@ public class MainForm : Form
 
     void Testing()
     {
-        // Show all embedded resources in debug output
-        // Useful for getting exact object references
+        //// Show all embedded resources in debug output
+        //// Useful for getting exact object references
         //Assembly myAssembly = Assembly.GetExecutingAssembly();
         //string[] names = myAssembly.GetManifestResourceNames();
         //foreach (string name in names)
         //{
         //    Debug.WriteLine($"MainForm.Testing: {name}");
         //}
-
-        // Maybe use this to test some menu sounds, idk
     }
 
     void UpdateUI()
     {
-        // Load JSON stuff
+        // Load JSON stuff into UI
         CheckBox_UseHQModels.Checked = prefs.UseHQModels;
         DropDown_BranchPicker.SelectedValue = prefs.UpdateBranch;
         FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
@@ -203,7 +199,6 @@ public class MainForm : Form
     }
 	#endregion
 
-    // This button doesn't exist anymore...
 	#region FilePicker
 	void FilePicker_DragDrop(object sender, EventArgs e)
     {

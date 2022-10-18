@@ -54,8 +54,6 @@
           TextColor="White"
           />
 
-
-
       <!--  Main text body  -->
       <Label
           x:Name="Label_MainTextBody"
@@ -106,6 +104,9 @@
         &#x0a;Save states will be your best friend, use at your own risk."
       />
 
+      <!-- Not what it's for but I'm using it for padding between elements -->
+      <Splitter Size="0,8"></Splitter>
+      
       <!--  Check for most recent patch  -->
       <Button
         x:Name="Button_UpdatePatch"
@@ -126,6 +127,9 @@
         Size="170,32"
       />
       
+            <!-- Half size to account for dropdown inherent padding -->
+      <Splitter Size="0,4"></Splitter>
+      
       <!--  Browse for rom file -->
       <FilePicker
         x:Name="FilePicker_BrowseForRom"
@@ -139,6 +143,9 @@
         Visible="True"
       />
 
+      <!-- Half size to account for dropdown inherent padding -->
+      <Splitter Size="0,4"></Splitter>
+      
       <!--  Apply the patch  -->
       <!--  Change the property IsEnabled to True when Md5 validates as good  -->
       <Button
@@ -193,30 +200,6 @@
 
       </StackLayoutItem>  
     </StackLayout>
-
-    <!-- Example Block -->
-  <!--  <Form.Menu>
-		<MenuBar>
-			<SubMenuItem Text="&amp;File">
-				<ButtonMenuItem Text="Click Me!" Click="HandleClickMe" />
-			</SubMenuItem>
-			<MenuBar.ApplicationItems>
-				<ButtonMenuItem Text="Preferences.." Shortcut="{On Control+O, Mac=Application+Comma}" />
-			</MenuBar.ApplicationItems>
-			<MenuBar.QuitItem>
-				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
-			</MenuBar.QuitItem>
-			<MenuBar.AboutItem>
-				<ButtonMenuItem Text="About..." Click="HandleAbout" />
-			</MenuBar.AboutItem>
-		</MenuBar>
-	</Form.Menu>
-	<Form.ToolBar>
-		<ToolBar>
-			<ButtonToolItem Text="Click Me!" Click="HandleClickMe" />
-		</ToolBar>
-	</Form.ToolBar> -->
-
   </Drawable>
   
   </Form>

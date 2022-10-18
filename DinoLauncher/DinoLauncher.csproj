@@ -17,17 +17,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="res\Fonts\**" />
+    <EmbeddedResource Remove="res\Fonts\**" />
+    <None Remove="res\Fonts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="git - Shortcut.lnk" />
     <None Remove="ResourceReference.txt" />
     <None Remove="res\AppIcon\krystalicon.png" />
     <None Remove="res\AppIcon\xdelta3.exe" />
     <None Remove="res\Audio\Music.mp3" />
     <None Remove="res\config.json" />
-    <None Remove="res\Fonts\FF Priska Serif Not That Fat.ttf" />
-    <None Remove="res\Fonts\ITC Anima Regular.ttf" />
-    <None Remove="res\Fonts\OpenSans-Regular.ttf" />
-    <None Remove="res\Fonts\OpenSans-Semibold.ttf" />
-    <None Remove="res\Fonts\Penumbra Half Serif Semibold.ttf" />
     <None Remove="res\Images\background.png" />
     <None Remove="res\Images\dinoplanet_logo.png" />
     <None Remove="res\Images\krystalicon.png" />
@@ -43,11 +44,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="res\Audio\Music.mp3" />
-    <EmbeddedResource Include="res\Fonts\FF Priska Serif Not That Fat.ttf" />
-    <EmbeddedResource Include="res\Fonts\ITC Anima Regular.ttf" />
-    <EmbeddedResource Include="res\Fonts\OpenSans-Regular.ttf" />
-    <EmbeddedResource Include="res\Fonts\OpenSans-Semibold.ttf" />
-    <EmbeddedResource Include="res\Fonts\Penumbra Half Serif Semibold.ttf" />
     <EmbeddedResource Include="res\AppIcon\favicon.ico" />
   </ItemGroup>
 
