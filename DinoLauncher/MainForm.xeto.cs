@@ -18,17 +18,15 @@ public class MainForm : Form
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
     UserPrefs prefs = new UserPrefs();
-    JSON json = new JSON();
+    string appVerNum = "DinoLauncher v0.01a RC1";
+    string modVerNum = "Dinopatch (Enhanceded)";
+    public string AppVerNum { get { return appVerNum; } set { appVerNum = value; } }
+    public string ModVerNum { get { return modVerNum; } set { modVerNum = value; } }
 
-    // Quick and dirty copy/paste to get embedded background playing nice
+    // Quick and dirty copy/paste to get embedded background image playing nice
     static Assembly ass = Assembly.GetExecutingAssembly();
     static Stream stream = ass.GetManifestResourceStream("DinoLauncher.res.Images.background.png");
     private readonly Bitmap formBG = new Bitmap(stream);
-
-    // Looks like Eto doesn't auto-generate controls in the xeto form
-    // According to internet wizards, I have to add them to my class as data members
-    // or properties with the same name
-    // Weird
 
     #region Form Controls
     // When adding/removing any controls from MainForm.xeto, these need to be adjusted to match
@@ -117,7 +115,14 @@ public class MainForm : Form
     {
         // Load JSON stuff into UI
         CheckBox_UseHQModels.Checked = prefs.UseHQModels;
-        DropDown_BranchPicker.SelectedValue = prefs.UpdateBranch;
+        if (prefs.UpdateBranch == "stable")
+        {
+            DropDown_BranchPicker.SelectedIndex = 0;
+        }
+        if (prefs.UpdateBranch == "nightly")
+        {
+            DropDown_BranchPicker.SelectedIndex = 1;
+        }
         FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
 
@@ -166,19 +171,22 @@ public class MainForm : Form
             //prefs.SaveJSON(prefs);
             Debug.WriteLine($"MainForm.DropDown: Selected branch: {selBranch}");
 
+            // On picking a branch, enable browse for rom
             Button_UpdatePatch.Enabled = true;
+            FilePicker_BrowseForRom.Enabled = true;
         }
         else
         {
             Debug.WriteLine($"MainForm.DropDown: DropDown is {selBranch}? That can't be right...");
         }
+
+        // Save on update
+        prefs.SaveJSON();
     }
 
     public async void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
     {
-        // Get the selected item value as a lower-case string
-        // Update our JSON file please
-        await prefs.SaveJSON();
+
     }
     #endregion
 

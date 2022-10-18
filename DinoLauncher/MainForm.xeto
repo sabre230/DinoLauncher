@@ -29,18 +29,27 @@
 
       <!-- Version Number -->
       <Label
-        x:Name="Label_VerNum"
-        Text="DinoLauncher v0.01a"
+        x:Name="Label_AppVerNum"
+        Text="{Binding Path=AppVerNum}"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
         />
 
+      <Label
+        x:Name="Label_ModVerNum"
+        Text="{Binding Path=ModVerNum}"
+        TextColor="White"
+        TextAlignment="Left"
+        Size="850,16"
+      />
+      
+
       <!--  Dino Planet logo  -->
       <!--  Using a Resource Extension to grab embedded objects  -->
       <ImageView
           x:Name="Image_DinoPlanetLogo"
-          Size="800,150"
+          Size="800,125"
           Image="{Resource DinoLauncher.res.Images.dinoplanet_logo.png, DinoLauncher}"
           />
 
@@ -48,7 +57,7 @@
       <Label
           x:Name="Label_MainSubtitle"
           Text="PREPARE TO LAUNCH SOME DINOS"
-          Size="640,64"
+          Size="640,52"
           Font="24"
           TextAlignment="Center"
           TextColor="White"
@@ -139,7 +148,7 @@
         Title="Browse for 'rom_crack.z64'"
         FileAction="OpenFile"
         Size="170,32"
-        Enabled="True"
+        Enabled="False"
         Visible="True"
       />
 
@@ -181,6 +190,9 @@
           TextColor="White"
           />      
       </StackLayoutItem>
+
+      <!-- Half size to account for dropdown inherent padding -->
+      <Splitter Size="0,8"></Splitter>
       
       <StackLayoutItem
         VerticalAlignment="Bottom"
@@ -191,7 +203,6 @@
           BackgroundColor="Black"
           MinValue="0"
           MaxValue="100"
-          Value="50"
           Width="750"
           Height="16"
           Visible="False"
