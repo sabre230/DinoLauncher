@@ -301,7 +301,12 @@ public class MainForm : Form
         }
         else
         {
-            // Just to keep track of things
+            // Give us the byte value for these regardless
+            stream.Position = 0x037EECA1;
+            Debug.WriteLine($"Sabre Model Value (SQ 07, HQ 08) : 0x037EECA1 0{stream.ReadByte()} ");
+
+            stream.Position = 0x37EF18D;
+            Debug.WriteLine($"Krystal Model Value (SQ 00, HQ 02): 0x37EF18D 0{stream.ReadByte()} ");
         }
 
         // Want to open a window to the finished rom here

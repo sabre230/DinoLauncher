@@ -27,18 +27,19 @@
       HorizontalContentAlignment="Center"
       >
 
-      <!-- Version Number -->
+      <!-- Version Number {Binding Path=AppVerNum} -->
       <Label
         x:Name="Label_AppVerNum"
-        Text="{Binding Path=AppVerNum}"
+        Text="DinoLauncher v0.01a"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
         />
-
+      
+      <!-- Version Number {Binding Path=ModVerNum} -->
       <Label
         x:Name="Label_ModVerNum"
-        Text="{Binding Path=ModVerNum}"
+        Text="Dinomod Enhanceded v20221014"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"
