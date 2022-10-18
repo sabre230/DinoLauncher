@@ -11,7 +11,9 @@ We will not be distributing roms in any capacity, do not ask.
 How to Use:
 
 You will need a copy of "rom_crack.z64"
+
 MD5 must be `c4c1b52f9c4469c6c747942891de3cfd`
+
 
 - Choose your branch (stable or nightly)
 - Click "Check for Updates"
