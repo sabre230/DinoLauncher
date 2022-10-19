@@ -85,6 +85,8 @@
 
   <ItemGroup>
     <Content Include="res\AppIcon\favicon.ico" />
+    <Content Include="res\Fonts\OpenSans-Regular.ttf" />
+    <Content Include="res\Fonts\OpenSans-Semibold.ttf" />
   </ItemGroup>
 
   <ItemGroup>
