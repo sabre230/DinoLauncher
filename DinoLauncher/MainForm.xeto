@@ -103,7 +103,6 @@
       <DropDown
         x:Name="DropDown_BranchPicker"
         Size="170,32"
-        TextColor="Black"
         ShowBorder="False"
         MouseUp="DropDown_BranchPicker_MouseUp"
         SelectedValueChanged="DropDown_BranchPicker_SelectionChanged"
