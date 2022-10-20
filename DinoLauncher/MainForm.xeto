@@ -173,10 +173,12 @@
         x:Name="Button_PlayGame"
         MouseDown="Button_PlayGame_Pressed"
         MouseUp="Button_PlayGame_Released"
-        Text="PLAY!"
+        Text="LAUNCH!"
+        BackgroundColor="#FFE400"
         Size="170,32"
-        Font="12"
+        Font="16"
         Visible="False"
+        Enabled="True"
       />
 
       <StackLayoutItem

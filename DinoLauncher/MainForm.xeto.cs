@@ -85,6 +85,8 @@ public class MainForm : Form
         if (File.Exists(fileIO.patchedRomPath))
         {
             ToggleAllControls(true, true);
+            Button_PlayGame.Enabled = true;
+            Button_PlayGame.Visible = true;
         }
 
         // Check for the game and activate the PLAY button if it exists (later)
@@ -118,8 +120,8 @@ public class MainForm : Form
 
     void UpdateUI()
     {
-        // Load JSON stuff into UI
         CheckBox_UseHQModels.Checked = prefs.UseHQModels;
+
         if (prefs.UpdateBranch == "stable")
         {
             DropDown_BranchPicker.SelectedIndex = 0;
@@ -128,6 +130,7 @@ public class MainForm : Form
         {
             DropDown_BranchPicker.SelectedIndex = 1;
         }
+
         FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
 
@@ -212,6 +215,12 @@ public class MainForm : Form
         //Git.PullPatchData(TransferProgressHandlerMethod);
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
+
+        if (File.Exists(fileIO.patchedRomPath))
+        {
+            Button_PlayGame.Enabled = true;
+            Button_PlayGame.Visible = true;
+        }
 
         ProgressBar_Progress.Visible = false;
         ProgressBar_Progress.Indeterminate = false;
@@ -333,8 +342,32 @@ public class MainForm : Form
 
     private void Button_PlayGame_Released(object sender, EventArgs e)
     {
-        // There are many different N64 emulators, it's tough to account for that
-        // Find a way to initiate playing the game
+        // Hoping this works on other platforms, uses System.Diagnostics
+        // Doing some light research tells me this should be fine
+        // Now maybe there's a way to pass a fullscreen parameter? Non-priority
+        try
+        {
+            string path = Path.Combine(fileIO.baseDir, fileIO.patchedRomPath);
+            Debug.WriteLine($"Trying to load: {path}");
+
+            using (Process p = new Process())
+            {
+                p.StartInfo = new ProcessStartInfo()
+                {
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    CreateNoWindow = false,
+                    UseShellExecute = true,
+                    Verb = "Open",
+                    FileName = path
+                };
+
+                p.Start();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+        }
     }
     #endregion
 
