@@ -87,11 +87,8 @@ public class MainForm : Form
             Button_PlayGame.Visible = true;
             Button_PatchExecute.Visible = false;
         }
-
-        // Check for the game and activate the PLAY button if it exists (later)
-        //CheckForGame();
-
-
+        
+        Button_PatchExecute.Enabled = false;
     }
 
     // Use this to draw the background
@@ -208,6 +205,8 @@ public class MainForm : Form
         Debug.WriteLine("MainForm.UpdatePatch: Checking for updates...");
         ToggleAllControls(false, true);
         Button_PatchExecute.Enabled = false;
+        Button_PatchExecute.Visible = true;
+        Button_PlayGame.Visible = false;
 
 		await Git.CheckRepoForPatch(prefs, fileIO);
 
@@ -219,8 +218,6 @@ public class MainForm : Form
 
         if (File.Exists(fileIO.patchedRomPath))
         {
-            // Ehhhhhhhhhhhhhh I don't like this, temporary fix for a timing issue
-            System.Threading.Thread.Sleep(1000);
             Button_PlayGame.Visible = true;
             Button_PatchExecute.Visible = false;
         }
@@ -339,7 +336,7 @@ public class MainForm : Form
 
     }
     #endregion
-
+    
     #region PlayGame Button
     private void Button_PlayGame_Pressed(object sender, EventArgs e)
     {
