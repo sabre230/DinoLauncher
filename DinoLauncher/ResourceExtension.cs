@@ -9,6 +9,7 @@ using Portable.Xaml.Markup;
 // We need this to access embedded resources using XAML
 namespace Eto.Serialization.Xaml.Extensions;
 
+// This class is required for XAML
 [MarkupExtensionReturnType(typeof(object))]
 public class ResourceExtension : MarkupExtension
 {

@@ -11,18 +11,18 @@ namespace DinoLauncher;
 
 public class MainForm : Form
 {
-    // I think it'll be easier to just pass these along in function parameters
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
     UserPrefs prefs = new UserPrefs();
-    string appVerNum = "DinoLauncher v0.01a RC1";
-    string modVerNum = "Dinopatch (Enhanceded)";
-    // I'll figure out XAML binding soon enough
+    string appVerNum = "DinoLauncher v0.01b"; // Remember to update this or automate it in a better way
+    string modVerNum = ""; // Pull from another source later
+
+    // Fix up XAML binding at some point
     public string AppVerNum { get { return appVerNum; } set { appVerNum = value; } }
     public string ModVerNum { get { return modVerNum; } set { modVerNum = value; } }
 
     // Quick and dirty copy/paste to get embedded background image playing nice
-    static Assembly ass = Assembly.GetExecutingAssembly(); // haha
+    static Assembly ass = Assembly.GetExecutingAssembly();
     static Stream stream = ass.GetManifestResourceStream("DinoLauncher.res.Images.background.png");
     private readonly Bitmap formBG = new Bitmap(stream);
 
@@ -59,11 +59,6 @@ public class MainForm : Form
     void Start()
     {
         // We want these things to start up as soon as the window opens, be careful with the order!
-        // We want to test things before implementing them
-        //Testing();
-
-        // Would rather do this before the window is rendered but it's fine for now
-        // Eto Forms XAML is finnicky
         foreach (var item in DropDown_BranchPicker_Options)
         {
             DropDown_BranchPicker.Items.Add(item);
@@ -78,17 +73,8 @@ public class MainForm : Form
         // Setup preferences after folder layout is finished
         prefs.Setup();
 
-        // Update UI to match saved prefs
+        // Update UI with UI stuff
         UpdateUI();
-
-        if (File.Exists(fileIO.patchedRomPath))
-        {
-            ToggleAllControls(true, true);
-            Button_PlayGame.Visible = true;
-            Button_PatchExecute.Visible = false;
-        }
-        
-        Button_PatchExecute.Enabled = false;
     }
 
     // Use this to draw the background
@@ -116,7 +102,12 @@ public class MainForm : Form
 
     void UpdateUI()
     {
-        CheckBox_UseHQModels.Checked = prefs.UseHQModels;
+        if (File.Exists(fileIO.patchedRomPath))
+        {
+            ToggleAllControls(true, true);
+            Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
+        }
 
         if (prefs.UpdateBranch == "stable")
         {
@@ -127,16 +118,11 @@ public class MainForm : Form
             DropDown_BranchPicker.SelectedIndex = 1;
         }
 
-        FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
-    }
+        Button_PatchExecute.Enabled = false;
 
-    public void CheckForGame()
-    {
-        if (File.Exists(fileIO.patchedRomPath))
-        {
-            // Wait on this until we can figure out a viable way to launch N64 games reliably
-            //Button_PlayGame.Visible = true;
-        }
+        CheckBox_UseHQModels.Checked = prefs.UseHQModels;
+
+        FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
 
     // Control methods shoule be in order from top to bottom
@@ -374,16 +360,6 @@ public class MainForm : Form
     }
     #endregion
 
-    void TestButton_ButtonPress(object sender, EventArgs e)
-    {
-        //InfoPopup("ALERT", "This is a test!");
-    }
-
-    void TestButton_ButtonRelease(object sender, EventArgs e)
-    {
-        Testing();
-    }
-
     #region UpdateStatusText Methods
     /// <summary>
     /// Method to quickly update the status text at the bottom of the screen.
@@ -436,6 +412,18 @@ public class MainForm : Form
                 Debug.WriteLine($"DisableAllControls: {ex}");
             }
         }
+    }
+    #endregion
+
+    #region Test Button
+    void TestButton_ButtonPress(object sender, EventArgs e)
+    {
+        //InfoPopup("ALERT", "This is a test!");
+    }
+
+    void TestButton_ButtonRelease(object sender, EventArgs e)
+    {
+        Testing();
     }
     #endregion
 
