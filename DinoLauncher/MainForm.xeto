@@ -178,7 +178,6 @@
         Size="170,32"
         Font="16"
         Visible="False"
-        Enabled="True"
       />
 
       <StackLayoutItem

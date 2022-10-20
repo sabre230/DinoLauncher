@@ -2,13 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Windows.Documents;
 using DinoLauncherLib;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
-using LibGit2Sharp;
-using Xceed.Wpf.AvalonDock.Properties;
 
 namespace DinoLauncher;
 
@@ -20,11 +17,12 @@ public class MainForm : Form
     UserPrefs prefs = new UserPrefs();
     string appVerNum = "DinoLauncher v0.01a RC1";
     string modVerNum = "Dinopatch (Enhanceded)";
+    // I'll figure out XAML binding soon enough
     public string AppVerNum { get { return appVerNum; } set { appVerNum = value; } }
     public string ModVerNum { get { return modVerNum; } set { modVerNum = value; } }
 
     // Quick and dirty copy/paste to get embedded background image playing nice
-    static Assembly ass = Assembly.GetExecutingAssembly();
+    static Assembly ass = Assembly.GetExecutingAssembly(); // haha
     static Stream stream = ass.GetManifestResourceStream("DinoLauncher.res.Images.background.png");
     private readonly Bitmap formBG = new Bitmap(stream);
 
@@ -65,6 +63,7 @@ public class MainForm : Form
         //Testing();
 
         // Would rather do this before the window is rendered but it's fine for now
+        // Eto Forms XAML is finnicky
         foreach (var item in DropDown_BranchPicker_Options)
         {
             DropDown_BranchPicker.Items.Add(item);
@@ -85,8 +84,8 @@ public class MainForm : Form
         if (File.Exists(fileIO.patchedRomPath))
         {
             ToggleAllControls(true, true);
-            Button_PlayGame.Enabled = true;
             Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
         }
 
         // Check for the game and activate the PLAY button if it exists (later)
@@ -208,6 +207,7 @@ public class MainForm : Form
 
         Debug.WriteLine("MainForm.UpdatePatch: Checking for updates...");
         ToggleAllControls(false, true);
+        Button_PatchExecute.Enabled = false;
 
 		await Git.CheckRepoForPatch(prefs, fileIO);
 
@@ -215,11 +215,14 @@ public class MainForm : Form
         //Git.PullPatchData(TransferProgressHandlerMethod);
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
+        Button_PatchExecute.Enabled = true;
 
         if (File.Exists(fileIO.patchedRomPath))
         {
-            Button_PlayGame.Enabled = true;
+            // Ehhhhhhhhhhhhhh I don't like this, temporary fix for a timing issue
+            System.Threading.Thread.Sleep(1000);
             Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
         }
 
         ProgressBar_Progress.Visible = false;
@@ -317,14 +320,17 @@ public class MainForm : Form
             stream.Position = 0x37EF18D;
             Debug.WriteLine($"Krystal Model Value (SQ 00, HQ 02): 0x37EF18D 0{stream.ReadByte()} ");
         }
-
-        // Want to open a window to the finished rom here
-
+        
         ProgressBar_Progress.Visible = false;
+
         try
         {
             var fileBrowser = new System.Diagnostics.ProcessStartInfo() { FileName = Path.Combine(fileIO.baseDir, "_Game"), UseShellExecute = true };
             Process.Start(fileBrowser);
+
+            // Go ahead and show the LAUNCH button too
+            Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
         }
         catch (Exception ex)
         {
@@ -418,8 +424,7 @@ public class MainForm : Form
         Control[] controls = {CheckBox_UseHQModels,
                                         DropDown_BranchPicker,
                                         Button_UpdatePatch,
-                                        FilePicker_BrowseForRom,
-                                        Button_PatchExecute };
+                                        FilePicker_BrowseForRom};
 
         foreach (var item in controls)
         {
