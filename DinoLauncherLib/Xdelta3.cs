@@ -11,9 +11,7 @@ public static class Xdelta3
     {
         try
         {
-            //fio.SetupFileStructure();
-
-            // Point to 'xdelta3.exe' in the dumbest way possible
+            // Point to 'xdelta3.exe'
             string exeDir = Path.Combine(fio.baseDir, fio.xdeltaPath);
 
             // Specify arguments for procStartInfo()
@@ -27,7 +25,6 @@ public static class Xdelta3
                     Arguments = args,
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
-                    // Don't bother opening a window for this
                     CreateNoWindow = true,
                     WorkingDirectory = Path.Combine(fio.baseDir)
                 };

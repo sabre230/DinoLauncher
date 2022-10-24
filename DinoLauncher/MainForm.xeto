@@ -204,9 +204,9 @@
           BackgroundColor="Black"
           MinValue="0"
           MaxValue="100"
-          Width="750"
+          Width="650"
           Height="16"
-          Visible="False"
+          Visible="True"
           Enabled="True"
           />
 
