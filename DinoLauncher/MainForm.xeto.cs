@@ -2,33 +2,29 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Windows.Documents;
 using DinoLauncherLib;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
-using LibGit2Sharp;
-using Xceed.Wpf.AvalonDock.Properties;
 
 namespace DinoLauncher;
 
 public class MainForm : Form
 {
-    // I think it'll be easier to just pass these along in function parameters
     FileIO fileIO = new FileIO(); // Use to reference and perform directory/file functions
     Extras extras = new Extras();// Use for fun things like music or w/e
     UserPrefs prefs = new UserPrefs();
-    JSON json = new JSON();
+    string appVerNum = "DinoLauncher v0.01b"; // Remember to update this or automate it in a better way
+    string modVerNum = ""; // Pull from another source later
 
-    // Quick and dirty copy/paste to get embedded background playing nice
+    // Fix up XAML binding at some point
+    public string AppVerNum { get { return appVerNum; } set { appVerNum = value; } }
+    public string ModVerNum { get { return modVerNum; } set { modVerNum = value; } }
+
+    // Quick and dirty copy/paste to get embedded background image playing nice
     static Assembly ass = Assembly.GetExecutingAssembly();
     static Stream stream = ass.GetManifestResourceStream("DinoLauncher.res.Images.background.png");
     private readonly Bitmap formBG = new Bitmap(stream);
-
-    // Looks like Eto doesn't auto-generate controls in the xeto form
-    // According to internet wizards, I have to add them to my class as data members
-    // or properties with the same name
-    // Weird
 
     #region Form Controls
     // When adding/removing any controls from MainForm.xeto, these need to be adjusted to match
@@ -51,7 +47,7 @@ public class MainForm : Form
     public FilePicker       FilePicker_BrowseForRom;
     public Drawable         Drawable_Drawable;
 
-    #endregion Form Controls
+    #endregion 
 
 
     public MainForm()
@@ -60,13 +56,9 @@ public class MainForm : Form
         Start();
     }
 
-    async void Start()
+    void Start()
     {
         // We want these things to start up as soon as the window opens, be careful with the order!
-        // We want to test things before implementing them
-        //Testing();
-
-        // Would rather do this before the window is rendered but it's fine for now
         foreach (var item in DropDown_BranchPicker_Options)
         {
             DropDown_BranchPicker.Items.Add(item);
@@ -81,18 +73,11 @@ public class MainForm : Form
         // Setup preferences after folder layout is finished
         prefs.Setup();
 
-        // Update UI to match saved prefs
+        // Update UI with UI stuff
         UpdateUI();
-
-        // Check for the game and activate the PLAY button if it exists (later)
-        //CheckForGame();
-
-
     }
 
-    // Stealing again
     // Use this to draw the background
-    // Maybe change the background with branch chosen? Eventually maybe later or not who knows 
     private void Drawable_Paint(object sender, PaintEventArgs e)
     {
         // Exit if sender is not a Drawable
@@ -105,33 +90,39 @@ public class MainForm : Form
 
     void Testing()
     {
-        // Show all embedded resources in debug output
-        // Useful for getting exact object references
+        //// Show all embedded resources in debug output
+        //// Useful for getting exact object references
         //Assembly myAssembly = Assembly.GetExecutingAssembly();
         //string[] names = myAssembly.GetManifestResourceNames();
         //foreach (string name in names)
         //{
         //    Debug.WriteLine($"MainForm.Testing: {name}");
         //}
-
-        // Maybe use this to test some menu sounds, idk
     }
 
     void UpdateUI()
     {
-        // Load JSON stuff
-        CheckBox_UseHQModels.Checked = prefs.UseHQModels;
-        DropDown_BranchPicker.SelectedValue = prefs.UpdateBranch;
-        FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
-    }
-
-    public void CheckForGame()
-    {
         if (File.Exists(fileIO.patchedRomPath))
         {
-            // Wait on this until we can figure out a viable way to launch N64 games reliably
-            //Button_PlayGame.Visible = true;
+            ToggleAllControls(true, true);
+            Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
         }
+
+        if (prefs.UpdateBranch == "stable")
+        {
+            DropDown_BranchPicker.SelectedIndex = 0;
+        }
+        if (prefs.UpdateBranch == "nightly")
+        {
+            DropDown_BranchPicker.SelectedIndex = 1;
+        }
+
+        Button_PatchExecute.Enabled = false;
+
+        CheckBox_UseHQModels.Checked = prefs.UseHQModels;
+
+        FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
 
     // Control methods shoule be in order from top to bottom
@@ -170,19 +161,22 @@ public class MainForm : Form
             //prefs.SaveJSON(prefs);
             Debug.WriteLine($"MainForm.DropDown: Selected branch: {selBranch}");
 
+            // On picking a branch, enable browse for rom
             Button_UpdatePatch.Enabled = true;
+            FilePicker_BrowseForRom.Enabled = true;
         }
         else
         {
             Debug.WriteLine($"MainForm.DropDown: DropDown is {selBranch}? That can't be right...");
         }
+
+        // Save on update
+        prefs.SaveJSON();
     }
 
-    public async void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
+    public void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
     {
-        // Get the selected item value as a lower-case string
-        // Update our JSON file please
-        await prefs.SaveJSON();
+
     }
     #endregion
 
@@ -191,8 +185,14 @@ public class MainForm : Form
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
+        ProgressBar_Progress.Visible = true;
+        ProgressBar_Progress.Indeterminate = true; // Indeterminate until I get progress hooked up
+
         Debug.WriteLine("MainForm.UpdatePatch: Checking for updates...");
         ToggleAllControls(false, true);
+        Button_PatchExecute.Enabled = false;
+        Button_PatchExecute.Visible = true;
+        Button_PlayGame.Visible = false;
 
 		await Git.CheckRepoForPatch(prefs, fileIO);
 
@@ -200,10 +200,19 @@ public class MainForm : Form
         //Git.PullPatchData(TransferProgressHandlerMethod);
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
+        Button_PatchExecute.Enabled = true;
+
+        if (File.Exists(fileIO.patchedRomPath))
+        {
+            Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
+        }
+
+        ProgressBar_Progress.Visible = false;
+        ProgressBar_Progress.Indeterminate = false;
     }
 	#endregion
 
-    // This button doesn't exist anymore...
 	#region FilePicker
 	void FilePicker_DragDrop(object sender, EventArgs e)
     {
@@ -235,9 +244,6 @@ public class MainForm : Form
         {
             Debug.WriteLine($"MainForm.FilePicker_PathChanged: {ex}");
         }
-
-
-
     }
     #endregion
 
@@ -247,15 +253,17 @@ public class MainForm : Form
         //Debug.WriteLine("Button pressed");
     }
 
-    void PatchExecute_ButtonRelease(object sender, EventArgs e)
+    async void PatchExecute_ButtonRelease(object sender, EventArgs e)
     {
-        // Copy the original rom file to the patchdata folder so we can have a controlled version
-        if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64") && File.Exists(fileIO.patchedRomPath))
-        {
-            File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath, true); // true for overwrite
-        }
+        ProgressBar_Progress.Visible = true;
 
-        Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
+        // Copy the original rom file to the patchdata folder so we can have a controlled version
+        //if (FilePicker_BrowseForRom.FilePath.EndsWith(".z64") && File.Exists(fileIO.patchedRomPath))
+        //{
+        //    File.Copy(FilePicker_BrowseForRom.FilePath, prefs.OriginalRomPath, true); // true for overwrite
+        //}
+
+        await Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
                                    (fileIO.chosenPatchPath),
                                    (Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)));
 
@@ -265,7 +273,6 @@ public class MainForm : Form
             Debug.WriteLine("Using HQ Models...");
             using var stream = File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
             // It seems the position changes after any time it's read, so we have to keep setting the stream position
-            // Fix later, get working now
             // Swap Sabre's model to HQ (0x7 to 0x8) at position 0x037EECA1
             stream.Position = 0x037EECA1;
             Debug.WriteLine($"Old Sabre Model Value: 0x037EECA1 0{stream.ReadByte()} ");
@@ -287,9 +294,35 @@ public class MainForm : Form
             stream.Position = 0x37EF18D;
             Debug.WriteLine($"New Krystal Model Value: 0x37EF18D 0{stream.ReadByte()} ");
         }
+        else
+        {
+            // Give us the byte value for these regardless
+            stream.Position = 0x037EECA1;
+            Debug.WriteLine($"Sabre Model Value (SQ 07, HQ 08) : 0x037EECA1 0{stream.ReadByte()} ");
+
+            stream.Position = 0x37EF18D;
+            Debug.WriteLine($"Krystal Model Value (SQ 00, HQ 02): 0x37EF18D 0{stream.ReadByte()} ");
+        }
+        
+        ProgressBar_Progress.Visible = false;
+
+        try
+        {
+            var fileBrowser = new System.Diagnostics.ProcessStartInfo() { FileName = Path.Combine(fileIO.baseDir, "_Game"), UseShellExecute = true };
+            Process.Start(fileBrowser);
+
+            // Go ahead and show the LAUNCH button too
+            Button_PlayGame.Visible = true;
+            Button_PatchExecute.Visible = false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"MainForm.PatchExecute_ButtonRelease: ERROR: {ex}");
+        }
+
     }
     #endregion
-
+    
     #region PlayGame Button
     private void Button_PlayGame_Pressed(object sender, EventArgs e)
     {
@@ -298,20 +331,34 @@ public class MainForm : Form
 
     private void Button_PlayGame_Released(object sender, EventArgs e)
     {
-        // There are many different N64 emulators, it's tough to account for that
-        // Find a way to initiate playing the game
+        // Hoping this works on other platforms, uses System.Diagnostics
+        // Doing some light research tells me this should be fine
+        // Now maybe there's a way to pass a fullscreen parameter? Non-priority
+        try
+        {
+            string path = Path.Combine(fileIO.baseDir, fileIO.patchedRomPath);
+            Debug.WriteLine($"Trying to load: {path}");
+
+            using (Process p = new Process())
+            {
+                p.StartInfo = new ProcessStartInfo()
+                {
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    CreateNoWindow = false,
+                    UseShellExecute = true,
+                    Verb = "Open",
+                    FileName = path
+                };
+
+                p.Start();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+        }
     }
     #endregion
-
-    void TestButton_ButtonPress(object sender, EventArgs e)
-    {
-        //InfoPopup("ALERT", "This is a test!");
-    }
-
-    void TestButton_ButtonRelease(object sender, EventArgs e)
-    {
-        Testing();
-    }
 
     #region UpdateStatusText Methods
     /// <summary>
@@ -350,8 +397,7 @@ public class MainForm : Form
         Control[] controls = {CheckBox_UseHQModels,
                                         DropDown_BranchPicker,
                                         Button_UpdatePatch,
-                                        FilePicker_BrowseForRom,
-                                        Button_PatchExecute };
+                                        FilePicker_BrowseForRom};
 
         foreach (var item in controls)
         {
@@ -366,6 +412,18 @@ public class MainForm : Form
                 Debug.WriteLine($"DisableAllControls: {ex}");
             }
         }
+    }
+    #endregion
+
+    #region Test Button
+    void TestButton_ButtonPress(object sender, EventArgs e)
+    {
+        //InfoPopup("ALERT", "This is a test!");
+    }
+
+    void TestButton_ButtonRelease(object sender, EventArgs e)
+    {
+        Testing();
     }
     #endregion
 
