@@ -44,7 +44,6 @@ public class FileIO
         // Set the current working directory to the application root
         System.IO.Directory.SetCurrentDirectory(baseDir);
 
-
         // These are now included in the project by default
         // This check is now redunant and can probably be removed later
         #region Check for directories
@@ -68,10 +67,8 @@ public class FileIO
 
         if (!File.Exists(xdeltaPath))
         {
-            // Make sure to copy over the xdelta3 utility so patching actually works
-            //WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
-            // This is completely unnecessary and should probably change
-            File.Copy(Path.Combine("res", "xdelta3.exe"), Path.Combine("_Resources","xdelta3.exe"));
+            // We'll do a check for this later
+            // For now, we're just including it in the project
         }
     }
 

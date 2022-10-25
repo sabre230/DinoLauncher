@@ -11,9 +11,9 @@
 
     <UseXeto>True</UseXeto>
 
-    <PackageIcon>krystalicon.png</PackageIcon>
+    <PackageIcon>_Resources\Images\krystalicon.png</PackageIcon>
 
-    <ApplicationIcon>res\AppIcon\favicon.ico</ApplicationIcon>
+    <ApplicationIcon>_Resources\AppIcon\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

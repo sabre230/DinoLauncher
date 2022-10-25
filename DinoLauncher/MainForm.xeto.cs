@@ -23,7 +23,7 @@ public class MainForm : Form
 
     // Quick and dirty copy/paste to get embedded background image playing nice
     static Assembly ass = Assembly.GetExecutingAssembly();
-    static Stream stream = ass.GetManifestResourceStream("DinoLauncher.res.Images.background.png");
+    static Stream stream = ass.GetManifestResourceStream("DinoLauncher._Resources.Images.background.png");
     private readonly Bitmap formBG = new Bitmap(stream);
 
     #region Form Controls
@@ -109,13 +109,18 @@ public class MainForm : Form
             Button_PatchExecute.Visible = false;
         }
 
-        if (prefs.UpdateBranch != "stable")
+        Debug.WriteLine(prefs.UpdateBranch);
+        if (prefs.UpdateBranch == "stable")
+        {
+            DropDown_BranchPicker.SelectedIndex = 0;
+        }
+        else if (prefs.UpdateBranch == "nightly")
         {
             DropDown_BranchPicker.SelectedIndex = 1;
         }
         else
         {
-            // The only other option for now is to set it to stable
+            // Default to stable
             DropDown_BranchPicker.SelectedIndex = 0;
         }
 

@@ -73,11 +73,11 @@ public class UserPrefs
             new JProperty("UseHQModels", UseHQModels)
             );
 
-        File.WriteAllText(Path.Combine("res", "config.json"), configFile.ToString());
+        File.WriteAllText(Path.Combine("_Resources", "config.json"), configFile.ToString());
 
         // Lol just copy the resource for now
         // No need to overcomplicate; time is running out
-        File.Copy(Path.Combine("res", "config.json"), "config.json"); // Just put it in the root folder for now, fix later
+        File.Copy(Path.Combine("_Resources", "config.json"), "config.json"); // Just put it in the root folder for now, fix later
 
         return Task.FromResult<string>(null); // Magic
     }
