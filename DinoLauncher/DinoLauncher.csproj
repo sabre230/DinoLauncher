@@ -25,37 +25,37 @@
   <ItemGroup>
     <None Remove="git - Shortcut.lnk" />
     <None Remove="ResourceReference.txt" />
-    <None Remove="res\AppIcon\krystalicon.png" />
-    <None Remove="res\AppIcon\xdelta3.exe" />
-    <None Remove="res\Audio\Music.mp3" />
+    <None Remove="_Resources\AppIcon\krystalicon.png" />
+    <None Remove="_Resources\AppIcon\xdelta3.exe" />
+    <None Remove="_Resources\Audio\Music.mp3" />
     <None Remove="res\config.json" />
-    <None Remove="res\Images\background.png" />
-    <None Remove="res\Images\dinoplanet_logo.png" />
-    <None Remove="res\Images\krystalicon.png" />
-    <None Remove="res\Images\unknown.png" />
-    <None Remove="res\Splash\dinoplanet_logo_splash.png" />
+    <None Remove="_Resources\Images\background.png" />
+    <None Remove="_Resources\Images\dinoplanet_logo.png" />
+    <None Remove="_Resources\Images\krystalicon.png" />
+    <None Remove="_Resources\Images\unknown.png" />
+    <None Remove="_Resources\Splash\dinoplanet_logo_splash.png" />
     <None Remove="res\xdelta3.exe" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="MainForm.xeto" />
-    <EmbeddedResource Include="res\AppIcon\krystalicon.png" />
+    <EmbeddedResource Include="_Resources\AppIcon\krystalicon.png" />
     <EmbeddedResource Include="_Resources\xdelta3.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="res\Audio\Music.mp3" />
-    <EmbeddedResource Include="res\AppIcon\favicon.ico" />
+    <EmbeddedResource Include="_Resources\Audio\Music.mp3" />
+    <EmbeddedResource Include="_Resources\AppIcon\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="res\Images\background.png" />
-    <EmbeddedResource Include="res\Images\dinoplanet_logo.png" />
-    <EmbeddedResource Include="res\Images\krystalicon.png">
+    <EmbeddedResource Include="_Resources\Images\background.png" />
+    <EmbeddedResource Include="_Resources\Images\dinoplanet_logo.png" />
+    <EmbeddedResource Include="_Resources\Images\krystalicon.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
-    <EmbeddedResource Include="res\Images\unknown.png" />
-    <EmbeddedResource Include="res\Splash\dinoplanet_logo_splash.png" />
+    <EmbeddedResource Include="_Resources\Images\unknown.png" />
+    <EmbeddedResource Include="_Resources\Splash\dinoplanet_logo_splash.png" />
     <Resource Include="res\config.json" />
     <Resource Include="res\xdelta3.exe" />
   </ItemGroup>
@@ -84,9 +84,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="res\AppIcon\favicon.ico" />
-    <Content Include="res\Fonts\OpenSans-Regular.ttf" />
-    <Content Include="res\Fonts\OpenSans-Semibold.ttf" />
+    <Content Include="_Resources\AppIcon\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -96,6 +94,7 @@
   <ItemGroup>
     <Folder Include="_Game\" />
     <Folder Include="_PatchData\git\" />
+    <Folder Include="_Resources\Fonts\" />
   </ItemGroup>
 
 </Project>

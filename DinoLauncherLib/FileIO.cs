@@ -29,8 +29,8 @@ public class FileIO
     public string patchedRomPath = Path.Combine("_Game", "dinosaurplanet.z64");
     public string gitWorkDir;
 
-    //public string assemblyPath;
-    //public string currentBranch;
+    public string assemblyPath;
+    public string currentBranch;
 
     /// <summary>
     /// Function to quickly build the folder structure required by DinoLauncher
