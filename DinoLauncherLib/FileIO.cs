@@ -17,21 +17,20 @@ public class FileIO
     public string creationDate;
     public string md5;
     // Keep ths around to check against the original rom_crack.z64 Md5 Checksum
-    public string originalMd5 = "c4c1b52f9c4469c6c747942891de3cfd";
+    const string originalMd5 = "c4c1b52f9c4469c6c747942891de3cfd";
 
     // Get the application directory
     public string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
     // Paths and path extensions
-    public string chosenPatchPath = Path.Combine("_PatchData", "dp-stable.xdelta"); // We'll need to change this to not rely on a hardcoded name
-    public string baseRomPath = Path.Combine("_PatchData", "rom_crack.z64"); // Same with this
+    public string chosenPatchPath = Path.Combine("_PatchData", "dp-stable.xdelta");
+    public string baseRomPath = Path.Combine("_PatchData", "rom_crack.z64");
     public string xdeltaPath = Path.Combine("_Resources", "xdelta3.exe");
     public string patchedRomPath = Path.Combine("_Game", "dinosaurplanet.z64");
     public string gitWorkDir;
 
-    public string musicPath = Path.Combine("_Resources", "music.mp3");
-    public string assemblyPath;
-    public string currentBranch;
+    //public string assemblyPath;
+    //public string currentBranch;
 
     /// <summary>
     /// Function to quickly build the folder structure required by DinoLauncher
@@ -45,8 +44,10 @@ public class FileIO
         // Set the current working directory to the application root
         System.IO.Directory.SetCurrentDirectory(baseDir);
 
-        // Create a directory to handle all the things
-        // Really just add a bunch of folders if they don't exist, write this better later, make it work for now
+
+        // These are now included in the project by default
+        // This check is now redunant and can probably be removed later
+        #region Check for directories
         if (!Directory.Exists(Path.Combine(baseDir, "_PatchData")))
         {
             Directory.CreateDirectory(Path.Combine(baseDir, "_PatchData")); // \\$"{baseDir}\\_PatchData");
@@ -63,6 +64,8 @@ public class FileIO
         {
             Directory.CreateDirectory(Path.Combine(baseDir, "_Game"));
         }
+        #endregion
+
         if (!File.Exists(xdeltaPath))
         {
             // Make sure to copy over the xdelta3 utility so patching actually works
@@ -96,8 +99,9 @@ public class FileIO
     }
 
     /// <summary>
-    /// Alternate Md5 generator, returns a bool value after comparing to the base rom Md5 (string path)
+    /// Alternate Md5 generator, returns a bool value after comparing to the base ROM Md5
     /// </summary>
+    /// <param name="path">Path to the base ROM</param>
     public bool MD5Checksum(string path)
     {
         md5 = CalculateMD5(path);

@@ -40,7 +40,7 @@
   <ItemGroup>
     <EmbeddedResource Include="MainForm.xeto" />
     <EmbeddedResource Include="res\AppIcon\krystalicon.png" />
-    <EmbeddedResource Include="res\xdelta3.exe">
+    <EmbeddedResource Include="_Resources\xdelta3.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="res\Audio\Music.mp3" />
@@ -91,6 +91,11 @@
 
   <ItemGroup>
     <Resource Include="MainForm.xeto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="_Game\" />
+    <Folder Include="_PatchData\git\" />
   </ItemGroup>
 
 </Project>
