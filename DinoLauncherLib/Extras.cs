@@ -36,8 +36,6 @@ public class Extras
         "Take these seeds to Moon Mountain Pass, you will know what to do.", // Krazoa
         "Only when the six Quan Ata Lachu are collected will my palace reveal itself to you." // Krazoa
     };
-    // This does nothing for now
-    // It will do something later, but right now it does nothing
 
     //FileIO fileIO;   // Use to reference and perform directory/file functions
     //Xdelta3 xdelta3; // Use to do patching stuff

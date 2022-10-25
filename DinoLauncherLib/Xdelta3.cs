@@ -15,7 +15,8 @@ public static class Xdelta3
             string exeDir = Path.Combine(fio.baseDir, fio.xdeltaPath);
 
             // Specify arguments for procStartInfo()
-            string args = $" -d -s {fBaseRomPath} {fPatchPath} {fPatchedRomPath}";
+            // Added some escaped quotes to get around the spaces in paths issue
+            string args = $" -d -s \"{fBaseRomPath}\" \"{fPatchPath}\" \"{fPatchedRomPath}\"";
 
             try
             {
