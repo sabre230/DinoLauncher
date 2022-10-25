@@ -49,19 +49,19 @@ public class FileIO
         // Really just add a bunch of folders if they don't exist, write this better later, make it work for now
         if (!Directory.Exists(Path.Combine(baseDir, "_PatchData")))
         {
-            CreateDirectory(Path.Combine(baseDir, "_PatchData")); // \\$"{baseDir}\\_PatchData");
+            Directory.CreateDirectory(Path.Combine(baseDir, "_PatchData")); // \\$"{baseDir}\\_PatchData");
         }
         if (!Directory.Exists(Path.Combine(baseDir, "_PatchData", "git")))
         {
-            CreateDirectory(Path.Combine(baseDir, "_PatchData", "git"));
+            Directory.CreateDirectory(Path.Combine(baseDir, "_PatchData", "git"));
         }
         if (!Directory.Exists(Path.Combine(baseDir, "_Resources")))
         {
-            CreateDirectory(Path.Combine(baseDir, "_Resources"));
+            Directory.CreateDirectory(Path.Combine(baseDir, "_Resources"));
         }
         if (!Directory.Exists(Path.Combine(baseDir, "_Game")))
         {
-            CreateDirectory(Path.Combine(baseDir, "_Game"));
+            Directory.CreateDirectory(Path.Combine(baseDir, "_Game"));
         }
         if (!File.Exists(xdeltaPath))
         {
@@ -69,59 +69,6 @@ public class FileIO
             //WriteResourceToFile("DinoLauncher.res.xdelta3.exe", xdeltaPath);
             // This is completely unnecessary and should probably change
             File.Copy(Path.Combine("res", "xdelta3.exe"), Path.Combine("_Resources","xdelta3.exe"));
-        }
-    }
-
-    /// <summary>
-    /// Helper class to create directories with specific permissions. 
-    /// This should help with I/O permissions issues.
-    /// </summary>
-    void CreateDirectory(string path)
-    {
-        Directory.CreateDirectory(path);
-
-        DirectoryInfo dir = new DirectoryInfo(path);
-    }
-
-	/// <summary>
-	/// This is a custom method, that deletes a Directory. The reason this is used, instead of <see cref="Directory.Delete(string)"/>,
-	/// is because this one sets the attributes of all files to be deletable, while <see cref="Directory.Delete(string)"/> does not do that on its own.
-	/// It's needed, because sometimes there are read-only files being generated, that would normally need more code in order to reset the attributes.<br/>
-	/// Note, that this method acts recursively. Stolen from AM2R Community 👀.
-	/// </summary>
-	/// <param name="path">The directory to delete.</param>
-	public static void DeleteDirectory(string path)
-    {
-		if (!Directory.Exists(path)) return;
-
-		File.SetAttributes(path, FileAttributes.Normal);
-
-		foreach (string file in Directory.GetFiles(path))
-		{
-			File.SetAttributes(file, FileAttributes.Normal);
-			File.Delete(file);
-		}
-
-		foreach (string dir in Directory.GetDirectories(path))
-		{
-			DeleteDirectory(dir);
-		}
-
-		Directory.Delete(path, false);
-	}
-
-    /// <summary>
-    /// Returns a bool value depending on whether or not a file exists (string path)
-    /// </summary>
-    public bool DoesFileExist(string path) // Returns a bool depending on if the file was found or not
-    {
-        if (File.Exists(path))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
