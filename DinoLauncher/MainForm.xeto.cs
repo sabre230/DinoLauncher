@@ -109,13 +109,14 @@ public class MainForm : Form
             Button_PatchExecute.Visible = false;
         }
 
-        if (prefs.UpdateBranch == "stable")
-        {
-            DropDown_BranchPicker.SelectedIndex = 0;
-        }
-        if (prefs.UpdateBranch == "nightly")
+        if (prefs.UpdateBranch != "stable")
         {
             DropDown_BranchPicker.SelectedIndex = 1;
+        }
+        else
+        {
+            // The only other option for now is to set it to stable
+            DropDown_BranchPicker.SelectedIndex = 0;
         }
 
         Button_PatchExecute.Enabled = false;
