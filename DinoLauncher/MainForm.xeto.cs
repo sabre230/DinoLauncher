@@ -178,6 +178,7 @@ public class MainForm : Form
 
         // Save on update
         prefs.SaveJSON();
+        UpdateStatusText($"MainForm: Chosen branch is{fileIO.currentBranch}");
     }
 
     public void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
@@ -432,6 +433,17 @@ public class MainForm : Form
         Testing();
     }
     #endregion
+
+    /// <summary>
+    /// Thinking about checking for conditions to enable/disable buttons with a method instead of manually like it is now
+    /// </summary>
+    void ConditionCheck()
+    {
+        // Check for patched rom
+        // Check if patch exists
+        // Check for base rom
+        // Really just check to see what the current status is and enable/disable buttons accordingly
+    }
 
     public void UpdateInitialStatusMessage()
     {
