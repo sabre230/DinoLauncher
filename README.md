@@ -28,6 +28,5 @@ MD5 must be `c4c1b52f9c4469c6c747942891de3cfd`
 <a name="readme-plannedfeatures"></a>
 **Planned Features:**
 
-- Launch the game, as implied by the title of the application
 - Add a third branch to handle more granular updates from binary patches
 - ... And more!
