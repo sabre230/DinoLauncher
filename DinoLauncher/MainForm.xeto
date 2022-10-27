@@ -69,10 +69,7 @@
           x:Name="Label_MainTextBody"
           TextAlignment="Center"
           Wrap="Word"
-          Text="Welcome to DinoLauncher! This tool is design to make it easier to 
-          casually keep your copy of Dinoaur Planet up to date with the most 
-          recent patches, enabling you to experience a formerly-lost piece of 
-          Nintendo and Rare Ltd. history, have fun!"
+          Text="Welcome to DinoLauncher! This tool is design to make it easier to casually keep your copy of Dinoaur Planet up to date with the most recent patches, enabling you to experience a formerly-lost piece of Nintendo and Rare Ltd. history, have fun!"
           Size="365,65"
           TextColor="White"
         />
