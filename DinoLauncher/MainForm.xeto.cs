@@ -178,7 +178,7 @@ public class MainForm : Form
 
         // Save on update
         prefs.SaveJSON();
-        UpdateStatusText($"MainForm: Chosen branch is{fileIO.currentBranch}");
+        UpdateStatusText($"Using the {fileIO.currentBranch} branch!");
     }
 
     public void DropDown_BranchPicker_MouseUp(object sender, EventArgs e)
