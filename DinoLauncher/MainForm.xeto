@@ -30,7 +30,7 @@
       <!-- Version Number {Binding Path=AppVerNum} -->
       <Label
         x:Name="Label_AppVerNum"
-        Text="DinoLauncher v0.02a"
+        Text="DinoLauncher v0.3.0"
         TextColor="White"
         TextAlignment="Left"
         Size="850,16"

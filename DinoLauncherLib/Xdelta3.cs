@@ -18,7 +18,7 @@ public static class Xdelta3
 
             // Specify arguments for procStartInfo()
             // Added some escaped quotes to get around the spaces in paths issue
-            string args = $" -d -s \"{fBaseRomPath}\" \"{fPatchPath}\" \"{fPatchedRomPath}\"";
+            string args = $"-f -d -s \"{fBaseRomPath}\" \"{fPatchPath}\" \"{fPatchedRomPath}\"";
 
             try
             {

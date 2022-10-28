@@ -188,7 +188,12 @@ public class MainForm : Form
     #endregion
 
     #region UpdatePatch Button
-    public void UpdatePatch_ButtonPress(object sender, EventArgs e) { }
+    public void UpdatePatch_ButtonPress(object sender, EventArgs e) 
+    {
+        // Brute force for a temporary fix
+        if (File.Exists(fileIO.patchedRomPath))
+            File.Delete(fileIO.patchedRomPath);
+    }
 
     public async void UpdatePatch_ButtonRelease(object sender, EventArgs e)
     {
@@ -207,13 +212,9 @@ public class MainForm : Form
         //Git.PullPatchData(TransferProgressHandlerMethod);
         Debug.WriteLine("MainForm.UpdatePatch: Done checking!");
         ToggleAllControls(true, true);
-        Button_PatchExecute.Enabled = true;
 
-        if (File.Exists(fileIO.patchedRomPath))
-        {
-            Button_PlayGame.Visible = true;
-            Button_PatchExecute.Visible = false;
-        }
+        // Brute force this bit for now
+        Button_PatchExecute.Enabled = true;
 
         ProgressBar_Progress.Visible = false;
         ProgressBar_Progress.Indeterminate = false;
