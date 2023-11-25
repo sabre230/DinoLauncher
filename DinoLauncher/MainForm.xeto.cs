@@ -274,7 +274,7 @@ public class MainForm : Form
         await Xdelta3.ApplyPatch(fileIO, (Path.Combine(fileIO.baseDir, fileIO.baseRomPath)),
                                    (fileIO.chosenPatchPath),
                                    (Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)));
-
+	
         // We will apply these changes AFTER patching, otherwise CRC will break
         if (prefs.UseHQModels)
         {
@@ -311,6 +311,26 @@ public class MainForm : Form
             stream.Position = 0x37EF18D;
             Debug.WriteLine($"Krystal Model Value (SQ 00, HQ 02): 0x37EF18D 0{stream.ReadByte()} ");
         }
+
+ 	if (prefs.Use16MBRam)
+	{
+	    // I suppose you could add a checkbox that says: "16MB support" in the launcher and then have it edit the shadow buffer to a crazy size.
+	    // It's located here in ROM: 0004E086 which currently is set to: 8610
+	    // Personally I'd start there edit here:0004E084 and replace the four bytes with: 3C040001
+	    // That will give it 0x10000
+	    Debug.WriteLine("Using 16MB RAM...");
+            using var stream = File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
+            // It seems the position changes after any time it's read, so we have to keep setting the stream position
+            // Tell the game to allocate 16MB RAM instead of the default 8MB, useful for emulators hopefully!
+            stream.Position = 0x0004E084;
+            Debug.WriteLine($"Old RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
+
+            stream.Position = 0x0004E084;
+            stream.WriteByte(3C040001 );
+
+            stream.Position = 0x0004E084;
+            Debug.WriteLine($"New RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
+	}
         
         ProgressBar_Progress.Visible = false;
 
