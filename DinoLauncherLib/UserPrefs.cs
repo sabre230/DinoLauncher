@@ -71,6 +71,7 @@ public class UserPrefs
             new JProperty("OriginalRomPath", OriginalRomPath),
             new JProperty("PatchedRomPath", PatchedRomPath),
             new JProperty("UseHQModels", UseHQModels)
+            new JProperty("Use16MBRam", Use16MBRam)
             );
 
         File.WriteAllText(Path.Combine("_Resources", "config.json"), configFile.ToString());
