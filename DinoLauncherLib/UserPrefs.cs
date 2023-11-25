@@ -25,6 +25,8 @@ public class UserPrefs
     public string PatchedRomPath { get; set; }
     [JsonProperty("UseHQModels")]
     public bool UseHQModels { get; set; }
+    [JsonProperty("Use16MBRam")]
+    public bool Use16MBRam { get; set; }
 
     public readonly string configFile = "config.json";
 
