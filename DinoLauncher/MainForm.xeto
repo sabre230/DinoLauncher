@@ -83,7 +83,18 @@
           Size="140,64"
           TextColor="White"
           MouseUp="UseHQModels_MouseUp"
-        
+        CheckBox_Use16MBRam
+        />
+
+      <!-- Shadow Buffer Size, Malloc -->
+      <CheckBox
+          x:Name="CheckBox_Use16MBRam"
+          Checked="False"
+          Text="Extended Shadow Buffer &#x0a;(Do not use unless you know what you are doing!)"
+          CheckedChanged="Use16MBRam_CheckedChanged"
+          Size="140,64"
+          TextColor="White"
+          MouseUp="Use16MBRam_MouseUp"
         />
 
       <!--  Branch Picker  -->
