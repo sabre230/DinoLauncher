@@ -305,7 +305,7 @@ public class MainForm : Form
         else
         {
             // Give us the byte value for these regardless
-            stream.Position = 0x037EECA1;
+            stream.Position = 0x37EECA1;
             Debug.WriteLine($"Sabre Model Value (SQ 07, HQ 08) : 0x037EECA1 0{stream.ReadByte()} ");
 
             stream.Position = 0x37EF18D;
@@ -322,13 +322,14 @@ public class MainForm : Form
             using var stream = File.Open((Path.Combine(fileIO.baseDir, fileIO.patchedRomPath)), FileMode.Open);
             // It seems the position changes after any time it's read, so we have to keep setting the stream position
             // Tell the game to allocate 16MB RAM instead of the default 8MB, useful for emulators hopefully!
-            stream.Position = 0x0004E084;
+            stream.Position = 0x4E084;
             Debug.WriteLine($"Old RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
 
-            stream.Position = 0x0004E084;
-            stream.WriteByte(3C040001);
+	    uint shdwBuffer = 0x3C040002
+            stream.Position = 0x4E084;
+            stream.WriteByte(shdwBuffer);
 
-            stream.Position = 0x0004E084;
+            stream.Position = 0x4E084;
             Debug.WriteLine($"New RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
 	}
         
