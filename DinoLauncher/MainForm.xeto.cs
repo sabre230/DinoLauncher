@@ -132,7 +132,7 @@ public class MainForm : Form
         FilePicker_BrowseForRom.FilePath = prefs.OriginalRomPath;
     }
 
-    // Control methods shoule be in order from top to bottom
+    // Control methods should be in order from top to bottom
     #region UseHQModels CheckBox
     private void UseHQModels_CheckedChanged(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
     {
@@ -147,6 +147,26 @@ public class MainForm : Form
     }
 
     private async void UseHQModels_MouseUp(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
+    {
+        // Save our JSON after making adjustments, typically on MouseUp
+        await prefs.SaveJSON();
+    }
+    #endregion
+
+    #region Use16MBRam CheckBox
+    private void Use16MBRam_CheckedChanged(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
+    {
+        if (CheckBox_Use16MBRam.Checked == true)
+        {
+            prefs.Use16MBRam = true;
+        }
+        else
+        {
+            prefs.Use16MBRam = false;
+        }
+    }
+
+    private async void Use16MBRam_MouseUp(object sender, EventArgs e) //Not sure ItemCheckEventArgs is correct here
     {
         // Save our JSON after making adjustments, typically on MouseUp
         await prefs.SaveJSON();
