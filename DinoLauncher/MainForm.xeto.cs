@@ -31,6 +31,7 @@ public class MainForm : Form
     public StackLayout      StackLayout;
     public ImageView        Image_DinosaurPlanetLogo;
     public CheckBox         CheckBox_UseHQModels;
+    public CheckBox	    CheckBox_Use16MBRam;
     public DropDown         DropDown_BranchPicker;
     public string[]         DropDown_BranchPicker_Options = { "stable", "nightly" }; // Is there a better way?
     public Label            Label_VerNum;
