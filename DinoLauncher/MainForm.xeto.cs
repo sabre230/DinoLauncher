@@ -326,7 +326,7 @@ public class MainForm : Form
             Debug.WriteLine($"Old RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
 
             stream.Position = 0x0004E084;
-            stream.WriteByte(3C040001 );
+            stream.WriteByte(3C040001);
 
             stream.Position = 0x0004E084;
             Debug.WriteLine($"New RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
