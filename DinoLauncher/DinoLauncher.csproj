@@ -20,6 +20,7 @@
     <Compile Remove="res\Fonts\**" />
     <EmbeddedResource Remove="res\Fonts\**" />
     <None Remove="res\Fonts\**" />
+    <None Remove="MacIcon.icns" />
   </ItemGroup>
 
   <ItemGroup>
@@ -97,4 +98,7 @@
     <Folder Include="_Resources\Fonts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <BundleResource Include="MacIcon.icns" />
+  </ItemGroup>
 </Project>
