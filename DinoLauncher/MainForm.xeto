@@ -83,7 +83,6 @@
           Size="140,64"
           TextColor="White"
           MouseUp="UseHQModels_MouseUp"
-        CheckBox_Use16MBRam
         />
 
       <!-- Shadow Buffer Size, Malloc -->
