@@ -1,3 +1,7 @@
+This application is no longer supported. If you are looking to patch your rom, please navigate to https://dinosaurpla.net/patch
+
+------------------------
+
 <a name="readme-top"></a>
 # DinoLauncher
 ### This is an application that specializes in launching dinos.
