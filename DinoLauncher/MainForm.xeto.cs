@@ -346,11 +346,11 @@ public class MainForm : Form
             stream.Position = 0x4E084;
             Debug.WriteLine($"Old RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");
 
-	    uint shdwBuffer = 0x3C040002
-     	    var bytes = BitConverter.GetBytes(shdwBuffer)
+            uint shdwBuffer = 0x3C040002;
+            var bytes = BitConverter.GetBytes(shdwBuffer);
 	  
             stream.Position = 0x4E084;
-            stream.WriteByte(bytes);
+            stream.Write(bytes);
 
             stream.Position = 0x4E084;
             Debug.WriteLine($"New RAM Table Value: 0x0004E084 0x{stream.ReadByte()} ");

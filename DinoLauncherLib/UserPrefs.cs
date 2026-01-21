@@ -72,7 +72,7 @@ public class UserPrefs
             new JProperty("UpdateBranch", UpdateBranch),
             new JProperty("OriginalRomPath", OriginalRomPath),
             new JProperty("PatchedRomPath", PatchedRomPath),
-            new JProperty("UseHQModels", UseHQModels)
+            new JProperty("UseHQModels", UseHQModels),
             new JProperty("Use16MBRam", Use16MBRam)
             );
 
